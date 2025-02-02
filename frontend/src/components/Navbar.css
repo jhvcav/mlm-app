@@ -1,0 +1,34 @@
+/* Barre de navigation */
+.navbar {
+    background-color: #007bff;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Liste des menus en horizontal */
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    padding: 0;
+    margin: 0;
+}
+
+/* Liens du menu */
+.nav-list a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    transition: background 0.3s, transform 0.2s;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Effet au survol */
+.nav-list a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}

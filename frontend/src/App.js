@@ -1,31 +1,30 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import MembersPage from './pages/MembersPage';
 import ProductsPage from './pages/ProductsPage';
 import WalletsPage from './pages/WalletsPage';
 import ProgressPage from './pages/ProgressPage';
+import MembersForm from './pages/MembersForm';
+import MembersTable from './pages/MembersTable';
+import Dashboard from "./pages/Dashboard"; // Import du Dashboard
+
 import './styles.css';
 
 const App = () => {
     return (
         <Router>
-            <div>
-                <nav>
-                    <ul>
-                        <li><Link to="/">Accueil</Link></li>
-                        <li><Link to="/members">Membres</Link></li>
-                        <li><Link to="/products">Produits</Link></li>
-                        <li><Link to="/wallets">Wallets</Link></li>
-                        <li><Link to="/progress">Progression</Link></li>
-                    </ul>
-                </nav>
-
+            <Navbar />
+            <div className="container">
                 <Routes>
+                    <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/members" element={<MembersPage />} />
+                    <Route path="/members-form" element={<MembersForm />} />
+                    <Route path="/members-table" element={<MembersTable />} />
                     <Route path="/products" element={<ProductsPage />} />
                     <Route path="/wallets" element={<WalletsPage />} />
                     <Route path="/progress" element={<ProgressPage />} />
-                    <Route path="/" element={<h1>Bienvenue sur l'application MLM</h1>} />
+                    <Route path="/" element={<h1 className="welcome">Bienvenue sur l'application MLM</h1>} />
                 </Routes>
             </div>
         </Router>

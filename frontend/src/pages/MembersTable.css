@@ -1,0 +1,20 @@
+/* Agrandir la liste déroulante de recherche */
+.search-dropdown {
+    width: 100%;
+    max-width: 400px;  /* Ajuste la largeur */
+    height: 45px;  /* Augmente la hauteur */
+    font-size: 18px;  /* Texte plus lisible */
+    padding: 10px;
+    border: 2px solid #007bff;  /* Bordure bleue */
+    border-radius: 8px;
+    background-color: white;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Style pour les options */
+.search-dropdown option {
+    font-size: 16px;
+    padding: 10px;
+    height: 40px; /* Augmente la hauteur des options */
+}
