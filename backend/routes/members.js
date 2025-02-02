@@ -2,6 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Member = require('../models/Member');
 
+// Route de test
+router.get('/test', (req, res) => {
+    res.json({ message: "L'API fonctionne !" });
+});
+
 // Ajouter un membre
 router.post('/', async (req, res) => {
     try {
