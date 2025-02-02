@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
+const API_URL = "https://mlm-app.onrender.com/api/members";  // 🚀 Corrigé !
+
 const MemberForm = () => {
     const [members, setMembers] = useState([]);
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', address: '' });
 
     useEffect(() => {
-        fetch('https://jhvcav.github.io/members')
+        fetch(API_URL)  // Utilise l'API Render
             .then(res => res.json())
-            .then(data => setMembers(data));
+            .then(data => setMembers(data))
+            .catch(err => console.error("❌ Erreur lors de la récupération des membres :", err));
     }, []);
 
     const handleChange = (e) => {
@@ -16,14 +19,21 @@ const MemberForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('https://jhvcav.github.io/members', {
+        const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
+
         if (response.ok) {
             alert('Membre ajouté !');
             setFormData({ name: '', email: '', phone: '', address: '' });
+            // Recharge la liste des membres après l'ajout
+            fetch(API_URL)
+                .then(res => res.json())
+                .then(data => setMembers(data));
+        } else {
+            alert("❌ Erreur lors de l'ajout du membre");
         }
     };
 
@@ -37,6 +47,7 @@ const MemberForm = () => {
                 <input type="text" name="address" placeholder="Adresse" onChange={handleChange} />
                 <button type="submit">Enregistrer</button>
             </form>
+
             <h2>Liste des membres</h2>
             <ul>
                 {members.map(member => (
