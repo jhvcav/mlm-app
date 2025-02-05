@@ -1,0 +1,11 @@
+{"error":"Tous les champs sont obligatoires."}--_curl_--
+>            "firstName": "John"
+--_curl_--
+>            "name": "Doe"
+--_curl_--
+>            "email": "john.doe@example.com"
+--_curl_--
+>            "phone": "+33612345678"
+--_curl_--
+>            "password": "password123"
+>          

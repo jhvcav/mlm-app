@@ -4,10 +4,23 @@ const Member = require('../models/Member');
 const Wallet = require('../models/Wallet');
 const Product = require('../models/Product');
 
-// Ajouter un membre avec produits et validation des entrées
+// Fonction pour générer un ID membre unique
+const generateMemberId = async () => {
+    const randomNumber = Math.floor(10000 + Math.random() * 90000); // Génère un numéro aléatoire 5 chiffres
+    const memberId = `RMR-${randomNumber}`;
+
+    // Vérifie si l'ID existe déjà dans la base
+    const existingMember = await Member.findOne({ memberId });
+    if (existingMember) {
+        return generateMemberId(); // Regénère si l'ID existe déjà
+    }
+    return memberId;
+};
+
+// ✅ Ajouter un membre avec génération d'un ID unique et nouvelles données
 router.post('/', async (req, res) => {
     try {
-        let { firstName, name, email, phone, address, sponsorId, products } = req.body;
+        let { firstName, name, email, phone, address, city, country, registrationDate, sponsorId, products } = req.body;
 
         if (!firstName || !name || !email) {
             return res.status(400).json({ error: "❌ Prénom, Nom et Email sont obligatoires." });
@@ -16,13 +29,20 @@ router.post('/', async (req, res) => {
         // Vérification et formatage des données
         sponsorId = sponsorId && sponsorId.trim() !== "" ? sponsorId : null;
         products = Array.isArray(products) ? products.filter(id => id.trim() !== "") : [];
+        
+        // Générer un ID unique pour le membre
+        const memberId = await generateMemberId();
 
         const newMember = new Member({
+            memberId, // Ajout de l'ID membre
             firstName,
             name,
             email,
             phone,
             address,
+            city,
+            country,
+            registrationDate: registrationDate || new Date().toISOString().split('T')[0], // Par défaut, date du jour
             sponsorId,
             products
         });
@@ -36,37 +56,30 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Modifier un membre (avec produits et validation)
+// ✅ Modifier un membre (y compris les nouvelles données)
 router.put('/:id', async (req, res) => {
     try {
-        let { firstName, name, email, phone, address, sponsorId, products } = req.body;
+        const { sponsorId, products, ...otherData } = req.body;
 
-        if (!firstName || !name || !email) {
-            return res.status(400).json({ error: "❌ Prénom, Nom et Email sont obligatoires." });
-        }
+        // Convertir sponsorId à null si vide
+        const updatedData = {
+            ...otherData,
+            sponsorId: sponsorId && sponsorId.trim() !== "" ? sponsorId : null,
+            products: Array.isArray(products) ? products.filter(p => p) : []
+        };
 
-        sponsorId = sponsorId && sponsorId.trim() !== "" ? sponsorId : null;
-        products = Array.isArray(products) ? products.filter(id => id.trim() !== "") : [];
-
-        const updatedMember = await Member.findByIdAndUpdate(
-            req.params.id,
-            { firstName, name, email, phone, address, sponsorId, products },
-            { new: true, runValidators: true }
-        ).populate('products');
-
+        const updatedMember = await Member.findByIdAndUpdate(req.params.id, updatedData, { new: true });
         if (!updatedMember) {
-            return res.status(404).json({ error: "❌ Membre non trouvé." });
+            return res.status(404).json({ error: "Membre non trouvé." });
         }
-
-        console.log("✅ Membre modifié :", updatedMember);
         res.json(updatedMember);
     } catch (err) {
-        console.error("❌ Erreur lors de la modification d'un membre :", err);
+        console.error("❌ Erreur dans PUT /api/members/:id :", err);
         res.status(500).json({ error: "Erreur interne du serveur." });
     }
 });
 
-// Obtenir tous les membres (et leurs produits et wallets associés)
+// ✅ Obtenir tous les membres (et leurs produits et wallets associés)
 router.get('/', async (req, res) => {
     try {
         const members = await Member.find()
@@ -81,7 +94,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Supprimer un membre et ses wallets associés
+// ✅ Supprimer un membre et ses wallets associés
 router.delete('/:id', async (req, res) => {
     try {
         const member = await Member.findById(req.params.id);
@@ -99,6 +112,30 @@ router.delete('/:id', async (req, res) => {
         res.json({ message: "✅ Membre et ses wallets associés supprimés avec succès." });
     } catch (err) {
         console.error("❌ Erreur lors de la suppression d'un membre :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Récupérer l'arbre du réseau d'un membre
+router.get('/network/:memberId', async (req, res) => {
+    try {
+        const getNetworkTree = async (memberId) => {
+            const member = await Member.findById(memberId).select("firstName name").lean();
+            if (!member) return null;
+
+            const children = await Member.find({ sponsorId: memberId }).select("firstName name").lean();
+            member.children = await Promise.all(children.map(child => getNetworkTree(child._id)));
+            return member;
+        };
+
+        const networkTree = await getNetworkTree(req.params.memberId);
+        if (!networkTree) {
+            return res.status(404).json({ error: "❌ Membre introuvable." });
+        }
+
+        res.json(networkTree);
+    } catch (err) {
+        console.error("❌ Erreur récupération réseau :", err);
         res.status(500).json({ error: "Erreur interne du serveur." });
     }
 });

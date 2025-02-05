@@ -1,0 +1,39 @@
+/* 📌 Centrer le bouton "Ajouter un Wallet" */
+.add-wallet-btn {
+    display: block;
+    margin: 20px auto; /* Centre le bouton horizontalement */
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-wallet-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Centrer le bloc de vérification */
+.wallet-verification {
+    text-align: center;
+    margin-top: 20px; /* Espacement avec le tableau */
+}
+
+/* 📌 Centrer et styliser le bouton "Vérifier" */
+.wallet-verification button {
+    display: block;
+    margin: 10px auto; /* Centre le bouton */
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.wallet-verification button:hover {
+    background-color: #218838;
+}

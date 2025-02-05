@@ -1,20 +1,142 @@
-/* Agrandir la liste déroulante de recherche */
-.search-dropdown {
-    width: 100%;
-    max-width: 400px;  /* Ajuste la largeur */
-    height: 45px;  /* Augmente la hauteur */
-    font-size: 18px;  /* Texte plus lisible */
-    padding: 10px;
-    border: 2px solid #007bff;  /* Bordure bleue */
-    border-radius: 8px;
-    background-color: white;
-    outline: none;
-    cursor: pointer;
+/* 📌 Conteneur principal du tableau */
+.table-container {
+    width: 95%; /* Ajuste la largeur du tableau */
+    margin: auto;
+    text-align: center;
+    overflow-x: auto; /* Permet le défilement horizontal si le tableau est trop large */
 }
 
-/* Style pour les options */
-.search-dropdown option {
-    font-size: 16px;
-    padding: 10px;
-    height: 40px; /* Augmente la hauteur des options */
+/* 📌 Tableau */
+table {
+    width: 100%; /* Largeur du tableau */
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 En-têtes du tableau */
+th {
+    background: #007bff; /* Couleur de fond */
+    color: white;
+    padding: 15px;
+    font-size: 18px; /* Taille du texte */
+    text-align: center !important; /* Centrer le texte */
+    border-bottom: 2px solid #0056b3;
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+    vertical-align: middle;
+}
+
+/* 📌 Style des cellules */
+td {
+    padding: 12px; /* Espacement du texte */
+    font-size: 16px; /* Taille du texte */
+    border-bottom: 1px solid #ddd;
+    text-align: center !important; /* Centrer le texte */
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+    vertical-align: middle;
+}
+
+/* 📌 Ajustement des largeurs des colonnes */
+th:nth-child(1), td:nth-child(1) { width: 10%; }  /* ID Membre */
+th:nth-child(2), td:nth-child(2) { width: 15%; } /* Prénom */
+th:nth-child(3), td:nth-child(3) { width: 15%; } /* Nom */
+th:nth-child(4), td:nth-child(4) { width: 20%; } /* Email */
+th:nth-child(5), td:nth-child(5) { width: 15%; } /* Téléphone */
+th:nth-child(6), td:nth-child(6) { width: 10%; } /* Produits souscrits */
+th:nth-child(7), td:nth-child(7) { width: 25%; } /* Actions */
+
+/* 📌 Correction pour que la colonne "Actions" occupe toute la largeur */
+td.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrer horizontalement */
+    justify-content: center; /* Centrer verticalement */
+    width: 100%; /* Prend toute la largeur de la colonne */
+    min-width: 180px; /* Empêche le rétrécissement */
+    max-width: 100%; /* Garantit que ça ne dépasse pas */
+}
+
+/* 📌 Ajuster la taille et l'espacement des boutons */
+.action-buttons button {
+    width: 100%; /* Prend toute la largeur disponible */
+    height: 40px; /* Hauteur */
+    margin: 5px 0; /* Espacement entre les boutons */
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px; /* Taille du texte */
+    text-align: center;
+}
+
+/* 📌 Modifier la couleur des boutons */
+.view-btn { background-color: #17a2b8; color: white; }
+.view-btn:hover { background-color: #138496; }
+
+.wallet-btn { background-color: #ffc107; color: black; }
+.wallet-btn:hover { background-color: #e0a800; }
+
+.edit-btn { background-color: #007bff; color: white; }
+.edit-btn:hover { background-color: #0056b3; }
+
+.details-btn { background-color: #17a2b8; color: white; }
+.details-btn:hover { background-color: #138496; }
+
+.delete-btn { background-color: #dc3545; color: white; }
+.delete-btn:hover { background-color: #c82333; }
+
+/* 📌 Centrer la pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* 📌 Style des boutons de pagination */
+.pagination button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.pagination button:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Assurer que la colonne "Actions" occupe bien toute la largeur */
+th:nth-child(7), td:nth-child(7) { 
+    width: 25%;  /* Ajuste la largeur de la colonne Actions */
+    max-width: 25%; /* Empêche l'expansion au-delà */
+    text-align: center;
+}
+
+/* 📌 Forcer les cellules de la colonne "Actions" à occuper toute la largeur */
+td.action-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;  /* Prend toute la largeur de la colonne */
+    max-width: 100% !important; /* Empêche de dépasser */
+    min-width: 100% !important; /* Assure une largeur constante */
+}
+
+/* 📌 Ajuster la taille des boutons dans "Actions" */
+.action-buttons button {
+    width: 80%; /* Les boutons s'adaptent bien sans dépasser */
+    height: 40px;
+    margin: 5px 0;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
 }

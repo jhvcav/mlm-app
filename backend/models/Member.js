@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const MemberSchema = new mongoose.Schema({
-    firstName: { type: String, required: true },
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true },
+    firstName: { type: String, required: false },
+    name: { type: String, required: false },
+    email: { type: String, required: false, unique: false },
+    phone: { type: String, required: false },
+    password: { type: String, required: false },
     address: { type: String },
     sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Member' }, // Référence vers le sponsor
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }], // Produits souscrits

@@ -1,103 +1,156 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './MembersTable.css';
 
-const MembersPage = () => {
+const MembersTable = () => {
     const [members, setMembers] = useState([]);
-    const [formData, setFormData] = useState({ name: '', email: '', phone: '', address: '' });
-    const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [editingId, setEditingId] = useState(null);
+    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [selectedMember, setSelectedMember] = useState(null);
+    const [showProductsModal, setShowProductsModal] = useState(false);
+    const [showMemberModal, setShowMemberModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const membersPerPage = 5;
+    const navigate = useNavigate();
 
+    // Charger la liste des membres
     useEffect(() => {
-        console.log("📡 Envoi de la requête API vers Render...");
-        setIsLoading(true);
-        setError(null);
-
-        const controller = new AbortController();
-        const signal = controller.signal;
-
-        fetch('https://mlm-app.onrender.com/api/members', { signal })
-            .then(res => {
-                if (!res.ok) throw new Error("Erreur API Render");
-                return res.json();
-            })
-            .then(data => {
-                console.log("✅ Membres récupérés :", data);
-                setMembers(data);
-            })
-            .catch(err => {
-                if (err.name === "AbortError") {
-                    console.log("⏹️ Requête annulée (changement de page)");
-                } else {
-                    console.error("❌ Erreur de chargement des membres :", err);
-                    setError("Impossible de charger les membres depuis Render.");
-                }
-            })
-            .finally(() => setIsLoading(false));
-
-        return () => controller.abort();
+        fetch("https://mlm-app.onrender.com/api/members")
+            .then(res => res.json())
+            .then(data => setMembers(data))
+            .catch(err => console.error("❌ Erreur chargement des membres :", err));
     }, []);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Fonction pour modifier un membre
+    const handleEdit = (member) => {
+        localStorage.setItem("selectedMember", JSON.stringify(member));
+        navigate('/members-form');
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const method = editingId ? 'PUT' : 'POST';
-        const url = editingId
-            ? `https://mlm-app.onrender.com/api/members/${editingId}`
-            : 'https://mlm-app.onrender.com/api/members';
+    // Fonction pour supprimer un membre
+    const handleDelete = async (memberId) => {
+        if (window.confirm("❌ Êtes-vous sûr de vouloir supprimer ce membre ?")) {
+            try {
+                const response = await fetch(`https://mlm-app.onrender.com/api/members/${memberId}`, {
+                    method: 'DELETE'
+                });
 
-        const response = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        });
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la suppression du membre.");
+                }
 
-        if (response.ok) {
-            alert(editingId ? 'Membre modifié !' : 'Membre ajouté !');
-            setFormData({ name: '', email: '', phone: '', address: '' });
-            setEditingId(null);
-            window.location.reload();
-        } else {
-            alert("Erreur lors de l'enregistrement.");
+                alert("✅ Membre supprimé avec succès !");
+                setMembers(members.filter(member => member._id !== memberId));
+            } catch (error) {
+                console.error("❌ Erreur suppression :", error);
+                alert("❌ Impossible de supprimer ce membre.");
+            }
         }
     };
 
-    const handleEdit = (member) => {
-        setFormData(member);
-        setEditingId(member._id);
+    // Fonction pour afficher les produits souscrits
+    const handleShowProducts = (products) => {
+        setSelectedProducts(products);
+        setShowProductsModal(true);
     };
 
-    return (
-        <div>
-            <h2>{editingId ? 'Modifier un membre' : 'Ajouter un membre'}</h2>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
-                <input type="text" name="name" placeholder="Nom" value={formData.name} onChange={handleChange} required />
-                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-                <input type="text" name="phone" placeholder="Téléphone" value={formData.phone} onChange={handleChange} required />
-                <input type="text" name="address" placeholder="Adresse" value={formData.address} onChange={handleChange} />
-                <button type="submit">{editingId ? 'Modifier' : 'Enregistrer'}</button>
-            </form>
+    // Fonction pour afficher les détails du membre
+    const handleShowMemberDetails = (member) => {
+        setSelectedMember(member);
+        setShowMemberModal(true);
+    };
 
-            <h2>Liste des membres</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {isLoading ? <p>Chargement des membres...</p> : (
-                <ul>
-                    {members.length > 0 ? (
-                        members.map(member => (
-                            <li key={member._id}>
-                                <strong>{member.name}</strong> ({member.email}) - {member.phone}
-                                <button onClick={() => handleEdit(member)} style={{ marginLeft: '10px' }}>Modifier</button>
-                            </li>
-                        ))
-                    ) : (
-                        <p>Aucun membre trouvé.</p>
-                    )}
-                </ul>
+    // Pagination - Calcul des membres affichés
+    const indexOfLastMember = currentPage * membersPerPage;
+    const indexOfFirstMember = indexOfLastMember - membersPerPage;
+    const currentMembers = members.slice(indexOfFirstMember, indexOfLastMember);
+
+    return (
+        <div className="table-container">
+            <h2>📋 Liste des Membres</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Membre</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Produits souscrits</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentMembers.map(member => (
+                        <tr key={member._id}>
+                            <td>{member.memberId}</td>
+                            <td>{member.firstName}</td>
+                            <td>{member.name}</td>
+                            <td>{member.email}</td>
+                            <td>{member.phone}</td>
+                            <td>
+                                <button 
+                                    className="view-btn" 
+                                    onClick={() => handleShowProducts(member.products)}>
+                                    📦 Voir Produits
+                                </button>
+                            </td>
+                            <td className="action-buttons">
+                                <button 
+                                    className="edit-btn" 
+                                    onClick={() => handleEdit(member)}>
+                                    ✏️ Modifier
+                                </button>
+                                <button 
+                                    className="details-btn" 
+                                    onClick={() => handleShowMemberDetails(member)}>
+                                    👁️ Voir Détails
+                                </button>
+                                <button 
+                                    className="delete-btn" 
+                                    onClick={() => handleDelete(member._id)}>
+                                    🗑️ Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* Pagination centrée */}
+            <div className="pagination">
+                {Array.from({ length: Math.ceil(members.length / membersPerPage) }, (_, i) => (
+                    <button
+                        key={i + 1}
+                        onClick={() => setCurrentPage(i + 1)}
+                        className={currentPage === i + 1 ? "active" : ""}
+                    >
+                        {i + 1}
+                    </button>
+                ))}
+            </div>
+
+            {/* Modal pour afficher les détails du membre sous forme de fiche bien structurée */}
+            {showMemberModal && (
+                <div className="modal">
+                    <div className="modal-content member-details">
+                        <h3>👤 Détails du Membre</h3>
+                        {selectedMember && (
+                            <div className="member-info">
+                                <p><strong>ID Membre :</strong> {selectedMember.memberId}</p>
+                                <p><strong>Prénom :</strong> {selectedMember.firstName}</p>
+                                <p><strong>Nom :</strong> {selectedMember.name}</p>
+                                <p><strong>Email :</strong> {selectedMember.email}</p>
+                                <p><strong>Téléphone :</strong> {selectedMember.phone}</p>
+                                <p><strong>Adresse :</strong> {selectedMember.address}</p>
+                                <p><strong>Sponsor :</strong> {selectedMember.sponsorId || "Aucun"}</p>
+                            </div>
+                        )}
+                        <button className="close-btn" onClick={() => setShowMemberModal(false)}>❌ Fermer</button>
+                    </div>
+                </div>
             )}
         </div>
     );
 };
 
-export default MembersPage;
+export default MembersTable;

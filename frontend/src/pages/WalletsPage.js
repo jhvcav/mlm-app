@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './WalletsPage.css';
 
 const API_URL = "https://mlm-app.onrender.com/api/wallets";
 
 const WalletsPage = () => {
     const [wallets, setWallets] = useState([]);
-    const [formData, setFormData] = useState({ name: '', address: '', password: '', secretPhrase: '' });
+    const [selectedWalletId, setSelectedWalletId] = useState("");
+    const [enteredPassword, setEnteredPassword] = useState("");
+    const navigate = useNavigate();
 
+    // Charger la liste des wallets
     useEffect(() => {
         fetch(API_URL)
             .then(res => res.json())
@@ -13,48 +18,98 @@ const WalletsPage = () => {
             .catch(err => console.error("❌ Erreur chargement des wallets :", err));
     }, []);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    // Fonction pour vérifier le mot de passe du wallet sélectionné
+    const checkPassword = async () => {
+        if (!selectedWalletId) {
+            alert("❌ Veuillez sélectionner un wallet !");
+            return;
+        }
+        if (!enteredPassword) {
+            alert("❌ Veuillez entrer un mot de passe !");
+            return;
+        }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        });
+        try {
+            const response = await fetch(`${API_URL}/verify-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ walletId: selectedWalletId, passwordToCheck: enteredPassword })
+            });
 
-        if (response.ok) {
-            alert('Wallet ajouté !');
-            setFormData({ name: '', address: '', password: '', secretPhrase: '' });
-            fetch(API_URL)
-                .then(res => res.json())
-                .then(data => setWallets(data));
-        } else {
-            alert("❌ Erreur lors de l'ajout du wallet");
+            const data = await response.json();
+            if (response.ok) {
+                alert("✅ Mot de passe correct !");
+            } else {
+                alert("❌ Mot de passe incorrect !");
+            }
+        } catch (error) {
+            console.error("❌ Erreur lors de la vérification du mot de passe :", error);
+            alert("❌ Erreur interne du serveur.");
         }
     };
 
     return (
-        <div>
-            <h2>Ajouter un Wallet</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="name" placeholder="Nom du Wallet" onChange={handleChange} required />
-                <input type="text" name="address" placeholder="Adresse Publique" onChange={handleChange} required />
-                <input type="password" name="password" placeholder="Mot de passe (chiffré)" onChange={handleChange} required />
-                <input type="text" name="secretPhrase" placeholder="Phrase secrète (optionnelle)" onChange={handleChange} />
-                <button type="submit">Enregistrer</button>
-            </form>
+        <div className="wallets-container">
+            <h2>💰 Liste des Wallets</h2>
 
-            <h2>Liste des Wallets</h2>
-            <ul>
-                {wallets.map(wallet => (
-                    <li key={wallet._id}>
-                        {wallet.name} - {wallet.address}
-                    </li>
-                ))}
-            </ul>
+            {/* Bouton pour ajouter un Wallet */}
+            <button onClick={() => navigate('/wallets-form')} className="add-wallet-btn">
+                ➕ Ajouter un Wallet
+            </button>
+
+            {/* Tableau des wallets */}
+            <table className="wallets-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Adresse Publique</th>
+                        <th>Propriétaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {wallets.length > 0 ? (
+                        wallets.map(wallet => (
+                            <tr key={wallet._id}>
+                                <td>{wallet.walletName}</td>
+                                <td>{wallet.publicAddress}</td>
+                                <td>{wallet.ownerId ? `${wallet.ownerId.firstName} ${wallet.ownerId.name}` : "Aucun"}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="3">Aucun wallet enregistré.</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+
+            {/* Vérification du mot de passe */}
+            {wallets.length > 0 && (
+                <div className="wallet-verification">
+                    <h3>🔑 Vérifier votre wallet</h3>
+
+                    {/* Sélectionner un wallet */}
+                    <select onChange={(e) => setSelectedWalletId(e.target.value)} value={selectedWalletId}>
+                        <option value="">-- Sélectionnez un wallet --</option>
+                        {wallets.map(wallet => (
+                            <option key={wallet._id} value={wallet._id}>
+                                {wallet.walletName} ({wallet.publicAddress})
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Champ de saisie du mot de passe */}
+                    <input
+                        type="password"
+                        placeholder="Entrez votre mot de passe"
+                        value={enteredPassword}
+                        onChange={(e) => setEnteredPassword(e.target.value)}
+                    />
+                    
+                    {/* Bouton de vérification */}
+                    <button onClick={checkPassword}>✅ Vérifier</button>
+                </div>
+            )}
         </div>
     );
 };

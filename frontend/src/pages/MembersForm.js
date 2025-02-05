@@ -5,11 +5,15 @@ import './MembersForm.css';
 const MembersForm = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
+        memberId: '',
         firstName: '',
         name: '',
         email: '',
         phone: '',
         address: '',
+        city: '',
+        country: '',
+        registrationDate: new Date().toISOString().split('T')[0], // Date d'inscription par défaut
         sponsorId: '',
         products: []
     });
@@ -58,42 +62,59 @@ const MembersForm = () => {
         setFormData({ ...formData, sponsorId: sponsorId !== "" ? sponsorId : null });
     };
 
+    // Supprimer un membre
+    const handleDelete = async () => {
+        if (!formData._id) return;
+        if (window.confirm("⚠️ Voulez-vous vraiment supprimer ce membre et ses données ?")) {
+            try {
+                await fetch(`https://mlm-app.onrender.com/api/members/${formData._id}`, {
+                    method: 'DELETE'
+                });
+                alert("🗑️ Membre supprimé avec succès !");
+                navigate('/members-table');
+            } catch (error) {
+                alert("❌ Erreur lors de la suppression.");
+            }
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         // Vérification des champs obligatoires
         if (!formData.firstName || !formData.name || !formData.email) {
             alert("❌ Prénom, Nom et Email sont obligatoires !");
             return;
         }
-
-        // Création de l'objet à envoyer (évite `sponsorId: ""`)
+    
+        // Nettoyage des données avant l'envoi
         const dataToSend = {
             ...formData,
-            sponsorId: formData.sponsorId && formData.sponsorId.trim() !== "" ? formData.sponsorId : null
+            sponsorId: formData.sponsorId && formData.sponsorId.trim() !== "" ? formData.sponsorId : null,
+            products: Array.isArray(formData.products) ? formData.products.filter(p => p) : []
         };
-
+    
         console.log("🔎 Données envoyées :", dataToSend);
-
+    
         const method = formData._id ? 'PUT' : 'POST';
         const url = formData._id 
             ? `https://mlm-app.onrender.com/api/members/${formData._id}`
             : 'https://mlm-app.onrender.com/api/members';
-
+    
         try {
             const response = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataToSend)
             });
-
+    
             if (!response.ok) {
                 const errorMessage = await response.text();
                 console.error("❌ Erreur API :", errorMessage);
                 alert("❌ Erreur lors de l'enregistrement : " + errorMessage);
                 return;
             }
-
+    
             alert(formData._id ? '✅ Membre modifié avec succès !' : '✅ Membre ajouté avec succès !');
             navigate('/members-table');
         } catch (error) {
@@ -105,12 +126,28 @@ const MembersForm = () => {
     return (
         <div className="form-container">
             <h2>{formData._id ? '✏️ Modifier un membre' : '➕ Ajouter un membre'}</h2>
+            
+            {/* Affichage de l'ID du membre */}
+            {formData._id && (
+                <p><strong>ID Membre :</strong> {formData.memberId}</p>
+            )}
+
             <form onSubmit={handleSubmit} className="member-form">
                 <input type="text" name="firstName" placeholder="Prénom" value={formData.firstName} onChange={handleChange} required />
                 <input type="text" name="name" placeholder="Nom" value={formData.name} onChange={handleChange} required />
                 <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
                 <input type="text" name="phone" placeholder="Téléphone" value={formData.phone} onChange={handleChange} required />
                 <input type="text" name="address" placeholder="Adresse" value={formData.address} onChange={handleChange} />
+
+                {/* Nouveau champ Pays */}
+                <input type="text" name="country" placeholder="Pays" value={formData.country} onChange={handleChange} required />
+
+                {/* Nouveau champ Ville */}
+                <input type="text" name="city" placeholder="Ville" value={formData.city} onChange={handleChange} required />
+
+                {/* Nouveau champ Date d'inscription avec sélecteur de calendrier */}
+                <label>📅 Date d'inscription :</label>
+                <input type="date" name="registrationDate" value={formData.registrationDate} onChange={handleChange} required />
 
                 {/* Sélecteur du sponsor */}
                 <label>🧑‍🤝‍🧑 Parrain :</label>
@@ -134,6 +171,12 @@ const MembersForm = () => {
                 </select>
 
                 <button type="submit">{formData._id ? '✅ Modifier' : '💾 Enregistrer'}</button>
+                
+                {/* Bouton de suppression du membre */}
+                {formData._id && (
+                    <button type="button" onClick={handleDelete} className="delete-btn">🗑️ Supprimer</button>
+                )}
+
                 <button type="button" onClick={() => navigate('/members-table')}>📋 Voir la liste des membres</button>
             </form>
         </div>

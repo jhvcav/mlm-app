@@ -1,7 +1,7 @@
 /* Importer la police "Poppins" de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-/* Appliquer la police globale */
+/* 📌 Appliquer la police globale */
 body {
     font-family: "Poppins", sans-serif;
     background-color: #f8f9fa;
@@ -55,7 +55,7 @@ table {
 th, td {
     border: 1px solid #ddd;
     padding: 12px;
-    text-align: left;
+    text-align: center;
 }
 
 /* Largeur ajustable des colonnes */
@@ -87,7 +87,7 @@ input, select {
     border-radius: 5px;
 }
 
-/* Zone du champ "Phrase secrète" */
+/* 📌 Zone du champ "Phrase secrète" */
 .secret-input {
     width: 100%;
     height: 50px;
@@ -95,7 +95,7 @@ input, select {
     padding: 10px;
 }
 
-/* Boutons stylisés */
+/* 📌 Boutons stylisés */
 button {
     background-color: #28a745;
     color: white;
@@ -104,30 +104,11 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
+    outline: none;
 }
 
 button:hover {
     background-color: #218838;
-}
-
-/* =================== */
-/* 📌 DASHBOARD        */
-/* =================== */
-.dashboard {
-    max-width: 900px;
-    margin: auto;
-    text-align: center;
-}
-
-/* Style des graphiques */
-.chart-container {
-    width: 100%;
-    height: 300px;
-    margin: 20px auto;
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* =================== */
@@ -158,4 +139,336 @@ button:hover {
 
 .navbar ul li a:hover {
     text-decoration: underline;
+}
+
+/* =================== */
+/* 📌 RÉSEAU (TABLEAU & ARBRE) */
+/* =================== */
+
+/* 📌 Conteneur des boutons Réseau */
+.network-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 10px 0;
+}
+
+/* 📌 Style des boutons Réseau */
+.network-btn {
+    display: inline-block;
+    padding: 12px 18px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background 0.3s;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.network-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Tableau du réseau */
+.network-table-container {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+}
+
+.network-table-container th, .network-table-container td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.network-table-container th {
+    background-color: #007bff;
+    color: white;
+}
+
+/* =================== */
+/* 📌 ARBRE DU RÉSEAU */
+/* =================== */
+
+/* 📌 Conteneur principal */
+.network-tree-container {
+    text-align: center;
+    padding: 20px;
+}
+
+/* 📌 Liste principale */
+.network-tree {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 📌 Blocs des membres */
+.network-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+}
+
+/* 📌 Bloc d'affichage d'un membre */
+.node-box {
+    width: 200px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+}
+
+/* 📌 Email sous le nom */
+.node-email {
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* 📌 Lignes de connexion entre les membres */
+.network-children {
+    list-style-type: none;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* 📌 Bouton pour ouvrir/fermer un niveau */
+.expand-btn {
+    background-color: white;
+    color: #007bff;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: background 0.3s;
+}
+
+.expand-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* =================== */
+/* 📌 PAGE DE CONNEXION */
+/* =================== */
+
+/* Conteneur principal */
+.login-container {
+    width: 100%;
+    height: 100vh; /* Prend toute la hauteur de l'écran */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Ramène le contenu de connexion plus haut */
+    align-items: center;
+    text-align: center;
+    background-color: #f8f9fa;
+    padding-top: 100px; /* Ajuste l'espacement */
+}
+
+/* Formulaire de connexion */
+.login-form {
+    display: flex;
+    flex-direction: column; /* ✅ Empile verticalement */
+    align-items: center;
+    gap: 15px; /* ✅ Espacement entre les champs et le bouton */
+}
+
+/* Champs de saisie */
+.login-form input {
+    width: 300px; /* ✅ Réduction de la taille */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center; /* ✅ Centrage du texte */
+}
+
+/* Bouton "Se connecter" */
+.login-form button {
+    width: 320px; /* ✅ Aligné avec les champs */
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* Effet au survol */
+.login-form button:hover {
+    background-color: #0056b3;
+}
+
+/* ✅ Formulaire d'inscription Admin */
+.admin-register-container {
+    width: 400px;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.admin-form button:hover {
+    background-color: #0056b3;
+}
+
+/* =================== */
+/* 📌 PAGE D'INSCRIPTION */
+/* =================== */
+
+.register-container {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 50px;
+}
+
+.register-container h2 {
+    color: #007bff;
+}
+
+.register-container input, 
+.register-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.register-container button:hover {
+    background-color: #218838;
+}
+
+/* 📌 Accueil */
+.home-container {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.auth-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.auth-buttons button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.auth-buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Formulaire d'inscription */
+.register-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.register-container h2 {
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.register-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.register-container button:hover {
+    background-color: #0056b3;
 }
