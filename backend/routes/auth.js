@@ -210,4 +210,23 @@ router.get('/', (req, res) => {
     res.json({ message: "🔒 API Auth fonctionne ! Routes disponibles : /register/member, /login/member, /register/admin, /login/admin" });
 });
 
+router.get('/members', async (req, res) => {
+    try {
+        const members = await Member.find().select('-password'); // Exclure le mot de passe
+        res.json(members);
+    } catch (err) {
+        console.error("Erreur récupération des membres :", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+router.get('/admins', async (req, res) => {
+    try {
+        const admins = await Admin.find().select('-password'); // Exclure le mot de passe hashé
+        res.json(admins);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
 module.exports = router;
