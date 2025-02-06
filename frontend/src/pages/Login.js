@@ -81,6 +81,9 @@ const Login = () => {
                 <div className='login-button'>
                     <button type="button" onClick={() => handleLogin("member")}>👤 Connexion Membre</button>
                     <button type="button" onClick={() => handleLogin("admin")}>🛠️ Connexion Admin</button>
+                    <button type="button" onClick={() => navigate("/register-admin")}>
+                    🛠️ Inscription Admin
+                    </button>
                 </div>
             </form>
         </div>

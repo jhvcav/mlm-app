@@ -86,6 +86,7 @@ router.post('/login/member', async (req, res) => {
 ================================ */
 router.post('/login/admin', async (req, res) => {
     const { email, password } = req.body;
+    console.log("📩 Tentative de connexion admin :", { email });
 
     if (!email || !password) {
         return res.status(400).json({ error: "Email et mot de passe sont requis." });
@@ -94,19 +95,25 @@ router.post('/login/admin', async (req, res) => {
     try {
         const admin = await Admin.findOne({ email });
         if (!admin) {
+            console.error("❌ Administrateur introuvable !");
             return res.status(401).json({ error: "Administrateur introuvable." });
         }
 
+        console.log("🔑 Mot de passe fourni :", password);
+        console.log("🔒 Mot de passe en base :", admin.password);
+
         const isMatch = await bcrypt.compare(password, admin.password);
         if (!isMatch) {
+            console.error("❌ Mot de passe incorrect !");
             return res.status(401).json({ error: "Mot de passe incorrect." });
         }
 
         const token = generateToken(admin._id, 'admin');
+        console.log("✅ Connexion réussie, token généré :", token);
 
         res.json({ token, user: { id: admin._id, email: admin.email, role: 'admin' } });
     } catch (err) {
-        console.error("Erreur de connexion admin :", err);
+        console.error("🚨 Erreur serveur :", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
