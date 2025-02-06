@@ -5,6 +5,10 @@ const Member = require('../models/Member');
 const Admin = require('../models/Admin');
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    res.json({ message: "🚀 API Auth en ligne !" });
+});
+
 // ✅ Secret JWT (Utiliser un fichier .env pour la sécurité)
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
@@ -191,6 +195,7 @@ router.post('/register/admin', async (req, res) => {
             email,
             password: hashedPassword,
             role: "admin"
+            
         });
 
         await newAdmin.save();
@@ -198,6 +203,11 @@ router.post('/register/admin', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: "Erreur serveur" });
     }
+});
+
+// ✅ Test de la route /api/auth
+router.get('/', (req, res) => {
+    res.json({ message: "🔒 API Auth fonctionne ! Routes disponibles : /register/member, /login/member, /register/admin, /login/admin" });
 });
 
 module.exports = router;
