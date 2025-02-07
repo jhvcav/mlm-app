@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const Admin = require('./models/Admin'); // Assure-toi que ton modèle Admin est bien importé
 
-const mongoURI = "mongodb://127.0.0.1:27017/mlm"; // Mets l'URL de ta base de données
+const mongoURI = "mongodb://127.0.0.0:1/mlm"; // Mets l'URL de ta base de données
 
 const createAdmin = async () => {
     try {
-        await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(mongoURI);
 
         const email = "admin@mlm.com";
         const password = "admin123"; // ✅ Stocké en clair

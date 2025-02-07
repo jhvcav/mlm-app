@@ -2,6 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
+console.log("MONGO_URI:", process.env.MONGO_URI); // Debugging: affiche l'URI
+if (!process.env.MONGO_URI) {
+    console.error("❌ ERREUR: MONGO_URI n'est pas défini !");
+    process.exit(1);
+}
 
 const app = express();
 

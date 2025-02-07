@@ -4,6 +4,11 @@ const Member = require('../models/Member');
 const Wallet = require('../models/Wallet');
 const Product = require('../models/Product');
 
+// Routes de test
+router.get('/test', (req, res) => {
+    res.json({ message: "L'API fonctionne !"});
+});
+
 // Fonction pour générer un ID membre unique
 const generateMemberId = async () => {
     const randomNumber = Math.floor(10000 + Math.random() * 90000); // Génère un numéro aléatoire 5 chiffres
