@@ -1,10 +1,9 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const router = express.Router();
 const Wallet = require('../models/Wallet');
 const Member = require('../models/Member');
 
-// ✅ Ajouter un wallet à un membre avec cryptage sécurisé
+// ✅ Ajouter un wallet à un membre (sans cryptage)
 router.post('/add-wallet', async (req, res) => {
     try {
         let { memberId, walletName, publicAddress, encryptedPassword, secretPhrase } = req.body;
@@ -20,20 +19,13 @@ router.post('/add-wallet', async (req, res) => {
             return res.status(404).json({ error: "❌ Membre introuvable." });
         }
 
-        // Générer un sel pour le hashage
-        const salt = await bcrypt.genSalt(12); // Augmenter la sécurité du hashage
-
-        // Crypter le mot de passe et la phrase secrète séparément
-        const hashedPassword = await bcrypt.hash(encryptedPassword, salt);
-        const hashedSecretPhrase = await bcrypt.hash(secretPhrase, salt);
-
-        // Créer le wallet avec les données cryptées
+        // Créer le wallet avec les données en clair
         const newWallet = new Wallet({
             ownerId: member._id,
             walletName: walletName.trim(),
             publicAddress: publicAddress.trim(),
-            encryptedPassword: hashedPassword,
-            secretPhrase: hashedSecretPhrase
+            encryptedPassword,  // Stocke le mot de passe en clair
+            secretPhrase        // Stocke la phrase secrète en clair
         });
 
         await newWallet.save();
@@ -49,12 +41,11 @@ router.post('/add-wallet', async (req, res) => {
     }
 });
 
-// ✅ Vérifier un mot de passe chiffré
+// ✅ Vérifier un mot de passe sans cryptage
 router.post('/verify-password', async (req, res) => {
     try {
         const { walletId, passwordToCheck } = req.body;
 
-        // Vérifier si les champs sont bien fournis
         if (!walletId || !passwordToCheck) {
             return res.status(400).json({ error: "❌ Wallet ID et mot de passe requis." });
         }
@@ -64,9 +55,8 @@ router.post('/verify-password', async (req, res) => {
             return res.status(404).json({ error: "⚠️ Wallet non trouvé." });
         }
 
-        // Comparer le mot de passe saisi avec le hash en base
-        const isMatch = await bcrypt.compare(passwordToCheck, wallet.encryptedPassword);
-        if (!isMatch) {
+        // Comparer directement avec la valeur stockée
+        if (passwordToCheck !== wallet.encryptedPassword) {
             return res.status(401).json({ error: "❌ Mot de passe incorrect." });
         }
 
@@ -77,12 +67,11 @@ router.post('/verify-password', async (req, res) => {
     }
 });
 
-// ✅ Vérifier une phrase secrète chiffrée (optionnel)
+// ✅ Vérifier une phrase secrète sans cryptage
 router.post('/verify-secret', async (req, res) => {
     try {
         const { walletId, secretToCheck } = req.body;
 
-        // Vérifier si les champs sont bien fournis
         if (!walletId || !secretToCheck) {
             return res.status(400).json({ error: "❌ Wallet ID et phrase secrète requis." });
         }
@@ -92,9 +81,8 @@ router.post('/verify-secret', async (req, res) => {
             return res.status(404).json({ error: "⚠️ Wallet non trouvé." });
         }
 
-        // Comparer la phrase secrète saisie avec le hash en base
-        const isMatch = await bcrypt.compare(secretToCheck, wallet.secretPhrase);
-        if (!isMatch) {
+        // Comparer directement avec la valeur stockée
+        if (secretToCheck !== wallet.secretPhrase) {
             return res.status(401).json({ error: "❌ Phrase secrète incorrecte." });
         }
 
@@ -105,7 +93,7 @@ router.post('/verify-secret', async (req, res) => {
     }
 });
 
-// ✅ Récupérer les wallets d'un membre spécifique sans afficher le mot de passe ni la phrase secrète
+// ✅ Récupérer les wallets d'un membre (sans afficher le mot de passe ni la phrase secrète)
 router.get('/member/:memberId', async (req, res) => {
     try {
         const memberId = req.params.memberId;

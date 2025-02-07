@@ -1,5 +1,4 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Member = require('../models/Member');
 const Admin = require('../models/Admin');
@@ -33,14 +32,12 @@ router.post('/register/member', async (req, res) => {
             return res.status(400).json({ error: "Cet email est déjà utilisé." });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const newMember = new Member({
             firstName,
             lastName,
             email,
             phone,
-            password: hashedPassword
+            password // ✅ Stocké en clair
         });
 
         await newMember.save();
@@ -67,8 +64,7 @@ router.post('/login/member', async (req, res) => {
             return res.status(401).json({ error: "Utilisateur introuvable." });
         }
 
-        const isMatch = await bcrypt.compare(password, member.password);
-        if (!isMatch) {
+        if (password !== member.password) {
             return res.status(401).json({ error: "Mot de passe incorrect." });
         }
 
@@ -102,9 +98,7 @@ router.post('/login/admin', async (req, res) => {
         console.log("🔑 Mot de passe fourni :", password);
         console.log("🔒 Mot de passe en base :", admin.password);
 
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (!isMatch) {
-            console.error("❌ Mot de passe incorrect !");
+        if (password !== admin.password) {
             return res.status(401).json({ error: "Mot de passe incorrect." });
         }
 
@@ -153,39 +147,6 @@ router.get('/member/profile', verifyToken, async (req, res) => {
     }
 });
 
-// ✅ Accès au tableau de bord admin
-router.get('/admin/dashboard', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: "⛔ Accès refusé." });
-
-    res.json({ message: "🎉 Bienvenue sur le tableau de bord admin." });
-});
-
-// ✅ Liste des membres (uniquement pour admin)
-router.get('/admin/members', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: "⛔ Accès refusé." });
-
-    try {
-        const members = await Member.find().select('-password');
-        res.json(members);
-    } catch (err) {
-        console.error("Erreur lors de la récupération des membres :", err);
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
-// ✅ Suppression d’un membre (admin seulement)
-router.delete('/admin/member/:id', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') return res.status(403).json({ error: "⛔ Accès refusé." });
-
-    try {
-        await Member.findByIdAndDelete(req.params.id);
-        res.json({ message: "✅ Membre supprimé avec succès." });
-    } catch (err) {
-        console.error("Erreur suppression membre :", err);
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
 // ✅ Inscription d'un nouvel administrateur
 router.post('/register/admin', async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
@@ -194,15 +155,12 @@ router.post('/register/admin', async (req, res) => {
         const existingAdmin = await Admin.findOne({ email });
         if (existingAdmin) return res.status(400).json({ error: "Cet email est déjà utilisé !" });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const newAdmin = new Admin({
             firstName,
             lastName,
             email,
-            password: hashedPassword,
+            password,  // ✅ Stocké en clair
             role: "admin"
-            
         });
 
         await newAdmin.save();
@@ -212,24 +170,10 @@ router.post('/register/admin', async (req, res) => {
     }
 });
 
-// ✅ Test de la route /api/auth
-router.get('/', (req, res) => {
-    res.json({ message: "🔒 API Auth fonctionne ! Routes disponibles : /register/member, /login/member, /register/admin, /login/admin" });
-});
-
-router.get('/members', async (req, res) => {
-    try {
-        const members = await Member.find().select('-password'); // Exclure le mot de passe
-        res.json(members);
-    } catch (err) {
-        console.error("Erreur récupération des membres :", err);
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
+// ✅ Liste des administrateurs (test)
 router.get('/admins', async (req, res) => {
     try {
-        const admins = await Admin.find().select('-password'); // Exclure le mot de passe hashé
+        const admins = await Admin.find().select('-password'); // Exclure le mot de passe
         res.json(admins);
     } catch (err) {
         res.status(500).json({ error: "Erreur serveur" });

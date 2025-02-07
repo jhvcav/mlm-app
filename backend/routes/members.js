@@ -20,21 +20,21 @@ const generateMemberId = async () => {
 // ✅ Ajouter un membre avec génération d'un ID unique et nouvelles données
 router.post('/', async (req, res) => {
     try {
-        let { firstName, name, email, phone, address, city, country, registrationDate, sponsorId, products } = req.body;
+        let { firstName, name, email, phone, address, city, country, registrationDate, sponsorId, products, password } = req.body;
 
-        if (!firstName || !name || !email) {
-            return res.status(400).json({ error: "❌ Prénom, Nom et Email sont obligatoires." });
+        if (!firstName || !name || !email || !password) {
+            return res.status(400).json({ error: "❌ Prénom, Nom, Email et Mot de passe sont obligatoires." });
         }
 
         // Vérification et formatage des données
         sponsorId = sponsorId && sponsorId.trim() !== "" ? sponsorId : null;
         products = Array.isArray(products) ? products.filter(id => id.trim() !== "") : [];
-        
+
         // Générer un ID unique pour le membre
         const memberId = await generateMemberId();
 
         const newMember = new Member({
-            memberId, // Ajout de l'ID membre
+            memberId,
             firstName,
             name,
             email,
@@ -42,9 +42,10 @@ router.post('/', async (req, res) => {
             address,
             city,
             country,
-            registrationDate: registrationDate || new Date().toISOString().split('T')[0], // Par défaut, date du jour
+            registrationDate: registrationDate || new Date().toISOString().split('T')[0],
             sponsorId,
-            products
+            products,
+            password // Stocké en clair ⚠️
         });
 
         await newMember.save();

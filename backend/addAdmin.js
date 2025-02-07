@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const Admin = require('./models/Admin'); // Assure-toi que ton modèle Admin est bien importé
 
 const mongoURI = "mongodb://127.0.0.1:27017/mlm"; // Mets l'URL de ta base de données
@@ -9,7 +8,7 @@ const createAdmin = async () => {
         await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
         const email = "admin@mlm.com";
-        const password = "admin123";
+        const password = "admin123"; // ✅ Stocké en clair
 
         // Vérifie si l'admin existe déjà
         const existingAdmin = await Admin.findOne({ email });
@@ -18,15 +17,12 @@ const createAdmin = async () => {
             return;
         }
 
-        // Hash du mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Création de l'admin
+        // ✅ Création de l'admin (sans hash)
         const newAdmin = new Admin({
             firstName: "Admin",
             lastName: "MLM",
             email: email,
-            password: hashedPassword,
+            password: password, // ✅ Stocké en clair
             role: "admin"
         });
 
