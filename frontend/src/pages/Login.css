@@ -1,0 +1,76 @@
+/* Centrer le contenu de la page */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* Boîte de connexion */
+.login-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+}
+
+/* Titre */
+.login-box h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+/* Champs de saisie */
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Bouton de connexion */
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.login-box button:hover {
+    background-color: #0056b3;
+}
+
+/* Message d'erreur */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Bouton de bypass admin */
+.bypass-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s ease;
+}
+
+.bypass-btn:hover {
+    background-color: #d43f00;
+}

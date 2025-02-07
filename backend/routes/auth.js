@@ -178,4 +178,32 @@ router.post('/register/member', async (req, res) => {
     }
 });
 
+/* ================================
+📌 RÉINITIALISATION DU MOT DE PASSE
+================================ */
+router.put('/reset-password/:id', verifyToken, async (req, res) => {
+    if (req.user.role !== "admin") {
+        return res.status(403).json({ error: "⛔ Accès refusé." });
+    }
+
+    const { newPassword } = req.body;
+    if (!newPassword) {
+        return res.status(400).json({ error: "❌ Nouveau mot de passe requis." });
+    }
+
+    try {
+        const user = await Member.findById(req.params.id) || await Admin.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ error: "❌ Utilisateur introuvable." });
+        }
+
+        user.password = newPassword; // Stocké en clair pour le moment
+        await user.save();
+
+        res.json({ message: "✅ Mot de passe mis à jour avec succès." });
+    } catch (err) {
+        res.status(500).json({ error: "❌ Erreur serveur." });
+    }
+});
+
 module.exports = router;

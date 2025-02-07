@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Login.css'; // Fichier CSS pour améliorer le design
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -55,34 +56,36 @@ const Login = () => {
 
     return (
         <div className="login-container">
-            <h2>🔑 Connexion</h2>
-            {error && <p className="error">{error}</p>}
-            <form onSubmit={(e) => e.preventDefault()}>
-                <input 
-                    type="email" 
-                    placeholder="Email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    required 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Mot de passe" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    required 
-                />
-                <button type="button" onClick={handleLogin}>🚀 Se connecter</button>
-            </form>
+            <div className="login-box">
+                <h2>🔑 Connexion</h2>
+                {error && <p className="error">{error}</p>}
+                <form onSubmit={(e) => e.preventDefault()}>
+                    <input 
+                        type="email" 
+                        placeholder="Email" 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        required 
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="Mot de passe" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required 
+                    />
+                    <button type="button" onClick={handleLogin}>🚀 Se connecter</button>
+                </form>
 
-            {/* 🚀 Bouton d'accès direct à l'espace admin */}
-            <button 
-                type="button" 
-                onClick={handleBypassAdmin} 
-                style={{ marginTop: "10px", backgroundColor: "#ff5733", color: "#fff", padding: "10px", borderRadius: "5px", border: "none", cursor: "pointer" }}
-            >
-                ⚠️ Accès direct Admin (Test)
-            </button>
+                {/* 🚀 Bouton d'accès direct à l'espace admin */}
+                <button 
+                    type="button" 
+                    onClick={handleBypassAdmin} 
+                    className="bypass-btn"
+                >
+                    ⚠️ Accès direct Admin (Test)
+                </button>
+            </div>
         </div>
     );
 };
