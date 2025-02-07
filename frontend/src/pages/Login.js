@@ -7,55 +7,37 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async (role) => {
+    const handleLogin = async () => {
         setError('');
-        const endpoint = role === "admin" ? "/api/auth/login/admin" : "/api/auth/login/member";
-
-        if (!email || !password) {
-            setError("❌ Veuillez remplir tous les champs.");
-            return;
-        }
-
-        if (!endpoint) {
-            setError("❌ Problème avec l'URL de connexion.");
-            return;
-        }
-
         try {
-            console.log("🔍 Vérification des valeurs envoyées :", { endpoint, email, password });
-
-            const response = await fetch(`https://mlm-app.onrender.com${endpoint}`, {
+            const response = await fetch("https://mlm-app.onrender.com/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
             });
 
-            const text = await response.text();
-            console.log("📩 Réponse brute du serveur :", text);
-
-            let data;
-            try {
-                data = JSON.parse(text);
-            } catch (err) {
-                setError("❌ Réponse invalide du serveur.");
-                console.error("❌ Erreur JSON :", err);
-                return;
-            }
+            const data = await response.json();
 
             if (!response.ok) {
-                console.error("❌ Erreur de connexion :", data);
                 alert(`❌ Erreur: ${data.error || "Échec de connexion"}`);
                 return;
             }
 
+            // Stocker le token et l'utilisateur connecté
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
 
             alert("✅ Connexion réussie !");
-            navigate(role === "admin" ? "/admin-dashboard" : "/dashboard");
+
+            // Rediriger en fonction du rôle
+            if (data.user.role === "admin") {
+                navigate("/admin-dashboard"); // Dashboard admin
+            } else {
+                navigate("/dashboard"); // Dashboard membre
+            }
+
         } catch (err) {
-            setError("❌ Erreur réseau : " + err.message);
-            console.error("❌ Erreur réseau :", err);
+            setError("❌ Erreur réseau, veuillez réessayer.");
         }
     };
 
@@ -78,13 +60,7 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)} 
                     required 
                 />
-                <div className='login-button'>
-                    <button type="button" onClick={() => handleLogin("member")}>👤 Connexion Membre</button>
-                    <button type="button" onClick={() => handleLogin("admin")}>🛠️ Connexion Admin</button>
-                    <button type="button" onClick={() => navigate("/register-admin")}>
-                    🛠️ Inscription Admin
-                    </button>
-                </div>
+                <button type="button" onClick={handleLogin}>🚀 Se connecter</button>
             </form>
         </div>
     );
