@@ -1,138 +1,138 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AdminDashboard = () => {
-    const [stats, setStats] = useState(null);
     const [members, setMembers] = useState([]);
-    const [admins, setAdmins] = useState([]);
-    const [wallets, setWallets] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [selectedMember, setSelectedMember] = useState(null);
-    const [newPassword, setNewPassword] = useState('');
 
+    // ✅ Récupérer la liste des membres
     useEffect(() => {
-        const fetchDashboardData = async () => {
+        const fetchMembers = async () => {
             try {
-                const token = localStorage.getItem("token");
-                const response = await fetch("https://mlm-app.onrender.com/api/auth/admin/dashboard", {
-                    method: "GET",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                });
-
+                const response = await fetch('https://mlm-app.onrender.com/api/auth/members');
                 const data = await response.json();
 
                 if (!response.ok) {
-                    setError(data.error || "Erreur lors de la récupération des données.");
-                    return;
+                    throw new Error(data.error || "Impossible de récupérer les membres.");
                 }
 
-                setStats(data.stats);
-                setMembers(data.members);
-                setAdmins(data.admins);
-                setWallets(data.wallets);
+                setMembers(data);
             } catch (err) {
-                setError("❌ Erreur réseau, veuillez réessayer.");
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchDashboardData();
+        fetchMembers();
     }, []);
 
-    // ✅ Fonction pour réinitialiser un mot de passe
-    const resetPassword = async (id) => {
-        if (!newPassword) {
-            alert("❌ Veuillez entrer un nouveau mot de passe.");
+    // ✅ Ajouter un membre (similaire à la requête API)
+    const handleAddMember = async () => {
+        const firstName = prompt("Entrez le prénom du membre :");
+        const lastName = prompt("Entrez le nom du membre :");
+        const email = prompt("Entrez l'email du membre :");
+        const phone = prompt("Entrez le téléphone du membre :");
+        const password = prompt("Entrez un mot de passe :");
+
+        if (!firstName || !lastName || !email || !phone || !password) {
+            alert("❌ Tous les champs sont obligatoires !");
             return;
         }
 
         try {
-            const token = localStorage.getItem("token");
-            const response = await fetch(`https://mlm-app.onrender.com/api/auth/reset-password/${id}`, {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ newPassword }),
+            const response = await fetch("https://mlm-app.onrender.com/api/auth/register/member", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ firstName, lastName, email, phone, password }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                alert(`❌ Erreur: ${data.error || "Échec de la réinitialisation"}`);
-                return;
+                throw new Error(data.error || "Échec de l'ajout du membre.");
             }
 
-            alert("✅ Mot de passe réinitialisé avec succès !");
-            setNewPassword('');
-            setSelectedMember(null);
+            alert("✅ Membre ajouté avec succès !");
+            setMembers([...members, data]); // Ajout dynamique du nouveau membre
         } catch (err) {
-            alert("❌ Erreur réseau.");
+            alert(`❌ Erreur: ${err.message}`);
+        }
+    };
+
+    // ✅ Supprimer un membre
+    const handleDeleteMember = async (memberId) => {
+        if (!window.confirm("Voulez-vous vraiment supprimer ce membre ?")) return;
+
+        try {
+            const response = await fetch(`https://mlm-app.onrender.com/api/auth/member/${memberId}`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Échec de la suppression.");
+            }
+
+            alert("✅ Membre supprimé !");
+            setMembers(members.filter(member => member._id !== memberId));
+        } catch (err) {
+            alert(`❌ Erreur: ${err.message}`);
+        }
+    };
+
+    // ✅ Voir l'arbre réseau d'un membre
+    const handleViewNetwork = async (memberId) => {
+        try {
+            const response = await fetch(`https://mlm-app.onrender.com/api/auth/network/${memberId}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Impossible d'afficher l'arbre réseau.");
+            }
+
+            alert(`📌 Réseau de ${data.firstName} ${data.lastName} :\n${JSON.stringify(data, null, 2)}`);
+        } catch (err) {
+            alert(`❌ Erreur: ${err.message}`);
         }
     };
 
     return (
         <div className="admin-dashboard">
-            <h2>🛠️ Tableau de Bord Administrateur</h2>
-            {error && <p className="error">{error}</p>}
+            <h2>🛠️ Tableau de bord Administrateur</h2>
+            <p>Bienvenue, Admin ! Gérez les membres, produits et transactions ici.</p>
 
-            {stats ? (
-                <div>
-                    <h3>📊 Statistiques</h3>
-                    <ul>
-                        <li>👥 Membres : {stats.totalMembers}</li>
-                        <li>👨‍💼 Administrateurs : {stats.totalAdmins}</li>
-                        <li>💰 Wallets créés : {stats.totalWallets}</li>
-                        <li>📦 Produits : {stats.totalProducts}</li>
-                    </ul>
+            <button onClick={handleAddMember} style={{ marginBottom: "10px", backgroundColor: "#28a745", color: "white", padding: "10px", borderRadius: "5px" }}>
+                ➕ Ajouter un Membre
+            </button>
 
-                    <h3>👥 Liste des Membres</h3>
-                    <ul>
+            {loading ? <p>⏳ Chargement des membres...</p> : error ? <p className="error">{error}</p> : (
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Prénom</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {members.map(member => (
-                            <li key={member._id}>
-                                {member.firstName} {member.lastName} - {member.email} 
-                                <button onClick={() => setSelectedMember(member)}>🔑 Réinitialiser mot de passe</button>
-                            </li>
+                            <tr key={member._id}>
+                                <td>{member.firstName}</td>
+                                <td>{member.lastName}</td>
+                                <td>{member.email}</td>
+                                <td>{member.phone}</td>
+                                <td>
+                                    <button onClick={() => handleDeleteMember(member._id)} style={{ backgroundColor: "red", color: "white", marginRight: "5px" }}>🗑️ Supprimer</button>
+                                    <button onClick={() => handleViewNetwork(member._id)} style={{ backgroundColor: "blue", color: "white" }}>🌐 Voir Réseau</button>
+                                </td>
+                            </tr>
                         ))}
-                    </ul>
-
-                    <h3>🔒 Administrateurs</h3>
-                    <ul>
-                        {admins.map(admin => (
-                            <li key={admin._id}>
-                                {admin.firstName} {admin.lastName} - {admin.email}
-                            </li>
-                        ))}
-                    </ul>
-
-                    <h3>💰 Wallets</h3>
-                    <ul>
-                        {wallets.map(wallet => (
-                            <li key={wallet._id}>
-                                {wallet.walletName} - {wallet.publicAddress} (Membre: {wallet.ownerId})
-                            </li>
-                        ))}
-                    </ul>
-
-                    {selectedMember && (
-                        <div className="reset-password-form">
-                            <h3>🔑 Réinitialiser le mot de passe</h3>
-                            <p>Utilisateur : {selectedMember.firstName} {selectedMember.lastName}</p>
-                            <input 
-                                type="password" 
-                                placeholder="Nouveau mot de passe" 
-                                value={newPassword} 
-                                onChange={(e) => setNewPassword(e.target.value)} 
-                            />
-                            <button onClick={() => resetPassword(selectedMember._id)}>✅ Confirmer</button>
-                            <button onClick={() => setSelectedMember(null)}>❌ Annuler</button>
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <p>⏳ Chargement des données...</p>
+                    </tbody>
+                </table>
             )}
         </div>
     );

@@ -206,4 +206,58 @@ router.put('/reset-password/:id', verifyToken, async (req, res) => {
     }
 });
 
+/* ================================
+📌 Récupérer la liste des membres (sans les mots de passe)
+================================ */
+router.get('/members', async (req, res) => {
+    try {
+        const members = await Member.find().select('-password');
+        res.json(members);
+    } catch (err) {
+        console.error("🚨 Erreur lors de la récupération des membres :", err);
+        res.status(500).json({ error: "❌ Erreur serveur" });
+    }
+});
+
+/* ================================
+📌 Supprimer un membre
+================================ */
+router.delete('/member/:id', async (req, res) => {
+    try {
+        const member = await Member.findByIdAndDelete(req.params.id);
+        if (!member) return res.status(404).json({ error: "❌ Membre introuvable." });
+
+        res.json({ message: "✅ Membre supprimé avec succès." });
+    } catch (err) {
+        console.error("🚨 Erreur suppression membre :", err);
+        res.status(500).json({ error: "❌ Erreur serveur" });
+    }
+});
+
+/* ================================
+📌 Récupérer l'arbre réseau d'un membre
+================================ */
+router.get('/network/:memberId', async (req, res) => {
+    try {
+        const getNetworkTree = async (memberId) => {
+            const member = await Member.findById(memberId).select("firstName lastName").lean();
+            if (!member) return null;
+
+            const children = await Member.find({ sponsorId: memberId }).select("firstName lastName").lean();
+            member.children = await Promise.all(children.map(child => getNetworkTree(child._id)));
+            return member;
+        };
+
+        const networkTree = await getNetworkTree(req.params.memberId);
+        if (!networkTree) {
+            return res.status(404).json({ error: "❌ Membre introuvable." });
+        }
+
+        res.json(networkTree);
+    } catch (err) {
+        console.error("🚨 Erreur récupération réseau :", err);
+        res.status(500).json({ error: "❌ Erreur serveur" });
+    }
+});
+
 module.exports = router;
