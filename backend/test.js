@@ -1,39 +1,14 @@
-const mongoose = require('mongoose');
-const Admin = require('./models/Admin');
+const axios = require('axios');
 
-const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/mlm-app";
+const API_URL = "https://mlm-app.onrender.com/api/auth/test";
 
-const createAdmin = async () => {
+const testAPI = async () => {
     try {
-        await mongoose.connect(mongoURI);
-
-        const email = "admin@example.com";
-        const password = "admin123";
-
-        // Vérifier si l'admin existe déjà
-        const existingAdmin = await Admin.findOne({ email });
-        if (existingAdmin) {
-            console.log("✅ Un administrateur existe déjà avec cet email.");
-            return;
-        }
-
-        // Créer un admin sans hashage
-        const newAdmin = new Admin({
-            firstName: "Super",
-            lastName: "Admin",
-            email: email,
-            password: password,
-            role: "admin"
-        });
-
-        await newAdmin.save();
-        console.log("✅ Administrateur ajouté avec succès !");
-    } catch (err) {
-        console.error("❌ Erreur lors de l'ajout de l'administrateur :", err);
-    } finally {
-        mongoose.connection.close();
+        const response = await axios.get(API_URL);
+        console.log("✅ Réponse du serveur :", response.data);
+    } catch (error) {
+        console.error("❌ Erreur lors du test de l'API :", error.response ? error.response.data : error.message);
     }
 };
 
-// Exécute la fonction
-createAdmin();
+testAPI();

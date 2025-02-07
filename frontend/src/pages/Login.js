@@ -41,6 +41,18 @@ const Login = () => {
         }
     };
 
+    // 🚀 Bouton pour bypasser l'authentification et accéder à l'admin
+    const handleBypassAdmin = () => {
+        alert("⚠️ Mode Accès direct activé ! Ceci est un accès temporaire pour les tests.");
+        
+        // Stocke un faux token pour simuler la connexion
+        localStorage.setItem("token", "fake-admin-token");
+        localStorage.setItem("user", JSON.stringify({ id: "admin-bypass", email: "admin@example.com", role: "admin" }));
+
+        // Redirection vers le tableau de bord admin
+        navigate("/admin-dashboard");
+    };
+
     return (
         <div className="login-container">
             <h2>🔑 Connexion</h2>
@@ -62,6 +74,15 @@ const Login = () => {
                 />
                 <button type="button" onClick={handleLogin}>🚀 Se connecter</button>
             </form>
+
+            {/* 🚀 Bouton d'accès direct à l'espace admin */}
+            <button 
+                type="button" 
+                onClick={handleBypassAdmin} 
+                style={{ marginTop: "10px", backgroundColor: "#ff5733", color: "#fff", padding: "10px", borderRadius: "5px", border: "none", cursor: "pointer" }}
+            >
+                ⚠️ Accès direct Admin (Test)
+            </button>
         </div>
     );
 };

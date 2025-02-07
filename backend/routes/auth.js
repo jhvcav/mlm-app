@@ -6,8 +6,25 @@ const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
+// ✅ Fonction pour générer un token JWT
 const generateToken = (id, role) => {
     return jwt.sign({ id, role }, JWT_SECRET, { expiresIn: '7d' });
+};
+
+// ✅ Middleware de vérification du token
+const verifyToken = (req, res, next) => {
+    const token = req.headers["authorization"];
+    if (!token) {
+        return res.status(403).json({ error: "⛔ Accès refusé. Token manquant." });
+    }
+
+    try {
+        const decoded = jwt.verify(token.split(" ")[1], JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(401).json({ error: "⛔ Token invalide." });
+    }
 };
 
 /* ================================
@@ -38,6 +55,31 @@ router.post('/login/admin', async (req, res) => {
         console.error("🚨 Erreur serveur lors de la connexion admin :", err);
         res.status(500).json({ error: "❌ Erreur serveur" });
     }
+});
+
+/* ================================
+📌 ROUTE ADMIN : Accéder au tableau de bord
+================================ */
+router.get('/admin/dashboard', verifyToken, async (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ error: "⛔ Accès refusé." });
+    }
+
+    res.json({ message: "🎉 Bienvenue sur le tableau de bord admin." });
+});
+
+/* ================================
+📌 📌 ACCÈS DIRECT AU DASHBOARD ADMIN (SANS MOT DE PASSE)
+================================ */
+router.get('/admin/bypass', (req, res) => {
+    res.json({
+        token: "fake-admin-token",
+        user: {
+            id: "admin-bypass",
+            email: "admin@example.com",
+            role: "admin"
+        }
+    });
 });
 
 /* ================================
