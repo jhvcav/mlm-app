@@ -6,6 +6,7 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // ✅ Récupérer la liste des membres et des administrateurs
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -33,67 +34,124 @@ const AdminDashboard = () => {
         fetchUsers();
     }, []);
 
-    // ✅ Modifier un administrateur
-    const handleEditAdmin = async (adminId) => {
-        const firstName = prompt("Modifier le prénom de l'admin :");
-        const lastName = prompt("Modifier le nom de l'admin :");
-        const email = prompt("Modifier l'email de l'admin :");
+    // ✅ Ajouter un membre
+    const handleAddMember = async () => {
+        const firstName = prompt("Entrez le prénom du membre :");
+        const lastName = prompt("Entrez le nom du membre :");
+        const email = prompt("Entrez l'email du membre :");
+        const phone = prompt("Entrez le téléphone du membre :");
+        const password = prompt("Entrez un mot de passe :");
 
-        if (!firstName || !lastName || !email) {
+        if (!firstName || !lastName || !email || !phone || !password) {
             alert("❌ Tous les champs sont obligatoires !");
             return;
         }
 
         try {
-            const response = await fetch(`https://mlm-app.onrender.com/api/auth/admin/${adminId}`, {
-                method: "PUT",
+            const response = await fetch("https://mlm-app.onrender.com/api/auth/register/member", {
+                method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ firstName, lastName, email }),
+                body: JSON.stringify({ firstName, lastName, email, phone, password }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Échec de la modification de l'admin.");
+                throw new Error(data.error || "Échec de l'ajout du membre.");
             }
 
-            alert("✅ Informations de l'admin mises à jour !");
-            setAdmins(admins.map(admin => admin._id === adminId ? { ...admin, firstName, lastName, email } : admin));
+            alert("✅ Membre ajouté avec succès !");
+            setMembers([...members, data]); // Mise à jour dynamique
         } catch (err) {
             alert(`❌ Erreur: ${err.message}`);
         }
     };
 
-    // ✅ Voir les détails d'un administrateur
-    const handleViewAdminDetails = async (adminId) => {
+    // ✅ Ajouter un administrateur
+    const handleAddAdmin = async () => {
+        const firstName = prompt("Entrez le prénom de l'admin :");
+        const lastName = prompt("Entrez le nom de l'admin :");
+        const email = prompt("Entrez l'email de l'admin :");
+        const password = prompt("Entrez un mot de passe :");
+
+        if (!firstName || !lastName || !email || !password) {
+            alert("❌ Tous les champs sont obligatoires !");
+            return;
+        }
+
         try {
-            const response = await fetch(`https://mlm-app.onrender.com/api/auth/admin/${adminId}`);
+            const response = await fetch("https://mlm-app.onrender.com/api/auth/register/admin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ firstName, lastName, email, password }),
+            });
+
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Impossible d'afficher les détails de l'admin.");
+                throw new Error(data.error || "Échec de l'ajout de l'admin.");
             }
 
-            alert(`📌 Détails de l'admin:\n${JSON.stringify(data, null, 2)}`);
+            alert("✅ Administrateur ajouté avec succès !");
+            setAdmins([...admins, data]); // Mise à jour dynamique
         } catch (err) {
             alert(`❌ Erreur: ${err.message}`);
         }
     };
 
-    // ✅ Supprimer un administrateur
-    const handleDeleteAdmin = async (adminId) => {
-        if (!window.confirm("Voulez-vous vraiment supprimer cet administrateur ?")) return;
+    // ✅ Supprimer un utilisateur (Admin ou Membre)
+    const handleDeleteUser = async (userId, isAdmin) => {
+        if (!window.confirm(`Voulez-vous vraiment supprimer cet utilisateur ?`)) return;
 
         try {
-            const response = await fetch(`https://mlm-app.onrender.com/api/auth/admin/${adminId}`, { method: "DELETE" });
+            const url = isAdmin 
+                ? `https://mlm-app.onrender.com/api/auth/admin/${userId}` 
+                : `https://mlm-app.onrender.com/api/auth/member/${userId}`;
+
+            const response = await fetch(url, { method: "DELETE" });
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Échec de la suppression de l'admin.");
+                throw new Error(data.error || "Échec de la suppression.");
             }
 
-            alert("✅ Administrateur supprimé !");
-            setAdmins(admins.filter(admin => admin._id !== adminId));
+            alert("✅ Utilisateur supprimé !");
+            isAdmin
+                ? setAdmins(admins.filter(admin => admin._id !== userId))
+                : setMembers(members.filter(member => member._id !== userId));
+
+        } catch (err) {
+            alert(`❌ Erreur: ${err.message}`);
+        }
+    };
+
+    // ✅ Réinitialiser le mot de passe
+    const handleResetPassword = async (userId, isAdmin) => {
+        const newPassword = prompt("Entrez un nouveau mot de passe :");
+
+        if (!newPassword) {
+            alert("❌ Vous devez entrer un mot de passe !");
+            return;
+        }
+
+        try {
+            const url = isAdmin 
+                ? `https://mlm-app.onrender.com/api/auth/reset-password/admin/${userId}` 
+                : `https://mlm-app.onrender.com/api/auth/reset-password/member/${userId}`;
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password: newPassword }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Échec de la réinitialisation.");
+            }
+
+            alert("✅ Mot de passe réinitialisé avec succès !");
         } catch (err) {
             alert(`❌ Erreur: ${err.message}`);
         }
@@ -103,6 +161,9 @@ const AdminDashboard = () => {
         <div className="admin-dashboard">
             <h2>🛠️ Tableau de bord Administrateur</h2>
             <p>Bienvenue, Admin ! Gérez les membres, administrateurs et transactions ici.</p>
+
+            <button onClick={handleAddMember} className="btn-action">➕ Ajouter un Membre</button>
+            <button onClick={handleAddAdmin} className="btn-action">➕ Ajouter un Admin</button>
 
             {loading ? <p>⏳ Chargement des utilisateurs...</p> : error ? <p className="error">{error}</p> : (
                 <>
@@ -125,7 +186,8 @@ const AdminDashboard = () => {
                                     <td>{member.email}</td>
                                     <td>{member.phone}</td>
                                     <td>
-                                        <button onClick={() => handleDeleteAdmin(member._id)} style={{ backgroundColor: "red", color: "white", marginRight: "5px" }}>🗑️ Supprimer</button>
+                                        <button onClick={() => handleResetPassword(member._id, false)}>🔑 Réinitialiser</button>
+                                        <button onClick={() => handleDeleteUser(member._id, false)}>🗑️ Supprimer</button>
                                     </td>
                                 </tr>
                             ))}
@@ -149,9 +211,8 @@ const AdminDashboard = () => {
                                     <td>{admin.lastName}</td>
                                     <td>{admin.email}</td>
                                     <td>
-                                        <button onClick={() => handleEditAdmin(admin._id)} style={{ backgroundColor: "orange", color: "white", marginRight: "5px" }}>✏️ Modifier</button>
-                                        <button onClick={() => handleViewAdminDetails(admin._id)} style={{ backgroundColor: "blue", color: "white", marginRight: "5px" }}>🔍 Détails</button>
-                                        <button onClick={() => handleDeleteAdmin(admin._id)} style={{ backgroundColor: "red", color: "white" }}>🗑️ Supprimer</button>
+                                        <button onClick={() => handleResetPassword(admin._id, true)}>🔑 Réinitialiser</button>
+                                        <button onClick={() => handleDeleteUser(admin._id, true)}>🗑️ Supprimer</button>
                                     </td>
                                 </tr>
                             ))}
