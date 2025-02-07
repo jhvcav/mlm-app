@@ -1,9 +1,0 @@
-{"error":"Erreur serveur"}--_curl_--
->            "firstName": "jean"
---_curl_--
->            "lastName": "Cavalie"
---_curl_--
->            "email": "jean@gmail.com"
---_curl_--
->            "password": "admin123"
->          
