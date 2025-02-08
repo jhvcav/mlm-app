@@ -1,0 +1,60 @@
+/* 📌 Centrer le titre */
+.admin-dashboard h2 {
+    text-align: center;
+    font-size: 28px; /* 🔥 Augmente la taille du titre */
+    margin-bottom: 20px;
+}
+
+/* 📌 Centrer et agrandir le bouton */
+.add-admin-button {
+    display: block; /* 🔥 Permet de centrer avec margin auto */
+    margin: 0 auto 20px auto; /* 🔥 Centre horizontalement et ajoute un espace en bas */
+    padding: 15px 20px; /* 🔥 Augmente la taille */
+    font-size: 18px; /* 🔥 Augmente la police */
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.add-admin-button:hover {
+    background-color: #218838;
+}
+
+/* 📌 Styles pour les boutons d'actions dans la liste des administrateurs */
+.admin-dashboard table td button {
+    padding: 12px 15px;  /* Ajuste l'espacement */
+    font-size: 16px;  /* Augmente la taille du texte */
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Bouton Modifier */
+.admin-dashboard table td .edit-btn {
+    background-color: #ffc107;
+    color: #333;
+    margin-right: 5px;
+}
+
+/* Bouton Voir Détails */
+.admin-dashboard table td .view-btn {
+    background-color: #007bff;
+    color: white;
+    margin-right: 5px;
+}
+
+/* Bouton Supprimer */
+.admin-dashboard table td .delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Animation au survol */
+.admin-dashboard table td button:hover {
+    opacity: 0.8;
+}

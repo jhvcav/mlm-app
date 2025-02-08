@@ -55,38 +55,40 @@ const Login = () => {
     };
 
     return (
-        <div className="login-wrapper">
-            <div className="login-container">
-                <h2>🔑 Connexion</h2>
-                {error && <p className="error">{error}</p>}
-                <form onSubmit={(e) => e.preventDefault()} className="login-form">
-                    <input 
-                        type="email" 
-                        placeholder="✉️ Email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
-                    />
-                    <input 
-                        type="password" 
-                        placeholder="🔒 Mot de passe" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
-                    />
-                    <button type="button" className="login-button" onClick={handleLogin}>🚀 Se connecter</button>
-                </form>
-
-                {/* 🚀 Bouton d'accès direct Admin */}
-                <button 
-                    type="button" 
-                    className="admin-access-button"
-                    onClick={handleBypassAdmin} 
-                >
-                    ⚠️ Accès direct Admin (Test)
-                </button>
+        <>
+            {/* 🚀 Barre d'entête en haut */}
+            <div className="header">Application de la communauté RMR-M</div>
+    
+            {/* 🌟 Conteneur principal */}
+            <div className="login-wrapper">
+                <div className="login-container">
+                    <h2>🔑 Connexion</h2>
+                    {error && <p className="error">{error}</p>}
+                    <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+                        <input 
+                            type="email" 
+                            placeholder="Email" 
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)} 
+                            required 
+                        />
+                        <input 
+                            type="password" 
+                            placeholder="Mot de passe" 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            required 
+                        />
+                        <button className="login-button" type="button" onClick={handleLogin}>🚀 Se connecter</button>
+                    </form>
+    
+                    {/* 🚀 Bouton d'accès direct à l'espace admin */}
+                    <button className="admin-access-button" type="button" onClick={handleBypassAdmin}>
+                        ⚠️ Accès direct Admin (Test)
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -1,94 +1,132 @@
-/* 🌟 Centrage parfait du contenu */
-.login-container {
+/* 📌 Styles globaux */
+body {
+    background-color: #f4f4f4;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;  /* 🔥 Met tout en haut au lieu de centrer */
     align-items: center;
     height: 100vh;
-    background-color: #f4f4f4;
+    margin: 0;
+    flex-direction: column;
+    padding-top: 60px;  /* 🔥 Ajoute un espace pour la navbar */
 }
 
-/* 🏠 Boîte de connexion */
-.login-box {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+/* 📌 Barre d'entête de la page d'accueil */
+.header {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
     text-align: center;
-    width: 350px;
+    padding: 15px;
+    font-size: 30px; /* Permet d'augnmenter la taille police de la page d'accueil */
+    font-weight: bold;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+/* 📌 Conteneur principal */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Positionne plus haut */
+    width: 100%;
+    height: 100vh;
+    padding-top: 80px;
+}
+
+/* 📌 Carte contenant le formulaire */
+.login-container {
+    width: 100%;
+    max-width: 350px;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-top: 50px;
+    align-items: center; /* Centre tout à l’intérieur */
 }
 
 /* 📌 Titre */
-.login-box h2 {
-    margin-bottom: 20px;
-    font-size: 22px;
+.login-container h2 {
     color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-/* 🔤 Champs de saisie */
-.login-box input {
+/* 📌 Formulaire */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+}
+
+/* 📌 Champs de saisie */
+.login-form input {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
     outline: none;
-    transition: 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    text-align: center;
 }
 
-/* Effet au focus */
-.login-box input:focus {
+.login-form input:focus {
     border-color: #007bff;
-    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* ✅ Bouton de connexion */
-.login-box button {
+/* 📌 Bouton Se connecter */
+.login-button {
     width: 100%;
     padding: 12px;
-    background-color: #007bff;
+    font-size: 16px;
     color: white;
+    background-color: #007bff;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
     cursor: pointer;
-    margin-top: 10px;
-    transition: 0.3s ease;
+    transition: all 0.3s ease-in-out;
 }
 
-.login-box button:hover {
+.login-button:hover {
     background-color: #0056b3;
 }
 
-/* ❌ Message d'erreur */
+/* 📌 Bouton d'accès direct Admin */
+.admin-access-button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    font-size: 14px;
+    color: white;
+    background-color: #ff5733;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.admin-access-button:hover {
+    background-color: #c70039;
+}
+
+/* 📌 Message d'erreur */
 .error {
     color: red;
     font-size: 14px;
     margin-bottom: 10px;
 }
 
-/* ⚠️ Bouton de bypass admin */
-.bypass-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #ff5733;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: 0.3s ease-in-out;
-}
-
-/* 🎨 Effet au survol du bouton bypass */
-.bypass-btn:hover {
-    background-color: #d43f00;
-}
-
-/* 🔄 Espacement entre les boutons */
-.button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+/* 📌 Responsive Design */
+@media screen and (max-width: 400px) {
+    .login-container {
+        width: 90%;
+    }
 }
