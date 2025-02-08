@@ -1,186 +1,172 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './MembersForm.css';
+import './AdminDashboard.css';
+import MembersForm from './MembersForm';  // ✅ Import du formulaire d'inscription des membres
+import MembersTable from './MembersTable';  // ✅ Import du tableau des membres
 
-const MembersForm = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        memberId: '',
+const AdminDashboard = () => {
+    const [admins, setAdmins] = useState([]);
+    const [members, setMembers] = useState([]);
+    const [showAdminForm, setShowAdminForm] = useState(false);
+    const [showMemberForm, setShowMemberForm] = useState(false);  // ✅ Gestion de l'affichage du formulaire membre
+    const [selectedAdmin, setSelectedAdmin] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [newPassword, setNewPassword] = useState(""); 
+
+    const [newAdmin, setNewAdmin] = useState({
         firstName: '',
-        name: '',
+        lastName: '',
         email: '',
-        phone: '',
-        address: '',
-        city: '',
-        country: '',
-        registrationDate: new Date().toISOString().split('T')[0], // Date d'inscription par défaut
-        sponsorId: '',
-        products: []
+        password: ''
     });
 
-    const [products, setProducts] = useState([]);
-    const [members, setMembers] = useState([]);
-
-    // Charger la liste des produits disponibles
     useEffect(() => {
-        fetch("https://mlm-app.onrender.com/api/products")
-            .then(res => res.json())
-            .then(data => setProducts(data))
-            .catch(err => console.error("❌ Erreur chargement des produits :", err));
+        fetchAdmins();
+        fetchMembers();
     }, []);
 
-    // Charger la liste des membres (pour la sélection du sponsor)
-    useEffect(() => {
-        fetch("https://mlm-app.onrender.com/api/members")
-            .then(res => res.json())
-            .then(data => setMembers(data))
-            .catch(err => console.error("❌ Erreur chargement des membres :", err));
-    }, []);
-
-    // Charger les données du membre sélectionné depuis localStorage
-    useEffect(() => {
-        const savedMember = localStorage.getItem("selectedMember");
-        if (savedMember) {
-            setFormData(JSON.parse(savedMember));
-            localStorage.removeItem("selectedMember"); // Efface après chargement
-        }
-    }, []);
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    // Gestion du sélecteur de produits
-    const handleProductChange = (e) => {
-        const selectedProducts = Array.from(e.target.selectedOptions, option => option.value);
-        setFormData({ ...formData, products: selectedProducts });
-    };
-
-    // Gestion du sélecteur de sponsor
-    const handleSponsorChange = (e) => {
-        const sponsorId = e.target.value;
-        setFormData({ ...formData, sponsorId: sponsorId !== "" ? sponsorId : null });
-    };
-
-    // Supprimer un membre
-    const handleDelete = async () => {
-        if (!formData._id) return;
-        if (window.confirm("⚠️ Voulez-vous vraiment supprimer ce membre et ses données ?")) {
-            try {
-                await fetch(`https://mlm-app.onrender.com/api/members/${formData._id}`, {
-                    method: 'DELETE'
-                });
-                alert("🗑️ Membre supprimé avec succès !");
-                navigate('/members-table');
-            } catch (error) {
-                alert("❌ Erreur lors de la suppression.");
-            }
+    const fetchAdmins = async () => {
+        try {
+            const response = await fetch('https://mlm-app.onrender.com/api/auth/admins');
+            const data = await response.json();
+            setAdmins(data);
+        } catch (err) {
+            console.error("Erreur lors du chargement des administrateurs :", err);
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-    
-        // Vérification des champs obligatoires
-        if (!formData.firstName || !formData.name || !formData.email) {
-            alert("❌ Prénom, Nom et Email sont obligatoires !");
+    const fetchMembers = async () => {
+        try {
+            const response = await fetch('https://mlm-app.onrender.com/api/auth/members');
+            const data = await response.json();
+            setMembers(data);
+        } catch (err) {
+            console.error("Erreur lors du chargement des membres :", err);
+        }
+    };
+
+    // ✅ Ajouter un administrateur (aucune modification)
+    const handleAddAdmin = async () => {
+        const { firstName, lastName, email, password } = newAdmin;
+
+        if (!firstName || !lastName || !email || !password) {
+            alert("❌ Tous les champs sont obligatoires !");
             return;
         }
-    
-        // Nettoyage des données avant l'envoi
-        const dataToSend = {
-            ...formData,
-            sponsorId: formData.sponsorId && formData.sponsorId.trim() !== "" ? formData.sponsorId : null,
-            products: Array.isArray(formData.products) ? formData.products.filter(p => p) : []
-        };
-    
-        console.log("🔎 Données envoyées :", dataToSend);
-    
-        const method = formData._id ? 'PUT' : 'POST';
-        const url = formData._id 
-            ? `https://mlm-app.onrender.com/api/members/${formData._id}`
-            : 'https://mlm-app.onrender.com/api/members';
-    
+
         try {
-            const response = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataToSend)
+            const response = await fetch("https://mlm-app.onrender.com/api/auth/register/admin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newAdmin),
             });
-    
+
+            const data = await response.json();
+
             if (!response.ok) {
-                const errorMessage = await response.text();
-                console.error("❌ Erreur API :", errorMessage);
-                alert("❌ Erreur lors de l'enregistrement : " + errorMessage);
-                return;
+                throw new Error(data.error || "Échec de l'ajout de l'administrateur.");
             }
-    
-            alert(formData._id ? '✅ Membre modifié avec succès !' : '✅ Membre ajouté avec succès !');
-            navigate('/members-table');
-        } catch (error) {
-            console.error("❌ Erreur Fetch :", error);
-            alert("❌ Erreur réseau ou problème de connexion à l'API.");
+
+            alert("✅ Administrateur ajouté avec succès !");
+            setShowAdminForm(false);
+            setNewAdmin({ firstName: '', lastName: '', email: '', password: '' });
+
+            fetchAdmins();
+        } catch (err) {
+            alert(`❌ Erreur: ${err.message}`);
+        }
+    };
+
+    // ✅ Ajouter un membre (aucune altération du code existant)
+    const handleAddMember = async (newMemberData) => {
+        try {
+            const response = await fetch("https://mlm-app.onrender.com/api/auth/register/member", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newMemberData),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Échec de l'ajout du membre.");
+            }
+
+            alert("✅ Membre ajouté avec succès !");
+            setShowMemberForm(false);
+            fetchMembers();
+        } catch (err) {
+            alert(`❌ Erreur: ${err.message}`);
         }
     };
 
     return (
-        <div className="form-container">
-            <h2>{formData._id ? '✏️ Modifier un membre' : '➕ Ajouter un membre'}</h2>
-            
-            {/* Affichage de l'ID du membre */}
-            {formData._id && (
-                <p><strong>ID Membre :</strong> {formData.memberId}</p>
+        <div className="admin-dashboard">
+            <h2>🛠️ Tableau de bord Administrateur</h2>
+
+            <div className="nav-buttons">
+                <button className="add-admin-button" onClick={() => setShowAdminForm(true)}>
+                     ➕ Inscrire un Administrateur
+                </button>
+                <button className="add-member-button" onClick={() => setShowMemberForm(true)}>
+                     ➕ Ajouter un Membre
+                </button>
+            </div>
+
+            {/* ✅ Formulaire d'ajout d'admin (aucune modification) */}
+            {showAdminForm && (
+                <div className="modal">
+                    <h3>Créer un Administrateur</h3>
+                    <input type="text" placeholder="Prénom" value={newAdmin.firstName} onChange={(e) => setNewAdmin({ ...newAdmin, firstName: e.target.value })} required />
+                    <input type="text" placeholder="Nom" value={newAdmin.lastName} onChange={(e) => setNewAdmin({ ...newAdmin, lastName: e.target.value })} required />
+                    <input type="email" placeholder="Email" value={newAdmin.email} onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })} required />
+                    <input type="password" placeholder="Mot de passe" value={newAdmin.password} onChange={(e) => setNewAdmin({ ...newAdmin, password: e.target.value })} required />
+                    <button onClick={handleAddAdmin}>✅ Créer Admin</button>
+                    <button onClick={() => setShowAdminForm(false)} className="cancel-btn">❌ Annuler</button>
+                </div>
             )}
 
-            <form onSubmit={handleSubmit} className="member-form">
-                <input type="text" name="firstName" placeholder="Prénom" value={formData.firstName} onChange={handleChange} required />
-                <input type="text" name="name" placeholder="Nom" value={formData.name} onChange={handleChange} required />
-                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-                <input type="text" name="phone" placeholder="Téléphone" value={formData.phone} onChange={handleChange} required />
-                <input type="text" name="address" placeholder="Adresse" value={formData.address} onChange={handleChange} />
+            {/* ✅ Formulaire d'ajout de membre avec le composant MembersForm */}
+            {showMemberForm && (
+                <div className="modal">
+                    <h3>Ajouter un Membre</h3>
+                    <MembersForm onAddMember={handleAddMember} />
+                    <button onClick={() => setShowMemberForm(false)} className="cancel-btn">❌ Annuler</button>
+                </div>
+            )}
 
-                {/* Nouveau champ Pays */}
-                <input type="text" name="country" placeholder="Pays" value={formData.country} onChange={handleChange} required />
-
-                {/* Nouveau champ Ville */}
-                <input type="text" name="city" placeholder="Ville" value={formData.city} onChange={handleChange} required />
-
-                {/* Nouveau champ Date d'inscription avec sélecteur de calendrier */}
-                <label>📅 Date d'inscription :</label>
-                <input type="date" name="registrationDate" value={formData.registrationDate} onChange={handleChange} required />
-
-                {/* Sélecteur du sponsor */}
-                <label>🧑‍🤝‍🧑 Parrain :</label>
-                <select name="sponsorId" value={formData.sponsorId || ""} onChange={handleSponsorChange}>
-                    <option value="">Aucun</option>
-                    {members.map(member => (
-                        <option key={member._id} value={member._id}>
-                            {member.firstName} {member.name} ({member.email})
-                        </option>
+            {/* ✅ Liste des Administrateurs */}
+            <h3>👨‍💼 Liste des Administrateurs</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {admins.map(admin => (
+                        <tr key={admin._id}>
+                            <td>{admin.firstName}</td>
+                            <td>{admin.lastName}</td>
+                            <td>{admin.email}</td>
+                            <td>
+                                <button className="edit-btn">📝 Modifier</button>
+                                <button className="view-btn">👁️ Voir Détails</button>
+                                <button className="delete-btn">🗑️ Supprimer</button>
+                            </td>
+                        </tr>
                     ))}
-                </select>
+                </tbody>
+            </table>
 
-                {/* Sélecteur des produits */}
-                <label>📦 Produits souscrits :</label>
-                <select multiple value={formData.products} onChange={handleProductChange}>
-                    {products.map(product => (
-                        <option key={product._id} value={product._id}>
-                            {product.name} - {product.price}€
-                        </option>
-                    ))}
-                </select>
-
-                <button type="submit">{formData._id ? '✅ Modifier' : '💾 Enregistrer'}</button>
-                
-                {/* Bouton de suppression du membre */}
-                {formData._id && (
-                    <button type="button" onClick={handleDelete} className="delete-btn">🗑️ Supprimer</button>
-                )}
-
-                <button type="button" onClick={() => navigate('/members-table')}>📋 Voir la liste des membres</button>
-            </form>
+            {/* ✅ Liste des Membres avec le composant MembersTable */}
+            <h3>👥 Liste des Membres</h3>
+            <MembersTable members={members} />
         </div>
     );
 };
 
-export default MembersForm;
+export default AdminDashboard;

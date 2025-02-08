@@ -111,4 +111,12 @@ router.post('/login/admin', async (req, res) => {
     }
 });
 
+
+/* ================================
+📌 Route de test
+================================ */
+router.get('/test', (req, res) => {
+    res.json({ message: "✅ L'API fonctionne correctement !" });
+});
+
 module.exports = router;
