@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
+
 console.log("MONGO_URI:", process.env.MONGO_URI); // Debugging: affiche l'URI
 if (!process.env.MONGO_URI) {
     console.error("❌ ERREUR: MONGO_URI n'est pas défini !");
@@ -44,8 +45,8 @@ app.get('/', (req, res) => {
     res.json({ message: "🚀 Serveur MLM en ligne !" });
 });
 
-// ✅ Démarrage du serveur avec PORT dynamique pour Render
+// ✅ Démarrage du serveur avec PORT dynamique pour Fly.io
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-    console.log(`🚀 Serveur lancé sur http://localhost:${PORT} 🚀`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Serveur lancé sur http://0.0.0.0:${PORT} 🚀`);
 });
