@@ -31,6 +31,13 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: "❌ Prénom, Nom, Email et Mot de passe sont obligatoires." });
         }
 
+        if (sponsorId) {
+            const sponsor = await Member.findById(sponsorId);
+            if (!sponsor) {
+                return res.status(400).json({ error: "❌ Sponsor introuvable." });
+            }
+        }
+
         // Vérification et formatage des données
         sponsorId = sponsorId && sponsorId.trim() !== "" ? sponsorId : null;
         products = Array.isArray(products) ? products.filter(id => id.trim() !== "") : [];
@@ -142,6 +149,17 @@ router.get('/network/:memberId', async (req, res) => {
         res.json(networkTree);
     } catch (err) {
         console.error("❌ Erreur récupération réseau :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Récupérer tous les admins
+router.get('/admins', async (req, res) => {
+    try {
+        const admins = await Member.find({ role: "admin" }); // ou { isAdmin: true }
+        res.json(admins);
+    } catch (err) {
+        console.error("❌ Erreur lors de la récupération des admins :", err);
         res.status(500).json({ error: "Erreur interne du serveur." });
     }
 });

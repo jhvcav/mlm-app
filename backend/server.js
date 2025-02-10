@@ -18,6 +18,7 @@ app.use(express.json());
 // ✅ Connexion à MongoDB
 const connectDB = async () => {
     try {
+        console.log("🔄 Tentative de connexion à MongoDB...");
         await mongoose.connect(process.env.MONGO_URI);
         console.log('🟢 MongoDB connecté avec succès !');
     } catch (error) {
@@ -45,8 +46,35 @@ app.get('/', (req, res) => {
     res.json({ message: "🚀 Serveur MLM en ligne !" });
 });
 
+// Servir le frontend React en production
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "frontend/build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
+
 // ✅ Démarrage du serveur avec PORT dynamique pour Fly.io
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Serveur lancé sur http://0.0.0.0:${PORT} 🚀`);
+});
+
+const membersRoutes = require('./routes/members');
+
+// Vérifie si l'importation retourne bien une fonction
+if (typeof membersRoutes === 'function') {
+    app.use('/api/members', membersRoutes);
+} else {
+    console.error("❌ Erreur : 'membersRoutes' n'est pas une fonction valide.");
+}
+
+const path = require('path');
+
+// Servir React pour toutes les routes inconnues
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });

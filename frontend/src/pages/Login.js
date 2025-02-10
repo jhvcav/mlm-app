@@ -11,7 +11,7 @@ const Login = () => {
     const handleLogin = async () => {
         setError('');
         try {
-            const response = await fetch("http://localhost:10000/api/auth/login/admin", {
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/login/admins", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -24,33 +24,20 @@ const Login = () => {
                 return;
             }
 
-            // Stocker le token et l'utilisateur connecté
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
 
             alert("✅ Connexion réussie !");
-
-            // Rediriger en fonction du rôle
-            if (data.user.role === "admin") {
-                navigate("/admin-dashboard"); // Dashboard admin
-            } else {
-                navigate("/dashboard"); // Dashboard membre
-            }
-
+            navigate("/admin-dashboard");
         } catch (err) {
             setError("❌ Erreur réseau, veuillez réessayer.");
         }
     };
 
-    // 🚀 Bouton pour bypasser l'authentification et accéder à l'admin
     const handleBypassAdmin = () => {
-        alert("⚠️ Mode Accès direct activé ! Ceci est un accès temporaire pour les tests.");
-        
-        // Stocke un faux token pour simuler la connexion
+        alert("⚠️ Mode Accès direct activé !");
         localStorage.setItem("token", "fake-admin-token");
         localStorage.setItem("user", JSON.stringify({ id: "admin-bypass", email: "admin@example.com", role: "admin" }));
-
-        // Redirection vers le tableau de bord admin
         navigate("/admin-dashboard");
     };
 

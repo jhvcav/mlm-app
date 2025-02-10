@@ -27,7 +27,7 @@ const AdminDashboard = () => {
 
     const fetchAdmins = async () => {
         try {
-            const response = await fetch('https://mlm-app.onrender.com/api/auth/admins');
+            const response = await fetch('https://mlm-app-jhc.fly.dev/api/auth/admins');
             const data = await response.json();
             setAdmins(data);
         } catch (err) {
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
 
     const fetchMembers = async () => {
         try {
-            const response = await fetch('https://mlm-app.onrender.com/api/auth/members');
+            const response = await fetch('https://mlm-app-jhc.fly.dev/api/auth/members');
             const data = await response.json();
             setMembers(data);
         } catch (err) {
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await fetch("https://mlm-app.onrender.com/api/auth/register/admin", {
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/register/admin", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newAdmin),
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
     // ✅ Ajouter un membre (aucune altération du code existant)
     const handleAddMember = async (newMemberData) => {
         try {
-            const response = await fetch("https://mlm-app.onrender.com/api/auth/register/member", {
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/register/member", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newMemberData),

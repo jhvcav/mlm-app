@@ -14,7 +14,7 @@ const MembersTable = () => {
 
     // Charger la liste des membres
     useEffect(() => {
-        fetch("https://mlm-app.onrender.com/api/members")
+        fetch("https://mlm-app-jhc.fly.dev/api/members")
             .then(res => res.json())
             .then(data => setMembers(data))
             .catch(err => console.error("❌ Erreur chargement des membres :", err));
@@ -30,7 +30,7 @@ const MembersTable = () => {
     const handleDelete = async (memberId) => {
         if (window.confirm("❌ Êtes-vous sûr de vouloir supprimer ce membre ?")) {
             try {
-                const response = await fetch(`https://mlm-app.onrender.com/api/members/${memberId}`, {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/${memberId}`, {
                     method: 'DELETE'
                 });
 

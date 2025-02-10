@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -38,7 +38,6 @@ const App = () => {
                     <Route path="/admin-dashboard" element={<PrivateRoute element={<AdminDashboard />} role="admin" />} />
                     <Route path="/members" element={<PrivateRoute element={<MembersPage />} role="admin" />} />
                     <Route path="/register-admin" element={<PrivateRoute element={<RegisterAdmin />} role="admin" />} />
-
                 </Routes>
 
                 {/* ✅ Afficher l'inscription admin SEULEMENT si c'est un Admin connecté */}
