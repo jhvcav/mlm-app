@@ -70,8 +70,6 @@ if (typeof membersRoutes === 'function') {
     console.error("❌ Erreur : 'membersRoutes' n'est pas une fonction valide.");
 }
 
-const path = require('path');
-
 // Servir React pour toutes les routes inconnues
 app.use(express.static(path.join(__dirname, 'build')));
 
