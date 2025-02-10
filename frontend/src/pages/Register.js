@@ -14,7 +14,7 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
     
-        const response = await fetch("http://mlm-app.onrender.com/api/auth/register/member", {
+        const response = await fetch("http://mlm-app-jhc.fly.dev/api/auth/register/member", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

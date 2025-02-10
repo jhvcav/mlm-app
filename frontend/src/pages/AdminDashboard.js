@@ -84,7 +84,7 @@ const AdminDashboard = () => {
             return;
         }
 
-        const url = data.role ? `https://mlm-app-jhc.fly.dev/api/auth/admins/${data.email}` : `https://mlm-app-jhc.fly.dev/api/auth/members/${data.email}`;
+        const url = data.role ? `https://mlm-app-jhc.fly.dev/api/auth/admins/${data.email}` : `https://mlm-app-jhc.fly.dev/api/members/${data.email}`;
 
         try {
             const response = await fetch(url, { method: "DELETE" });
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
 
     // ✅ Enregistrer les modifications
     const handleSaveChanges = async () => {
-        let url = editData.role ? `https://mlm-app-jhc.fly.dev/api/auth/admins/${editData.email}` : `https://mlm-app-jhc.fly.dev/api/auth/members/${editData.email}`;
+        let url = editData.role ? `https://mlm-app-jhc.fly.dev/api/auth/admins/${editData.email}` : `https://mlm-app-jhc.fly.dev/api/members/${editData.email}`;
 
         try {
             const response = await fetch(url, {

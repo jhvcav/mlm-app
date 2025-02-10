@@ -30,7 +30,7 @@ const NetworkTree = () => {
     const [expandedNodes, setExpandedNodes] = useState(new Set()); // Pour stocker les niveaux ouverts
 
     useEffect(() => {
-        fetch("https://mlm-app.onrender.com/api/members")
+        fetch("https://mlm-app-jhc.fly.dev/api/members")
             .then(res => res.json())
             .then(data => {
                 setMembers(data);

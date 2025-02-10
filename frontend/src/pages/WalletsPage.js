@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './WalletsPage.css';
 
-const API_URL = "https://mlm-app.onrender.com/api/wallets";
+const API_URL = "https://mlm-app-jhc.fly.dev/api/wallets";
 
 const WalletsPage = () => {
     const [wallets, setWallets] = useState([]);

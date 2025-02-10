@@ -18,7 +18,7 @@ const ProductsPage = () => {
     const itemsPerPage = 5; // Nombre de produits affichés par page
 
     useEffect(() => {
-        fetch("https://mlm-app.onrender.com/api/products")
+        fetch("https://mlm-app-jhc.fly.dev/api/products")
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error("❌ Erreur chargement des produits :", err));
@@ -32,8 +32,8 @@ const ProductsPage = () => {
         e.preventDefault();
         const method = formData._id ? 'PUT' : 'POST';
         const url = formData._id 
-            ? `https://mlm-app.onrender.com/api/products/${formData._id}`
-            : 'https://mlm-app.onrender.com/api/products';
+            ? `https://mlm-app-jhc.fly.dev/api/products/${formData._id}`
+            : 'https://mlm-app-jhc.fly.dev/api/products';
 
         const response = await fetch(url, {
             method,
@@ -57,7 +57,7 @@ const ProductsPage = () => {
 
     const handleDelete = async (productId) => {
         if (window.confirm("❌ Supprimer ce produit ?")) {
-            const response = await fetch(`https://mlm-app.onrender.com/api/products/${productId}`, {
+            const response = await fetch(`https://mlm-app-jhc.fly.dev/api/products/${productId}`, {
                 method: 'DELETE'
             });
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = "https://mlm-app.onrender.com/api/progress";
+const API_URL = "https://mlm-app-jhc.fly.dev/api/progress";
 
 const ProgressPage = () => {
     const [progressData, setProgressData] = useState([]);

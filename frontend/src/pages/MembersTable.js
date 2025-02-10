@@ -14,7 +14,7 @@ const MembersTable = () => {
             return;
         }
 
-        fetch("https://mlm-app.onrender.com/api/auth/member/profile", {
+        fetch("https://mlm-app-jhc.fly.dev/api/auth/member/profile", {
             method: "GET",
             headers: { "Authorization": `Bearer ${token}` }
         })
@@ -40,7 +40,7 @@ const MembersTable = () => {
         if (window.confirm("❌ Êtes-vous sûr de vouloir supprimer ce membre ?")) {
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch(`https://mlm-app.onrender.com/api/members/${memberId}`, {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/${memberId}`, {
                     method: 'DELETE',
                     headers: { "Authorization": `Bearer ${token}` }
                 });
