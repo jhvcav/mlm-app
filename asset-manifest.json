@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/mlm-app/static/css/main.7bbd4347.css",
-    "main.js": "/mlm-app/static/js/main.584cfea6.js",
+    "main.css": "/mlm-app/static/css/main.bf756efb.css",
+    "main.js": "/mlm-app/static/js/main.7b2b5e95.js",
     "index.html": "/mlm-app/index.html",
-    "main.7bbd4347.css.map": "/mlm-app/static/css/main.7bbd4347.css.map",
-    "main.584cfea6.js.map": "/mlm-app/static/js/main.584cfea6.js.map"
+    "main.bf756efb.css.map": "/mlm-app/static/css/main.bf756efb.css.map",
+    "main.7b2b5e95.js.map": "/mlm-app/static/js/main.7b2b5e95.js.map"
   },
   "entrypoints": [
-    "static/css/main.7bbd4347.css",
-    "static/js/main.584cfea6.js"
+    "static/css/main.bf756efb.css",
+    "static/js/main.7b2b5e95.js"
   ]
 }
