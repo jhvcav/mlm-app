@@ -7,11 +7,11 @@ const MemberSchema = new mongoose.Schema({
     phone: { type: String, required: true }, // ✅ Obligatoire
     password: { type: String, required: true }, // ✅ Stocké en clair
     address: { type: String },
-    sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Member' }, // Référence vers le sponsor
+    sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Member', default: null }, // Référence vers le sponsor
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }], // Produits souscrits
     wallets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' }], // Wallets associés
-    photo: { type: String },
-    createdAt: { type: Date, default: Date.now }
-});
+    role: { type: String, enum: ["member", "admin"]}, // ✅ Limite les rôles à "member" ou "admin"
+    photo: { type: String }, // Photo de profil
+}, { timestamps: true }); // Ajoute automatiquement createdAt et updatedAt
 
 module.exports = mongoose.model('Member', MemberSchema);

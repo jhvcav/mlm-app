@@ -1,0 +1,13 @@
+{"error":"❌ Prénom, Nom, Email et Mot de passe sont obligatoires."}--_curl_--
+>          "firstName": "Admin"
+--_curl_--
+>          "name": "Test"
+--_curl_--
+>          "email": "testadmin3@gmail.com"
+--_curl_--
+>          "role": "admin"
+--_curl_--
+>          "password": "securepassword"
+--_curl_--
+>          "phone": "0692004009"
+>      

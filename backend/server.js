@@ -61,7 +61,8 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Serveur lancé sur http://0.0.0.0:${PORT} 🚀`);
 });
 
-const membersRoutes = require('./routes/members');
+const memberRoutes = require('./routes/members');
+app.use('/api', memberRoutes);
 
 // Vérifie si l'importation retourne bien une fonction
 if (typeof membersRoutes === 'function') {

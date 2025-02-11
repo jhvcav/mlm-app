@@ -9,6 +9,94 @@ router.get('/test', (req, res) => {
     res.json({ message: "L'API fonctionne !"});
 });
 
+// ✅ Supprimer un membre par son email
+router.delete('/email/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        // Vérifier si le membre existe
+        const member = await Member.findOne({ email });
+
+        if (!member) {
+            return res.status(404).json({ error: "❌ Membre non trouvé." });
+        }
+
+        // Supprimer les wallets associés
+        await Wallet.deleteMany({ ownerId: member._id });
+
+        // Supprimer le membre
+        await Member.deleteOne({ email });
+
+        console.log("🗑️ Membre supprimé :", email);
+        res.json({ message: `✅ Membre avec l'email ${email} supprimé avec succès.` });
+    } catch (err) {
+        console.error("❌ Erreur lors de la suppression du membre :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Supprimer un administrateur par son ID
+router.delete('/admins/:id', async (req, res) => {
+    try {
+        const admin = await Member.findById(req.params.id);
+
+        if (!admin || admin.role !== "admin") {
+            return res.status(404).json({ error: "❌ Administrateur non trouvé." });
+        }
+
+        // Supprimer l'administrateur
+        await Member.findByIdAndDelete(req.params.id);
+
+        console.log("🗑️ Administrateur supprimé :", req.params.id);
+        res.json({ message: `✅ Administrateur supprimé avec succès.` });
+    } catch (err) {
+        console.error("❌ Erreur lors de la suppression de l'administrateur :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Supprimer un administrateur par son email
+router.delete('/admins/email/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+
+        // Vérifier si l'admin existe avec cet email
+        const admin = await Member.findOne({ email, role: "admin" });
+
+        if (!admin) {
+            return res.status(404).json({ error: "❌ Administrateur non trouvé." });
+        }
+
+        // Supprimer l'administrateur par son _id au lieu de l'email (plus fiable)
+        await Member.findByIdAndDelete(admin._id);
+
+        console.log("🗑️ Administrateur supprimé :", email);
+        res.json({ message: `✅ Administrateur ${email} supprimé avec succès.` });
+    } catch (err) {
+        console.error("❌ Erreur lors de la suppression de l'administrateur :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Supprimer un membre par son email
+router.delete('/email/:email', async (req, res) => {
+    try {
+        const member = await Member.findOne({ email: req.params.email, role: "member" });
+
+        if (!member) {
+            return res.status(404).json({ error: "❌ Membre non trouvé." });
+        }
+
+        await Member.deleteOne({ email: req.params.email });
+
+        console.log("🗑️ Membre supprimé :", req.params.email);
+        res.json({ message: `✅ Membre ${req.params.email} supprimé avec succès.` });
+    } catch (err) {
+        console.error("❌ Erreur lors de la suppression du membre :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
 // Fonction pour générer un ID membre unique
 const generateMemberId = async () => {
     const randomNumber = Math.floor(10000 + Math.random() * 90000); // Génère un numéro aléatoire 5 chiffres
@@ -22,42 +110,34 @@ const generateMemberId = async () => {
     return memberId;
 };
 
-// ✅ Ajouter un membre avec génération d'un ID unique et nouvelles données
 router.post('/', async (req, res) => {
     try {
-        let { firstName, name, email, phone, address, city, country, registrationDate, sponsorId, products, password } = req.body;
+        let { firstName, name, email, phone, address, role, password } = req.body;
 
-        if (!firstName || !name || !email || !password) {
-            return res.status(400).json({ error: "❌ Prénom, Nom, Email et Mot de passe sont obligatoires." });
+        if (!firstName || !name || !email || !password || !phone) {
+            return res.status(400).json({ error: "❌ Prénom, Nom, Email, Téléphone et Mot de passe sont obligatoires." });
         }
 
-        if (sponsorId) {
-            const sponsor = await Member.findById(sponsorId);
-            if (!sponsor) {
-                return res.status(400).json({ error: "❌ Sponsor introuvable." });
-            }
+        // Vérifie si l'email existe déjà
+        const existingMember = await Member.findOne({ email });
+        if (existingMember) {
+            return res.status(400).json({ error: "❌ Un compte avec cet email existe déjà." });
         }
 
-        // Vérification et formatage des données
-        sponsorId = sponsorId && sponsorId.trim() !== "" ? sponsorId : null;
-        products = Array.isArray(products) ? products.filter(id => id.trim() !== "") : [];
+        // Assurez-vous que le rôle est bien défini (soit "admin", soit "member")
+        if (role !== "admin") {
+            role = "member"; // Si le rôle n'est pas "admin", on met "member" par défaut
+        }
 
-        // Générer un ID unique pour le membre
-        const memberId = await generateMemberId();
-
+        // Création du nouvel utilisateur
         const newMember = new Member({
-            memberId,
             firstName,
             name,
             email,
             phone,
             address,
-            city,
-            country,
-            registrationDate: registrationDate || new Date().toISOString().split('T')[0],
-            sponsorId,
-            products,
-            password // Stocké en clair ⚠️
+            role,  // ✅ Maintenant, on prend en compte le rôle envoyé
+            password // Stocké en clair comme demandé ⚠️
         });
 
         await newMember.save();
@@ -107,24 +187,28 @@ router.get('/', async (req, res) => {
     }
 });
 
-// ✅ Supprimer un membre et ses wallets associés
-router.delete('/:id', async (req, res) => {
+// ✅ Supprimer un membre et ses wallets associés en utilisant l'email
+router.delete('/email/:email', async (req, res) => {
     try {
-        const member = await Member.findById(req.params.id);
+        const { email } = req.params;
+
+        // Vérifier si le membre existe avec cet email
+        const member = await Member.findOne({ email });
+
         if (!member) {
             return res.status(404).json({ error: "❌ Membre non trouvé." });
         }
 
-        // Supprimer les wallets associés au membre
-        await Wallet.deleteMany({ ownerId: req.params.id });
+        // Supprimer les wallets associés
+        await Wallet.deleteMany({ ownerId: member._id });
 
-        // Supprimer le membre
-        await Member.findByIdAndDelete(req.params.id);
+        // Supprimer le membre en utilisant son email
+        await Member.deleteOne({ email });
 
-        console.log("🗑️ Membre supprimé :", req.params.id);
-        res.json({ message: "✅ Membre et ses wallets associés supprimés avec succès." });
+        console.log("🗑️ Membre supprimé :", email);
+        res.json({ message: `✅ Membre avec l'email ${email} et ses wallets associés supprimés avec succès.` });
     } catch (err) {
-        console.error("❌ Erreur lors de la suppression d'un membre :", err);
+        console.error("❌ Erreur lors de la suppression du membre :", err);
         res.status(500).json({ error: "Erreur interne du serveur." });
     }
 });
@@ -156,10 +240,60 @@ router.get('/network/:memberId', async (req, res) => {
 // ✅ Récupérer tous les admins
 router.get('/admins', async (req, res) => {
     try {
-        const admins = await Member.find({ role: "admin" }); // ou { isAdmin: true }
+        const admins = await Member.find({ role: "admin" });
+        if (!admins.length) {
+            return res.json([]);  // Retourne un tableau vide si aucun admin
+        }
         res.json(admins);
     } catch (err) {
         console.error("❌ Erreur lors de la récupération des admins :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Récupère un membre par son email
+router.get('/email/:email', async (req, res) => {
+    try {
+        const member = await Member.findOne({ email: req.params.email });
+
+        if (!member) {
+            return res.status(404).json({ error: "❌ Email Membre non trouvé." });
+        }
+
+        console.log("📡 Email récupéré :", member.email);
+        res.json(member);
+    } catch (err) {
+        console.error("❌ Erreur lors de la récupération de l'email :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Récupérer un administrateur par son email
+router.get('/auth/admins/email/:email', async (req, res) => {
+    try {
+        const admin = await Member.findOne({ email: req.params.email, role: "admin" });
+
+        if (!admin) {
+            return res.status(404).json({ error: "❌ Administrateur non trouvé." });
+        }
+
+        res.json(admin);
+    } catch (err) {
+        console.error("❌ Erreur lors de la récupération de l'administrateur :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
+    }
+});
+
+// ✅ Récupérer un administrateur spécifique par son email
+router.get('/admins/email/:email', async (req, res) => {
+    try {
+        const admin = await Member.findOne({ email: req.params.email, role: "admin" });
+        if (!admin) {
+            return res.status(404).json({ error: "❌ Administrateur non trouvé." });
+        }
+        res.json(admin);
+    } catch (err) {
+        console.error("❌ Erreur lors de la récupération de l'administrateur :", err);
         res.status(500).json({ error: "Erreur interne du serveur." });
     }
 });
