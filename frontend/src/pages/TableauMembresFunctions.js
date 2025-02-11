@@ -8,21 +8,26 @@ export const handleViewMember = (member, setSelectedDetail, setShowDetailModal) 
     setShowDetailModal(true);
 };
 
-export const handleDeleteMember = async (member, fetchMembers) => {
-    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer ${member.firstName} ?`)) {
+export const handleDeleteMember = async (memberEmail, fetchMembers) => {
+    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer le membre ${memberEmail} ?`)) {
         return;
     }
 
     try {
-        const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/members/${member.email}`, { method: "DELETE" });
+        const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/email/${memberEmail}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await response.json();
 
         if (!response.ok) {
-            throw new Error("Échec de la suppression.");
+            throw new Error(data.error || "Échec de la suppression.");
         }
 
-        alert("✅ Suppression réussie !");
-        await fetchMembers();
+        alert(`✅ Membre ${memberEmail} supprimé avec succès.`);
+        fetchMembers(); // 🔄 Rafraîchir la liste après suppression
     } catch (err) {
-        alert(`Erreur: ${err.message}`);
+        alert(`❌ Erreur : ${err.message}`);
     }
 };

@@ -8,21 +8,26 @@ export const handleViewAdmin = (admin, setSelectedDetail, setShowDetailModal) =>
     setShowDetailModal(true);
 };
 
-export const handleDeleteAdmin = async (admin, fetchAdmins) => {
-    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer ${admin.firstName} ?`)) {
+export const handleDeleteAdmin = async (adminEmail, fetchAdmins) => {
+    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer l'administrateur ${adminEmail} ?`)) {
         return;
     }
 
     try {
-        const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/admins/${admin.email}`, { method: "DELETE" });
+        const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/admins/email/${adminEmail}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await response.json();
 
         if (!response.ok) {
-            throw new Error("Échec de la suppression.");
+            throw new Error(data.error || "Échec de la suppression.");
         }
 
-        alert("✅ Suppression réussie !");
-        await fetchAdmins();
+        alert(`✅ Administrateur ${adminEmail} supprimé avec succès.`);
+        fetchAdmins(); // 🔄 Rafraîchir la liste après suppression
     } catch (err) {
-        alert(`Erreur: ${err.message}`);
+        alert(`❌ Erreur : ${err.message}`);
     }
 };

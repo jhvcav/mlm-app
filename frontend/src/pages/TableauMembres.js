@@ -3,6 +3,9 @@ import TableauMembresButtons from "./TableauMembresButtons";
 import { handleEditMember, handleViewMember, handleDeleteMember } from "./TableauMembresFunctions";
 
 const TableauMembres = ({ members, setEditData, setShowEditModal, setSelectedDetail, setShowDetailModal, fetchMembers }) => {
+    // 🔹 Filtrer uniquement les membres (role: "member")
+    const memberList = members.filter(member => member.role === "member");
+
     return (
         <div>
             <h3>👥 Liste des Membres</h3>
@@ -17,20 +20,28 @@ const TableauMembres = ({ members, setEditData, setShowEditModal, setSelectedDet
                     </tr>
                 </thead>
                 <tbody>
-                    {members.map(member => (
-                        <tr key={member.email}>
-                            <td>{member.firstName}</td>
-                            <td>{member.lastName}</td>
-                            <td>{member.email}</td>
-                            <td>{member.phone}</td>
-                            <TableauMembresButtons 
-                                member={member} 
-                                onEdit={() => handleEditMember(member, setEditData, setShowEditModal)}
-                                onView={() => handleViewMember(member, setSelectedDetail, setShowDetailModal)}
-                                onDelete={() => handleDeleteMember(member, fetchMembers)}
-                            />
+                    {memberList.length > 0 ? (
+                        memberList.map(member => (
+                            <tr key={member.email}>
+                                <td>{member.firstName}</td>
+                                <td>{member.name}</td>
+                                <td>{member.email}</td>
+                                <td>{member.phone}</td>
+                                <td>
+                                    <TableauMembresButtons 
+                                        member={member} 
+                                        onEdit={() => handleEditMember(member, setEditData, setShowEditModal)}
+                                        onView={() => handleViewMember(member, setSelectedDetail, setShowDetailModal)}
+                                        onDelete={() => handleDeleteMember(member.email, fetchMembers)} // ✅ Supprime un membre
+                                    />
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: "center" }}>Aucun membre trouvé</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
         </div>
