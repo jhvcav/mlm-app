@@ -42,7 +42,7 @@ router.get('/admin/dashboard', verifyToken, async (req, res) => {
 ================================ */
 router.get('/admins', async (req, res) => {
     try {
-        const admins = await Admin.find();  // Changer Member -> Admin
+        const admins = await Member.find({ role: "admin" });  // ✅ Récupère les admins depuis `members`
         res.json(admins);
     } catch (err) {
         console.error("❌ Erreur lors de la récupération des admins :", err);
@@ -58,17 +58,17 @@ router.post('/register/admin', async (req, res) => {
     }
 
     try {
-        const existingAdmin = await Admin.findOne({ email });
+        const existingAdmin = await Member.findOne({ email });  // ✅ Vérifier dans `members`
         if (existingAdmin) {
             return res.status(400).json({ error: "❌ Cet email est déjà utilisé !" });
         }
 
-        const newAdmin = new Admin({
+        const newAdmin = new Member({  // ✅ Ajouter dans `members`
             firstName,
             lastName,
             email,
-            password,  // ✅ Stocké en clair temporairement
-            role: "admin"
+            password,
+            role: "admin"  // ✅ Définir le rôle "admin"
         });
 
         await newAdmin.save();
@@ -89,7 +89,7 @@ router.post('/login/admin', async (req, res) => {
     }
 
     try {
-        const admin = await Admin.findOne({ email });
+        const admin = await Member.findOne({ email, role: "admin" });  // ✅ Vérifier dans `members`
         if (!admin) {
             console.error("❌ Administrateur introuvable !");
             return res.status(401).json({ error: "Administrateur introuvable." });
@@ -111,7 +111,6 @@ router.post('/login/admin', async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
-
 
 /* ================================
 📌 Route de test
