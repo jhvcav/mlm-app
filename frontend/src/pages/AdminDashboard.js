@@ -25,7 +25,7 @@ const AdminDashboard = () => {
     // ✅ Fonction pour récupérer les administrateurs
     const fetchAdmins = async () => {
         try {
-            const response = await fetch('https://mlm-app-jhc.fly.dev/api/auth/admins');
+            const response = await fetch('https://mlm-app-jhc.fly.dev/api/admins');
             const data = await response.json();
             setAdmins(data);
         } catch (err) {

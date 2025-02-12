@@ -3,8 +3,8 @@ import TableauAdminButtons from "./TableauAdminButtons";
 import { handleEditAdmin, handleViewAdmin, handleDeleteAdmin } from "./TableauAdminFunctions";
 
 const TableauAdmins = ({ admins, setEditData, setShowEditModal, setSelectedDetail, setShowDetailModal, fetchAdmins }) => {
-    // 🔹 Filtrer uniquement les admins (role: "admin")
-    const adminList = admins.filter(admin => admin.role === "admin");
+    // 🔍 Filtrer les administrateurs uniquement
+    const filteredAdmins = admins.filter(admin => admin.role === "admin");
 
     return (
         <div>
@@ -19,18 +19,18 @@ const TableauAdmins = ({ admins, setEditData, setShowEditModal, setSelectedDetai
                     </tr>
                 </thead>
                 <tbody>
-                    {adminList.length > 0 ? (
-                        adminList.map(admin => (
+                    {filteredAdmins.length > 0 ? (
+                        filteredAdmins.map(admin => (
                             <tr key={admin.email}>
                                 <td>{admin.firstName}</td>
-                                <td>{admin.name}</td>
+                                <td>{admin.lastName}</td>
                                 <td>{admin.email}</td>
                                 <td>
                                     <TableauAdminButtons 
                                         admin={admin} 
                                         onEdit={() => handleEditAdmin(admin, setEditData, setShowEditModal)}
                                         onView={() => handleViewAdmin(admin, setSelectedDetail, setShowDetailModal)}
-                                        onDelete={() => handleDeleteAdmin(admin.email, fetchAdmins)} // ✅ Supprime un admin
+                                        onDelete={() => handleDeleteAdmin(admin.email, fetchAdmins)}
                                     />
                                 </td>
                             </tr>
