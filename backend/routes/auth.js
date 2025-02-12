@@ -42,10 +42,11 @@ router.get('/admin/dashboard', verifyToken, async (req, res) => {
 ================================ */
 router.get('/admins', async (req, res) => {
     try {
-        const admins = await Admin.find().select('-password');
+        const admins = await Admin.find();  // Changer Member -> Admin
         res.json(admins);
     } catch (err) {
-        res.status(500).json({ error: "❌ Erreur serveur" });
+        console.error("❌ Erreur lors de la récupération des admins :", err);
+        res.status(500).json({ error: "Erreur interne du serveur." });
     }
 });
 

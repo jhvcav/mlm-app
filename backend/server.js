@@ -29,16 +29,22 @@ const connectDB = async () => {
 
 connectDB(); // Connexion immédiate à MongoDB
 
-// ✅ Routes Auth (chargée en premier)
+// ✅ Routes API
 const authRoutes = require('./routes/auth');
+const membersRoutes = require('./routes/members');
+const productsRoutes = require('./routes/products');
+const walletsRoutes = require('./routes/wallets');
+
 app.use('/api/auth', authRoutes);
 console.log("🚀 API Auth chargée : /api/auth");
 
-// ✅ Autres Routes API
-app.use('/api/members', require('./routes/members'));
-app.use('/api/products', require('./routes/products'));
-app.use('/api/wallets', require('./routes/wallets'));
+app.use('/api/members', membersRoutes);
+console.log("🚀 API Members chargée : /api/members");
 
+app.use('/api/products', productsRoutes);
+console.log("🚀 API Products chargée : /api/products");
+
+app.use('/api/wallets', walletsRoutes);
 console.log("🚀 API Wallets chargée : /api/wallets");
 
 // ✅ Route d'accueil pour vérifier le bon fonctionnement du serveur
@@ -46,9 +52,8 @@ app.get('/', (req, res) => {
     res.json({ message: "🚀 Serveur MLM en ligne !" });
 });
 
-// Servir le frontend React en production
+// ✅ Servir le frontend React en production
 const path = require("path");
-
 app.use(express.static(path.join(__dirname, "frontend/build")));
 
 app.get("*", (req, res) => {
@@ -59,21 +64,4 @@ app.get("*", (req, res) => {
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Serveur lancé sur http://0.0.0.0:${PORT} 🚀`);
-});
-
-const memberRoutes = require('./routes/members');
-app.use('/api', memberRoutes);
-
-// Vérifie si l'importation retourne bien une fonction
-if (typeof membersRoutes === 'function') {
-    app.use('/api/members', membersRoutes);
-} else {
-    console.error("❌ Erreur : 'membersRoutes' n'est pas une fonction valide.");
-}
-
-// Servir React pour toutes les routes inconnues
-app.use(express.static(path.join(__dirname, 'build')));
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });

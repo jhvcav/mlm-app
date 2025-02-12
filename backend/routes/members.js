@@ -112,20 +112,16 @@ router.delete('/admins/:id', async (req, res) => {
 // ✅ Supprimer un administrateur par son email
 router.delete('/admins/email/:email', async (req, res) => {
     try {
-        const { email } = req.params;
-
-        // Vérifier si l'admin existe avec cet email
-        const admin = await Member.findOne({ email, role: "admin" });
+        const admin = await Admin.findOne({ email: req.params.email });
 
         if (!admin) {
             return res.status(404).json({ error: "❌ Administrateur non trouvé." });
         }
 
-        // Supprimer l'administrateur par son _id au lieu de l'email (plus fiable)
-        await Member.findByIdAndDelete(admin._id);
+        await Admin.deleteOne({ email: req.params.email });
 
-        console.log("🗑️ Administrateur supprimé :", email);
-        res.json({ message: `✅ Administrateur ${email} supprimé avec succès.` });
+        console.log("🗑️ Administrateur supprimé :", req.params.email);
+        res.json({ message: `✅ Administrateur ${req.params.email} supprimé avec succès.` });
     } catch (err) {
         console.error("❌ Erreur lors de la suppression de l'administrateur :", err);
         res.status(500).json({ error: "Erreur interne du serveur." });
@@ -294,10 +290,7 @@ router.get('/network/:memberId', async (req, res) => {
 // ✅ Récupérer tous les admins
 router.get('/admins', async (req, res) => {
     try {
-        const admins = await Member.find({ role: "admin" });
-        if (!admins.length) {
-            return res.json([]);  // Retourne un tableau vide si aucun admin
-        }
+        const admins = await Admin.find();  // Changer Member -> Admin
         res.json(admins);
     } catch (err) {
         console.error("❌ Erreur lors de la récupération des admins :", err);
