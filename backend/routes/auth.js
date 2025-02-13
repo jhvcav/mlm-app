@@ -1,14 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const Member = require('../models/Member');
-const Admin = require('../models/Admin');
 const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-// ✅ Fonction pour générer un token JWT
-const generateToken = (id, role) => {
-    return jwt.sign({ id, role }, JWT_SECRET, { expiresIn: '7d' });
+// ✅ Générer un token JWT
+const generateToken = (id, role, permissions) => {
+    return jwt.sign({ id, role, permissions }, JWT_SECRET, { expiresIn: '7d' });
 };
 
 // ✅ Middleware de vérification du token
@@ -27,96 +26,77 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-/* ================================
-📌 ROUTE ADMIN : Accéder au tableau de bord
-================================ */
-router.get('/admin/dashboard', verifyToken, async (req, res) => {
-    if (req.user.role !== 'admin') {
-        return res.status(403).json({ error: "⛔ Accès refusé." });
+// ✅ Middleware pour vérifier si un utilisateur est Super Admin
+const verifySuperAdmin = (req, res, next) => {
+    if (!req.user || req.user.role !== "superadmin") {
+        return res.status(403).json({ error: "⛔ Accès refusé. Vous devez être Super Admin." });
     }
-    res.json({ message: "🎉 Bienvenue sur le tableau de bord admin." });
-});
+    next();
+};
 
-/* ================================
-📌 Récupérer la liste des admins
-================================ */
-router.get('/admins', async (req, res) => {
-    try {
-        const admins = await Member.find({ role: "admin" });  // ✅ Récupère les admins depuis `members`
-        res.json(admins);
-    } catch (err) {
-        console.error("❌ Erreur lors de la récupération des admins :", err);
-        res.status(500).json({ error: "Erreur interne du serveur." });
-    }
-});
+// ✅ Enregistrement d'un membre par le Super Admin
+router.post('/register/member', verifyToken, verifySuperAdmin, async (req, res) => {
+    const { firstName, lastName, email, phone, password, role, permissions } = req.body;
 
-router.post('/register/admin', async (req, res) => {
-    const { firstName, lastName, email, password } = req.body;
-
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email || !password || !role) {
         return res.status(400).json({ error: "❌ Tous les champs sont obligatoires." });
     }
 
     try {
-        const existingAdmin = await Member.findOne({ email });  // ✅ Vérifier dans `members`
-        if (existingAdmin) {
+        const existingUser = await Member.findOne({ email });
+        if (existingUser) {
             return res.status(400).json({ error: "❌ Cet email est déjà utilisé !" });
         }
 
-        const newAdmin = new Member({  // ✅ Ajouter dans `members`
+        const newMember = new Member({
             firstName,
             lastName,
             email,
+            phone,
             password,
-            role: "admin"  // ✅ Définir le rôle "admin"
+            role,
+            permissions: permissions || {} 
         });
 
-        await newAdmin.save();
-        res.status(201).json({ message: "✅ Administrateur créé avec succès !" });
+        await newMember.save();
+        res.status(201).json({ message: "✅ Membre créé avec succès !" });
 
     } catch (err) {
-        console.error("🚨 Erreur lors de l'inscription de l'admin :", err);
+        console.error("🚨 Erreur lors de l'inscription du membre :", err);
         res.status(500).json({ error: "❌ Erreur serveur" });
     }
 });
 
-router.post('/login/admin', async (req, res) => {
-    console.log("📩 Tentative de connexion admin :", req.body);
-    
+// ✅ Connexion et génération de token
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+
     if (!email || !password) {
         return res.status(400).json({ error: "Email et mot de passe sont requis." });
     }
 
     try {
-        const admin = await Member.findOne({ email, role: "admin" });  // ✅ Vérifier dans `members`
-        if (!admin) {
-            console.error("❌ Administrateur introuvable !");
-            return res.status(401).json({ error: "Administrateur introuvable." });
+        const user = await Member.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ error: "Utilisateur introuvable." });
         }
 
-        console.log("🔑 Mot de passe fourni :", password);
-        console.log("🔒 Mot de passe en base :", admin.password);
-
-        if (password !== admin.password) {
+        if (password !== user.password) {
             return res.status(401).json({ error: "Mot de passe incorrect." });
         }
 
-        const token = generateToken(admin._id, 'admin');
-        console.log("✅ Connexion réussie, token généré :", token);
+        const token = generateToken(user._id, user.role, user.permissions);
+        res.json({ token, user });
 
-        res.json({ token, user: { id: admin._id, email: admin.email, role: 'admin' } });
     } catch (err) {
         console.error("🚨 Erreur serveur :", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
 
-/* ================================
-📌 Route de test
-================================ */
-router.get('/test', (req, res) => {
-    res.json({ message: "✅ L'API fonctionne correctement !" });
+// ✅ Route pour accéder au tableau de bord du Super Admin
+router.get('/superadmin/dashboard', verifyToken, verifySuperAdmin, (req, res) => {
+    res.json({ message: "🎉 Bienvenue sur le tableau de bord du Super Admin !" });
 });
 
 module.exports = router;

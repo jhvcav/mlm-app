@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Login from './pages/Login';
 import RegisterAdmin from './pages/RegisterAdmin';
 import MembersPage from './pages/MembersPage';
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 
 // ✅ Middleware pour protéger les routes selon le rôle
 const PrivateRoute = ({ element, role }) => {
@@ -38,6 +39,7 @@ const App = () => {
                     <Route path="/admin-dashboard" element={<PrivateRoute element={<AdminDashboard />} role="admin" />} />
                     <Route path="/members" element={<PrivateRoute element={<MembersPage />} role="admin" />} />
                     <Route path="/register-admin" element={<PrivateRoute element={<RegisterAdmin />} role="admin" />} />
+                    <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
                 </Routes>
 
                 {/* ✅ Afficher l'inscription admin SEULEMENT si c'est un Admin connecté */}

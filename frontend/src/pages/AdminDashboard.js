@@ -1,189 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import './AdminDashboard.css';
-import TableauAdmins from './TableauAdmins';
-import TableauMembres from './TableauMembres';
-import DashboardButtons from './DashboardButtons';
-import AdminModals from "./AdminModals";
-import MemberModals from "./MemberModals";
+import React, { useState, useEffect } from "react";
+import ManagePermissions from "../components/ManagePermissions";
 
 const AdminDashboard = () => {
-    const [admins, setAdmins] = useState([]);
-    const [members, setMembers] = useState([]);
-    const [showAddAdminModal, setShowAddAdminModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [showDetailModal, setShowDetailModal] = useState(false);
-    const [editData, setEditData] = useState(null);
-    const [selectedDetail, setSelectedDetail] = useState(null);
-    const [newAdmin, setNewAdmin] = useState({ firstName: '', lastName: '', email: '', password: '' });
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [users, setUsers] = useState([]);
+    const [newMember, setNewMember] = useState({ firstName: "", lastName: "", email: "", password: "", role: "member" });
 
-    // ✅ Charger la liste des administrateurs et membres au démarrage
     useEffect(() => {
-        fetchAdmins();
-        fetchMembers();
+        fetchUsers();
     }, []);
 
-    // ✅ Fonction pour récupérer les administrateurs
-    const fetchAdmins = async () => {
+    // ✅ Fonction pour récupérer la liste des membres
+    const fetchUsers = async () => {
         try {
-            const response = await fetch('https://mlm-app-jhc.fly.dev/api/admins');
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/members");
             const data = await response.json();
-            setAdmins(data);
+            setUsers(data);
         } catch (err) {
-            console.error("Erreur lors du chargement des administrateurs :", err);
+            console.error("❌ Erreur lors du chargement des membres :", err);
         }
     };
 
-    // ✅ Fonction pour récupérer les membres
-    const fetchMembers = async () => {
+    // ✅ Fonction pour inscrire un membre (Admin ou Membre)
+    const handleRegisterMember = async () => {
         try {
-            const response = await fetch('https://mlm-app-jhc.fly.dev/api/members');
-            const data = await response.json();
-            setMembers(data);
-        } catch (err) {
-            console.error("Erreur lors du chargement des membres :", err);
-        }
-    };
-
-    // ✅ Ajouter un administrateur
-    const handleAddAdmin = async () => {
-        try {
-            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/register/admin", {
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/members/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newAdmin),
+                body: JSON.stringify(newMember),
             });
 
+            const data = await response.json();
             if (!response.ok) {
-                throw new Error("Échec de l'ajout de l'administrateur.");
+                throw new Error(data.error || "Échec de l'inscription.");
             }
 
-            alert("✅ Administrateur ajouté avec succès !");
-            setShowAddAdminModal(false);
-            setNewAdmin({ firstName: '', lastName: '', email: '', password: '' });
-            fetchAdmins();
+            alert("✅ Membre inscrit avec succès !");
+            setNewMember({ firstName: "", lastName: "", email: "", password: "", role: "member" });
+            fetchUsers();
         } catch (err) {
-            alert(`Erreur: ${err.message}`);
-        }
-    };
-
-    // ✅ Modifier un Admin ou un Membre
-    const handleEdit = (data) => {
-        setEditData({ ...data });
-        setShowEditModal(true);
-    };
-
-    // ✅ Voir les détails
-    const handleViewDetails = (data) => {
-        setSelectedDetail(data);
-        setShowDetailModal(true);
-    };
-
-    // ✅ Supprimer un Admin ou un Membre avec confirmation
-    const handleDelete = async (data) => {
-        if (!window.confirm(`Êtes-vous sûr de vouloir supprimer ${data.firstName} ?`)) {
-            return;
-        }
-
-        const url = data.role ? `https://mlm-app-jhc.fly.dev/api/auth/admins/${data.email}` : `https://mlm-app-jhc.fly.dev/api/members/${data.email}`;
-
-        try {
-            const response = await fetch(url, { method: "DELETE" });
-
-            if (!response.ok) {
-                throw new Error("Échec de la suppression.");
-            }
-
-            alert("✅ Suppression réussie !");
-            fetchAdmins();
-            fetchMembers();
-        } catch (err) {
-            alert(`Erreur: ${err.message}`);
-        }
-    };
-
-    // ✅ Enregistrer les modifications
-    const handleSaveChanges = async () => {
-        let url = editData.role ? `https://mlm-app-jhc.fly.dev/api/auth/admins/${editData.email}` : `https://mlm-app-jhc.fly.dev/api/members/${editData.email}`;
-
-        try {
-            const response = await fetch(url, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(editData),
-            });
-
-            if (!response.ok) {
-                throw new Error("Échec de la mise à jour.");
-            }
-
-            alert("✅ Mise à jour effectuée !");
-            fetchAdmins();
-            fetchMembers();
-            setShowEditModal(false);
-        } catch (err) {
-            alert(`Erreur: ${err.message}`);
+            alert(`❌ Erreur : ${err.message}`);
         }
     };
 
     return (
-        <div className="admin-dashboard">
-            <h2>🛠️ Tableau de bord Admin</h2>
-            <DashboardButtons onAddAdmin={() => setShowAddAdminModal(true)} />
+        <div>
+            <h1>📋 Tableau de bord Super Admin</h1>
 
-            {/* ✅ Liste des Administrateurs */}
-            <TableauAdmins 
-                admins={admins}
-                setEditData={setEditData}
-                setShowEditModal={setShowEditModal}
-                setSelectedDetail={setSelectedDetail}
-                setShowDetailModal={setShowDetailModal}
-                fetchAdmins={fetchAdmins}
-                handleEdit={handleEdit}
-                handleViewDetails={handleViewDetails}
-                handleDelete={handleDelete}
-            />
+            {/* 📌 Formulaire d'inscription d'un membre */}
+            <h2>➕ Inscrire un nouveau membre</h2>
+            <input type="text" placeholder="Prénom" value={newMember.firstName} onChange={(e) => setNewMember({ ...newMember, firstName: e.target.value })} />
+            <input type="text" placeholder="Nom" value={newMember.lastName} onChange={(e) => setNewMember({ ...newMember, lastName: e.target.value })} />
+            <input type="email" placeholder="Email" value={newMember.email} onChange={(e) => setNewMember({ ...newMember, email: e.target.value })} />
+            <input type="password" placeholder="Mot de passe" value={newMember.password} onChange={(e) => setNewMember({ ...newMember, password: e.target.value })} />
+            <select value={newMember.role} onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}>
+                <option value="member">Membre</option>
+                <option value="admin">Administrateur</option>
+            </select>
+            <button onClick={handleRegisterMember}>✅ Inscrire</button>
 
-            {/* ✅ Liste des Membres */}
-            <TableauMembres 
-                members={members}
-                setEditData={setEditData}
-                setShowEditModal={setShowEditModal}
-                setSelectedDetail={setSelectedDetail}
-                setShowDetailModal={setShowDetailModal}
-                fetchMembers={fetchMembers}
-                handleEdit={handleEdit}
-                handleViewDetails={handleViewDetails}
-                handleDelete={handleDelete}
-            />
+            {/* 📌 Liste des membres */}
+            <h2>👥 Liste des Membres</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.map((user) => (
+                        <tr key={user._id}>
+                            <td>{user.firstName}</td>
+                            <td>{user.lastName}</td>
+                            <td>{user.email}</td>
+                            <td>{user.role}</td>
+                            <td>
+                                <button onClick={() => setSelectedUser(user)}>⚙️ Gérer Permissions</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
 
-            {/* ✅ Modales Admin */}
-            <AdminModals
-                showAddAdminModal={showAddAdminModal}
-                setShowAddAdminModal={setShowAddAdminModal}
-                newAdmin={newAdmin}
-                setNewAdmin={setNewAdmin}
-                handleAddAdmin={handleAddAdmin}
-                showEditModal={showEditModal}
-                setShowEditModal={setShowEditModal}
-                editData={editData}
-                setEditData={setEditData}
-                handleSaveChanges={handleSaveChanges}
-                showDetailModal={showDetailModal}
-                setShowDetailModal={setShowDetailModal}
-                selectedDetail={selectedDetail}
-            />
-
-            {/* ✅ Modales Membres */}
-            <MemberModals
-                showEditModal={showEditModal}
-                setShowEditModal={setShowEditModal}
-                editData={editData}
-                setEditData={setEditData}
-                handleSaveChanges={handleSaveChanges}
-                showDetailModal={showDetailModal}
-                setShowDetailModal={setShowDetailModal}
-                selectedDetail={selectedDetail}
-            />
+            {/* 📌 Interface de gestion des permissions */}
+            {selectedUser && (
+                <div>
+                    <h3>🔹 Modifier les permissions pour {selectedUser.firstName} {selectedUser.lastName}</h3>
+                    <ManagePermissions 
+                        userId={selectedUser._id} 
+                        currentPermissions={selectedUser.permissions || {}} 
+                        onPermissionsUpdated={fetchUsers} 
+                    />
+                </div>
+            )}
         </div>
     );
 };

@@ -4,11 +4,27 @@ import { handleEditMember, handleViewMember, handleDeleteMember } from "./Tablea
 
 const TableauMembres = ({ members, setEditData, setShowEditModal, setSelectedDetail, setShowDetailModal, fetchMembers }) => {
     // 🔹 Filtrer uniquement les membres (role: "member")
-    const memberList = members.filter(member => member.role === "member");
+    const memberList = members.filter(member => !member.role || member.role === "member");
+
+    // 🔍 Vérification console (debug)
+    console.log("📌 Membres avant filtrage :", members);
+    console.log("📌 Membres après filtrage :", memberList);
 
     return (
         <div>
             <h3>👥 Liste des Membres</h3>
+
+            {/* ✅ Données brutes des Membres (Debug) */}
+            <div style={{ backgroundColor: "#f8f8f8", padding: "10px", border: "1px solid #ddd" }}>
+                <h4>📋 Données brutes des Membres (Debug - Avant Filtrage)</h4>
+                {members ? <pre>{JSON.stringify(members, null, 2)}</pre> : <p>⚠️ Aucune donnée reçue</p>}
+
+                <h4>📋 Membres après Filtrage (Debug)</h4>
+                {memberList.length > 0 ? (
+                    <pre>{JSON.stringify(memberList, null, 2)}</pre>
+                ) : <p>⚠️ Aucun membre trouvé</p>}
+            </div>
+
             <table border="1">
                 <thead>
                     <tr>

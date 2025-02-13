@@ -40,7 +40,7 @@ const MembersTable = () => {
         if (window.confirm("❌ Êtes-vous sûr de vouloir supprimer ce membre ?")) {
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/${memberId}`, {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth//members/${memberId}`, {
                     method: 'DELETE',
                     headers: { "Authorization": `Bearer ${token}` }
                 });

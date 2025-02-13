@@ -9,7 +9,7 @@ const Dashboard = () => {
     const [monthlyRegistrations, setMonthlyRegistrations] = useState({});
 
     useEffect(() => {
-        fetch("https://mlm-app-jhc.fly.dev/api/members")
+        fetch("https://mlm-app-jhc.fly.dev/api/auth//members")
             .then(res => res.json())
             .then(data => {
                 setMembers(data);
