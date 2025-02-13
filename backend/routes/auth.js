@@ -34,6 +34,14 @@ const verifySuperAdmin = (req, res, next) => {
     next();
 };
 
+// ✅ Middleware pour vérifier si un utilisateur est Membre ou Admin
+const verifyMember = (req, res, next) => {
+    if (!req.user || !["member", "admin", "superadmin"].includes(req.user.role)) {
+        return res.status(403).json({ error: "⛔ Accès refusé. Vous devez être un membre." });
+    }
+    next();
+};
+
 // ✅ Enregistrement d'un membre par le Super Admin
 router.post('/register/member', verifyToken, verifySuperAdmin, async (req, res) => {
     const { firstName, lastName, email, phone, password, role, permissions } = req.body;
@@ -97,6 +105,11 @@ router.post('/login', async (req, res) => {
 // ✅ Route pour accéder au tableau de bord du Super Admin
 router.get('/superadmin/dashboard', verifyToken, verifySuperAdmin, (req, res) => {
     res.json({ message: "🎉 Bienvenue sur le tableau de bord du Super Admin !" });
+});
+
+// ✅ Route pour accéder au tableau de bord du Membre
+router.get('/member/dashboard', verifyToken, verifyMember, (req, res) => {
+    res.json({ message: "👤 Bienvenue sur le tableau de bord du Membre !" });
 });
 
 module.exports = router;

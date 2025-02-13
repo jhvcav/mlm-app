@@ -1,19 +1,16 @@
-import React from 'react';
-import { HashRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Dashboard from "./pages/Dashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import Login from './pages/Login';
-import RegisterAdmin from './pages/RegisterAdmin';
-import MembersPage from './pages/MembersPage';
+import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import MemberDashboard from "./pages/MemberDashboard";
+import Navbar from "./components/Navbar";
 
 // ✅ Middleware pour protéger les routes selon le rôle
-const PrivateRoute = ({ element, role }) => {
+const PrivateRoute = ({ element, allowedRoles }) => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
 
-    if (!token || !user || (role && user.role !== role)) {
+    if (!token || !user || (allowedRoles && !allowedRoles.includes(user.role))) {
         return <Navigate to="/login" />;
     }
 
@@ -34,19 +31,26 @@ const App = () => {
                     {/* ✅ Redirection automatique vers login si non connecté */}
                     <Route path="/" element={<Navigate to="/login" />} />
 
-                    {/* ✅ Routes protégées */}
-                    <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} role="member" />} />
-                    <Route path="/admin-dashboard" element={<PrivateRoute element={<AdminDashboard />} role="admin" />} />
-                    <Route path="/members" element={<PrivateRoute element={<MembersPage />} role="admin" />} />
-                    <Route path="/register-admin" element={<PrivateRoute element={<RegisterAdmin />} role="admin" />} />
-                    <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
+                    {/* ✅ Routes protégées avec vérification des rôles */}
+                    <Route 
+                        path="/superadmin-dashboard" 
+                        element={<PrivateRoute element={<SuperAdminDashboard />} allowedRoles={["superadmin"]} />} 
+                    />
+                    <Route 
+                        path="/admin-dashboard" 
+                        element={<PrivateRoute element={<AdminDashboard />} allowedRoles={["admin", "superadmin"]} />} 
+                    />
+                    <Route 
+                        path="/member-dashboard" 
+                        element={<PrivateRoute element={<MemberDashboard />} allowedRoles={["member", "admin", "superadmin"]} />} 
+                    />
                 </Routes>
 
                 {/* ✅ Afficher l'inscription admin SEULEMENT si c'est un Admin connecté */}
                 {user && user.role === "admin" && (
                     <div className="admin-panel">
-                        <Link to="/register-admin" className="btn-admin">⚙️ Inscription Admin</Link>
-                        <Link to="/members" className="btn-admin">📋 Gérer les membres</Link>
+                        <a href="/register-admin" className="btn-admin">⚙️ Inscription Admin</a>
+                        <a href="/members" className="btn-admin">📋 Gérer les membres</a>
                     </div>
                 )}
             </div>
