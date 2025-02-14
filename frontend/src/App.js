@@ -1,10 +1,9 @@
-import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import MemberDashboard from "./pages/MemberDashboard";
 import Navbar from "./components/Navbar";
-import { Link } from "react-router-dom"; // 🔹 Ajouté pour la navigation interne
 
 // ✅ Middleware pour protéger les routes selon le rôle
 const PrivateRoute = ({ element, allowedRoles }) => {
@@ -18,13 +17,24 @@ const PrivateRoute = ({ element, allowedRoles }) => {
     return element;
 };
 
-const App = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+// ✅ Composant qui vérifie si on est sur la page de connexion
+const Layout = ({ children }) => {
+    const location = useLocation();
+    const isLoginPage = location.pathname === "/login";
 
     return (
+        <div className="app-container">
+            {!isLoginPage && <Navbar />}
+            {isLoginPage && <header className="login-header">Espace membres RMR-M</header>}
+            <div className="container">{children}</div>
+        </div>
+    );
+};
+
+const App = () => {
+    return (
         <Router>
-            <Navbar />
-            <div className="container">
+            <Layout>
                 <Routes>
                     {/* ✅ Page de connexion */}
                     <Route path="/login" element={<Login />} />
@@ -46,15 +56,7 @@ const App = () => {
                         element={<PrivateRoute element={<MemberDashboard />} allowedRoles={["member", "admin", "superadmin"]} />} 
                     />
                 </Routes>
-
-                {/* ✅ Afficher les options Admin SEULEMENT si c'est un Admin connecté */}
-                {user && user.role === "admin" && (
-                    <div className="admin-panel">
-                        <Link to="/register-admin" className="btn-admin">⚙️ Inscription Admin</Link>
-                        <Link to="/members" className="btn-admin">📋 Gérer les membres</Link>
-                    </div>
-                )}
-            </div>
+            </Layout>
         </Router>
     );
 };
