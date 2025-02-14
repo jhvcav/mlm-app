@@ -31,7 +31,7 @@
 /* ✅ Uniformisation des champs et du bouton */
 .login-box input,
 .login-box button {
-    width: 100%; /* 🔥 Tous les éléments prennent la même largeur */
+    width: 80%; /* 🔥 Tous les éléments prennent la même largeur */
     padding: 12px; /* Ajustement pour une meilleure lisibilité */
     margin: 10px 0; /* Même espacement vertical */
     border-radius: 5px;
