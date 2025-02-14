@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -17,24 +17,15 @@ const PrivateRoute = ({ element, allowedRoles }) => {
     return element;
 };
 
-// ✅ Composant qui vérifie si on est sur la page de connexion
-const Layout = ({ children }) => {
-    const location = useLocation();
-    const isLoginPage = location.pathname === "/login";
-
-    return (
-        <div className="app-container">
-            {!isLoginPage && <Navbar />}
-            {isLoginPage && <header className="login-header">Espace membres RMR-M</header>}
-            <div className="container">{children}</div>
-        </div>
-    );
-};
-
 const App = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
     return (
         <Router>
-            <Layout>
+            {/* ✅ Afficher la barre de navigation SEULEMENT si on n'est PAS sur la page de connexion */}
+            {!window.location.href.includes("/login") && <Navbar />}
+            
+            <div className="container">
                 <Routes>
                     {/* ✅ Page de connexion */}
                     <Route path="/login" element={<Login />} />
@@ -56,7 +47,15 @@ const App = () => {
                         element={<PrivateRoute element={<MemberDashboard />} allowedRoles={["member", "admin", "superadmin"]} />} 
                     />
                 </Routes>
-            </Layout>
+
+                {/* ✅ Afficher l'inscription admin SEULEMENT si c'est un Admin connecté */}
+                {user && user.role === "admin" && (
+                    <div className="admin-panel">
+                        <a href="/register-admin" className="btn-admin">⚙️ Inscription Admin</a>
+                        <a href="/members" className="btn-admin">📋 Gérer les membres</a>
+                    </div>
+                )}
+            </div>
         </Router>
     );
 };

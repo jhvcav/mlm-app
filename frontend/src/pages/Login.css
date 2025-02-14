@@ -1,64 +1,127 @@
-/* ✅ Barre de titre pour la connexion */
+/* ✅ Style global */
+.login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* ✅ Barre de titre "Espace Membres RMR-M" */
 .login-header {
     width: 100%;
-    background-color: #007bff;
-    color: white;
     text-align: center;
     padding: 15px;
-    font-size: 1.5em;
+    background-color: #0044cc;
+    color: white;
+    font-size: 20px;
     font-weight: bold;
 }
 
-/* ✅ Conteneur principal */
+/* ✅ Boîte de connexion centrée */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
-    background-color: #f4f4f4;
+    height: 100vh;
 }
 
-/* ✅ Boîte de connexion */
+/* ✅ Style de la boîte de dialogue */
 .login-box {
     background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    top: -100px;
+    width: 350px;
+}
+.login-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333; /* Couleur du texte */
+}
+
+/* ✅ Champs de saisie */
+.login-input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* ✅ Bouton de connexion */
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-button:hover {
+    background-color: #0033aa;
+}
+
+/* ✅ Bouton "Mot de passe oublié ?" */
+.forgot-password {
+    background: none;
+    border: none;
+    color: #0044cc;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* ✅ Boîte de dialogue pour la réinitialisation */
+.reset-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ✅ Contenu de la boîte de dialogue */
+.reset-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 350px;
 }
 
-/* ✅ Uniformisation des champs et du bouton */
-.login-box input,
-.login-box button {
-    width: 80%; /* 🔥 Tous les éléments prennent la même largeur */
-    padding: 12px; /* Ajustement pour une meilleure lisibilité */
-    margin: 10px 0; /* Même espacement vertical */
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-/* ✅ Bordures et styles des champs */
-.login-box input {
-    border: 1px solid #ccc;
-}
-
-/* ✅ Style du bouton */
-.login-box button {
-    background-color: #007bff;
-    color: white;
+/* ✅ Bouton d'annulation */
+.cancel-button {
+    background: #ccc;
+    color: black;
     border: none;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s ease;
-    font-weight: bold;
+    width: 100%;
 }
 
-.login-box button:hover {
-    background-color: #0056b3;
-}
-
-/* ✅ Style des erreurs */
-.error {
-    color: red;
-    font-size: 0.9em;
+.cancel-button:hover {
+    background: #bbb;
 }
