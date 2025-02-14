@@ -4,6 +4,7 @@ import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import MemberDashboard from "./pages/MemberDashboard";
 import Navbar from "./components/Navbar";
+import { Link } from "react-router-dom"; // 🔹 Ajouté pour la navigation interne
 
 // ✅ Middleware pour protéger les routes selon le rôle
 const PrivateRoute = ({ element, allowedRoles }) => {
@@ -46,11 +47,11 @@ const App = () => {
                     />
                 </Routes>
 
-                {/* ✅ Afficher l'inscription admin SEULEMENT si c'est un Admin connecté */}
+                {/* ✅ Afficher les options Admin SEULEMENT si c'est un Admin connecté */}
                 {user && user.role === "admin" && (
                     <div className="admin-panel">
-                        <a href="/register-admin" className="btn-admin">⚙️ Inscription Admin</a>
-                        <a href="/members" className="btn-admin">📋 Gérer les membres</a>
+                        <Link to="/register-admin" className="btn-admin">⚙️ Inscription Admin</Link>
+                        <Link to="/members" className="btn-admin">📋 Gérer les membres</Link>
                     </div>
                 )}
             </div>
