@@ -108,8 +108,17 @@ router.get('/superadmin/dashboard', verifyToken, verifySuperAdmin, (req, res) =>
 });
 
 // ✅ Route pour accéder au tableau de bord du Membre
-router.get('/member/dashboard', verifyToken, verifyMember, (req, res) => {
-    res.json({ message: "👤 Bienvenue sur le tableau de bord du Membre !" });
+router.get('/member/dashboard', verifyToken, verifyMember, async (req, res) => {
+    try {
+        const member = await Member.findById(req.user.id).select("-password"); // ❌ Exclure le mot de passe
+        if (!member) {
+            return res.status(404).json({ error: "❌ Membre introuvable." });
+        }
+        res.json({ message: "👤 Bienvenue sur le tableau de bord du Membre !", member });
+    } catch (err) {
+        console.error("🚨 Erreur lors de la récupération du membre :", err);
+        res.status(500).json({ error: "❌ Erreur serveur" });
+    }
 });
 
 module.exports = router;

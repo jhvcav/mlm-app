@@ -29,6 +29,10 @@ const Navbar = () => {
                     <li><Link to="/superadmin-dashboard">⚡ Super Admin</Link></li>
                 )}
 
+                {user && user.role === "member" && (
+                    <li><Link to="/member-dashboard">👤 Tableau de bord Membre</Link></li>
+                )}
+
                 <li>
                     <button onClick={() => { 
                         localStorage.clear(); 
