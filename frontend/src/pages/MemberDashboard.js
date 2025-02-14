@@ -26,7 +26,7 @@ const MemberDashboard = () => {
                 }
 
                 const data = await response.json();
-                setMember(data.member); // 📊 Stocker les infos du membre
+                setMember(data.member);
             } catch (err) {
                 setError(err.message);
             }
@@ -46,6 +46,18 @@ const MemberDashboard = () => {
                     <p><strong>📧 Email :</strong> {member.email}</p>
                     <p><strong>📞 Téléphone :</strong> {member.phone || "Non renseigné"}</p>
                     <p><strong>🎭 Rôle :</strong> {member.role}</p>
+
+                    {/* 🔹 Historique des activités */}
+                    <h3>📜 Historique des Activités</h3>
+                    <ul>
+                        {member.activityLog && member.activityLog.length > 0 ? (
+                            member.activityLog.map((log, index) => (
+                                <li key={index}>{log}</li>
+                            ))
+                        ) : (
+                            <p>Aucune activité récente.</p>
+                        )}
+                    </ul>
                 </div>
             ) : (
                 <p>🔄 Chargement des informations...</p>

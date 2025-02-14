@@ -75,7 +75,12 @@ router.post('/register/member', verifyToken, verifySuperAdmin, async (req, res) 
     }
 });
 
-// ✅ Connexion et génération de token
+// ✅ Fonction pour enregistrer une action dans l'historique du membre
+const logActivity = async (userId, action) => {
+    await Member.findByIdAndUpdate(userId, { $push: { activityLog: `${new Date().toLocaleString()} - ${action}` } });
+};
+
+// ✅ Modifier la route de connexion pour enregistrer les connexions
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -94,6 +99,10 @@ router.post('/login', async (req, res) => {
         }
 
         const token = generateToken(user._id, user.role, user.permissions);
+        
+        // 🔹 Enregistrer la connexion dans l'historique
+        await logActivity(user._id, "Connexion au compte");
+
         res.json({ token, user });
 
     } catch (err) {

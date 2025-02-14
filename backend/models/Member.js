@@ -24,6 +24,8 @@ const MemberSchema = new mongoose.Schema({
         } 
     }, // ✅ Permissions personnalisées
 
+    activityLog: [{ type: String, default: [] }], // ✅ Ajout de l'historique des actions
+
     createdAt: { type: Date, default: Date.now }
 });
 
