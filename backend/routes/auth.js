@@ -35,25 +35,66 @@ const generateToken = (id, role, permissions) => {
     return jwt.sign({ id, role, permissions }, JWT_SECRET, { expiresIn: '7d' });
 };
 
+// ✅ Route pour inscrire un utilisateur (TEST)
+router.post('/register', async (req, res) => {
+    const { firstName, lastName, email, password, role } = req.body;
+
+    if (!firstName || !lastName || !email || !password || !role) {
+        return res.status(400).json({ error: "❌ Tous les champs sont obligatoires." });
+    }
+
+    try {
+        const existingUser = await Member.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: "❌ Cet email est déjà utilisé !" });
+        }
+
+        const newUser = new Member({
+            firstName,
+            lastName,
+            email,
+            password,  // Stocké en clair (pas sécurisé, mais pour test)
+            role,
+            permissions: {}
+        });
+
+        await newUser.save();
+        res.status(201).json({ message: "✅ Utilisateur créé avec succès !" });
+
+    } catch (err) {
+        console.error("🚨 Erreur lors de l'inscription :", err);
+        res.status(500).json({ error: "❌ Erreur serveur" });
+    }
+});
+
 // ✅ Connexion et génération de token
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
+
+    console.log("🟢 Tentative de connexion:", email);
+    console.log("Mot de passe fourni:", password);
 
     if (!email || !password) {
         return res.status(400).json({ error: "Email et mot de passe sont requis." });
     }
 
     try {
-        const user = await Member.findOne({ email });
+        const user = await Member.findOne({ email }).select("+password");
+
         if (!user) {
+            console.log("❌ Utilisateur introuvable:", email);
             return res.status(401).json({ error: "Utilisateur introuvable." });
         }
 
-        // 🔹 Vérification du mot de passe (sans hashage)
+        console.log("🔍 Vérification du mot de passe...");
+        console.log("Mot de passe en base:", user.password);
+
         if (password !== user.password) {
+            console.log("❌ Mot de passe incorrect.");
             return res.status(401).json({ error: "Mot de passe incorrect." });
         }
 
+        console.log("✅ Connexion réussie !");
         const token = generateToken(user._id, user.role, user.permissions);
         res.json({ token, user });
 
@@ -77,7 +118,7 @@ router.post('/reset-password', async (req, res) => {
     }
 
     try {
-        const user = await Member.findOne({ email });
+        const user = await Member.findOne({ email }).select("+password");
         if (!user) {
             return res.status(404).json({ error: "❌ Email non trouvé." });
         }
