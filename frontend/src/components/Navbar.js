@@ -5,6 +5,10 @@ import './Navbar.css';
 const Navbar = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
+    if (!user) {
+        return null;  // ✅ Ne pas afficher la barre si aucun utilisateur n'est connecté
+    }
+
     const handleLogout = () => {
         localStorage.clear();  // 🧹 Supprime les données locales
         window.location.href = "/#/login";  // 🔄 Redirection vers la page de connexion
@@ -15,15 +19,15 @@ const Navbar = () => {
             <ul className="nav-list">
                 <li><Link to="/">🏠 Accueil</Link></li>
 
-                {user && user.role === "superadmin" && (
+                {user.role === "superadmin" && (
                     <li><Link to="/#/superadmin-dashboard">🔑 Super Admin</Link></li>
                 )}
 
-                {user && user.role === "admin" && (
+                {user.role === "admin" && (
                     <li><Link to="/#/admin-dashboard">⚙️ Admin</Link></li>
                 )}
 
-                {user && user.role === "member" && (
+                {user.role === "member" && (
                     <li><Link to="/#/member-dashboard">👤 Membre</Link></li>
                 )}
 
