@@ -1,4 +1,5 @@
-import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Login from "./pages/Login";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -18,12 +19,20 @@ const PrivateRoute = ({ element, allowedRoles }) => {
 };
 
 const App = () => {
+    const location = useLocation();
     const user = JSON.parse(localStorage.getItem("user"));
+
+    // ✅ Redirection automatique si l'URL ne contient pas "/#/login"
+    useEffect(() => {
+        if (location.pathname === "/" || location.pathname === "/mlm-app") {
+            window.location.href = "/mlm-app/#/login";
+        }
+    }, [location]);
 
     return (
         <Router>
             {/* ✅ Afficher la barre de navigation SEULEMENT si on n'est PAS sur la page de connexion */}
-            {!window.location.href.includes("/login") && <Navbar />}
+            {!location.pathname.includes("/login") && <Navbar />}
             
             <div className="container">
                 <Routes>
