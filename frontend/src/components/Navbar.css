@@ -32,3 +32,20 @@
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
 }
+
+/* ✅ Style amélioré pour le bouton Déconnexion */
+.logout-btn {
+    background-color: #ff4d4d; /* Rouge clair */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.logout-btn:hover {
+    background-color: #cc0000; /* Rouge foncé */
+}

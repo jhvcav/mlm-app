@@ -181,4 +181,15 @@ router.post('/new-password', async (req, res) => {
     }
 });
 
+// ✅ Route pour récupérer tous les administrateurs (admin + superadmin)
+router.get('/admins', verifyToken, async (req, res) => {
+    try {
+        const admins = await Member.find({ role: { $in: ["admin", "superadmin"] } });
+        res.json(admins);
+    } catch (err) {
+        console.error("🚨 Erreur récupération admins :", err);
+        res.status(500).json({ error: "❌ Erreur serveur" });
+    }
+});
+
 module.exports = router;

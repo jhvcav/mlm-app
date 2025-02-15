@@ -1,24 +1,11 @@
 import React from "react";
-import TableauAdminButtons from "./TableauAdminButtons";
-import { handleEditAdmin, handleViewAdmin, handleDeleteAdmin } from "./TableauAdminFunctions";
+import "./TableauStyle.css"; // Import du CSS amélioré
 
-const TableauAdmins = ({ admins, setEditData, setShowEditModal, setSelectedDetail, setShowDetailModal, fetchAdmins }) => {
-    // 🔍 Vérification console
-    console.log("📡 Liste des admins reçue :", admins);
-
+const TableauAdmins = ({ admins, onEdit, onDelete, onView }) => {
     return (
-        <div>
+        <div className="table-container">
             <h3>👨‍💼 Liste des Administrateurs</h3>
-
-            {/* 🔍 Debug - Affiche les données brutes des admins */}
-            <div style={{ backgroundColor: "#f8f8f8", padding: "10px", border: "1px solid #ddd", marginBottom: "15px" }}>
-                <h4>📋 Données brutes des Admins (Debug)</h4>
-                <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-                    {JSON.stringify(admins, null, 2)}
-                </pre>
-            </div>
-
-            <table border="1">
+            <table className="styled-table">
                 <thead>
                     <tr>
                         <th>Prénom</th>
@@ -28,27 +15,22 @@ const TableauAdmins = ({ admins, setEditData, setShowEditModal, setSelectedDetai
                     </tr>
                 </thead>
                 <tbody>
-                    {admins && admins.length > 0 ? (
+                    {admins.length > 0 ? (
                         admins.map(admin => (
                             <tr key={admin.email}>
                                 <td>{admin.firstName}</td>
-                                <td>{admin.name || admin.lastName}</td>
+                                <td>{admin.lastName || admin.name}</td>
                                 <td>{admin.email}</td>
-                                <td>
-                                    <TableauAdminButtons 
-                                        admin={admin} 
-                                        onEdit={() => handleEditAdmin(admin, setEditData, setShowEditModal)}
-                                        onView={() => handleViewAdmin(admin, setSelectedDetail, setShowDetailModal)}
-                                        onDelete={() => handleDeleteAdmin(admin.email, fetchAdmins)}
-                                    />
+                                <td className="action-buttons">
+                                    <button className="edit-btn" onClick={() => onEdit(admin)}>✏️ Modifier</button>
+                                    <button className="view-btn" onClick={() => onView(admin)}>👁️ Voir</button>
+                                    <button className="delete-btn" onClick={() => onDelete(admin.email)}>🗑️ Supprimer</button>
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="4" style={{ textAlign: "center", color: "red" }}>
-                                ⚠️ Aucun administrateur trouvé
-                            </td>
+                            <td colSpan="4" className="empty-message">⚠️ Aucun administrateur trouvé</td>
                         </tr>
                     )}
                 </tbody>

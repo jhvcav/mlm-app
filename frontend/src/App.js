@@ -1,5 +1,4 @@
-import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -19,20 +18,12 @@ const PrivateRoute = ({ element, allowedRoles }) => {
 };
 
 const App = () => {
-    const location = useLocation();
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    // ✅ Redirection automatique si l'URL ne contient pas "/#/login"
-    useEffect(() => {
-        if (location.pathname === "/" || location.pathname === "/mlm-app") {
-            window.location.href = "/mlm-app/#/login";
-        }
-    }, [location]);
+    const token = localStorage.getItem("token"); // Vérification de la connexion
 
     return (
         <Router>
-            {/* ✅ Afficher la barre de navigation SEULEMENT si on n'est PAS sur la page de connexion */}
-            {!location.pathname.includes("/login") && <Navbar />}
+            {/* ✅ Afficher la barre de navigation SEULEMENT si l'utilisateur est connecté */}
+            {token && <Navbar />}
             
             <div className="container">
                 <Routes>
@@ -56,14 +47,6 @@ const App = () => {
                         element={<PrivateRoute element={<MemberDashboard />} allowedRoles={["member", "admin", "superadmin"]} />} 
                     />
                 </Routes>
-
-                {/* ✅ Afficher l'inscription admin SEULEMENT si c'est un Admin connecté */}
-                {user && user.role === "admin" && (
-                    <div className="admin-panel">
-                        <a href="/register-admin" className="btn-admin">⚙️ Inscription Admin</a>
-                        <a href="/members" className="btn-admin">📋 Gérer les membres</a>
-                    </div>
-                )}
             </div>
         </Router>
     );

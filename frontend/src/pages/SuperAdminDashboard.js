@@ -1,44 +1,87 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import HistoriqueActivites from './MemberHistoriqueActivite';
+import TableauAdmins from './TableauAdmins';
+import TableauMembres from './TableauMembres';
+import ModalInscription from './ModalInscription';
+import './SuperAdminDashboard.css';
 
 const SuperAdminDashboard = () => {
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [admins, setAdmins] = useState([]);
+    const [members, setMembers] = useState([]);
 
+    // 🔹 Récupération des administrateurs
     useEffect(() => {
-        const fetchDashboardData = async () => {
-            try {
-                const token = localStorage.getItem("token"); // 🔑 Récupération du token
-                if (!token) {
-                    setError("⛔ Accès refusé. Veuillez vous connecter.");
-                    return;
-                }
-
-                const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/superadmin/dashboard", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error("⛔ Accès refusé ou erreur serveur.");
-                }
-
+        const fetchAdmins = async () => {
+            const token = localStorage.getItem("token");
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/admins", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+    
+            if (response.ok) {
                 const data = await response.json();
-                setMessage(data.message);
-            } catch (err) {
-                setError(err.message);
+                
+                // 🔍 DEBUG : Affichage de la réponse API
+                document.body.innerHTML += `<pre>📡 Réponse API Admins : ${JSON.stringify(data, null, 2)}</pre>`;
+                
+                setAdmins(data);
+            } else {
+                console.error("⛔ Erreur chargement des administrateurs.");
+                document.body.innerHTML += `<p style="color: red;">❌ Erreur chargement des administrateurs.</p>`;
             }
         };
+        fetchAdmins();
+    }, []);
 
-        fetchDashboardData();
+    // 🔹 Récupération des membres
+    useEffect(() => {
+        const fetchMembers = async () => {
+            const token = localStorage.getItem("token");
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/members", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setMembers(data);
+            } else {
+                console.error("⛔ Erreur chargement des membres.");
+            }
+        };
+        fetchMembers();
     }, []);
 
     return (
-        <div style={{ padding: "20px" }}>
-            <h2>📊 Tableau de bord Super Admin</h2>
-            {error ? <p style={{ color: "red" }}>{error}</p> : <p>{message}</p>}
+        <div className="superadmin-dashboard">
+            <h1 className="dashboard-title">🏆 Tableau de bord Super Admin</h1>
+            <p className="dashboard-message">Bienvenue sur votre espace de gestion.</p>
+
+            {/* ✅ Boutons d'accès */}
+            <div className="admin-buttons">
+                <button onClick={() => navigate('/admin-list')} className="btn-admin">👨‍💼 Liste des Admins</button>
+                <button onClick={() => navigate('/member-list')} className="btn-members">👥 Liste des Membres</button>
+                <button onClick={() => setIsModalOpen(true)} className="btn-add-user">➕ Inscrire un utilisateur</button>
+            </div>
+
+            {/* ✅ Historique des activités */}
+            <div className="activity-section">
+                <HistoriqueActivites />
+            </div>
+
+            {/* ✅ Liste des administrateurs */}
+            <div className="admin-table">
+                <TableauAdmins admins={admins} />
+            </div>
+
+            {/* ✅ Liste des membres */}
+            <div className="member-table">
+                <TableauMembres members={members} />
+            </div>
+
+            {/* ✅ Fenêtre Modale pour Inscription */}
+            {isModalOpen && <ModalInscription isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
         </div>
     );
 };

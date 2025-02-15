@@ -1,0 +1,55 @@
+.superadmin-dashboard {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.dashboard-title {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.dashboard-message {
+    font-size: 18px;
+    color: #666;
+}
+
+.admin-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.admin-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-admin {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-members {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-add-user {
+    background-color: #ffc107;
+    color: black;
+}
+
+.activity-section, .admin-table, .member-table {
+    margin-top: 30px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}

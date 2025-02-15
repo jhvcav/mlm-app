@@ -1,31 +1,11 @@
 import React from "react";
-import TableauMembresButtons from "./TableauMembresButtons";
-import { handleEditMember, handleViewMember, handleDeleteMember } from "./TableauMembresFunctions";
+import "./TableauStyle.css"; // Import du CSS amélioré
 
-const TableauMembres = ({ members, setEditData, setShowEditModal, setSelectedDetail, setShowDetailModal, fetchMembers }) => {
-    // 🔹 Filtrer uniquement les membres (role: "member")
-    const memberList = members.filter(member => !member.role || member.role === "member");
-
-    // 🔍 Vérification console (debug)
-    console.log("📌 Membres avant filtrage :", members);
-    console.log("📌 Membres après filtrage :", memberList);
-
+const TableauMembres = ({ members, onEdit, onDelete, onView }) => {
     return (
-        <div>
+        <div className="table-container">
             <h3>👥 Liste des Membres</h3>
-
-            {/* ✅ Données brutes des Membres (Debug) */}
-            <div style={{ backgroundColor: "#f8f8f8", padding: "10px", border: "1px solid #ddd" }}>
-                <h4>📋 Données brutes des Membres (Debug - Avant Filtrage)</h4>
-                {members ? <pre>{JSON.stringify(members, null, 2)}</pre> : <p>⚠️ Aucune donnée reçue</p>}
-
-                <h4>📋 Membres après Filtrage (Debug)</h4>
-                {memberList.length > 0 ? (
-                    <pre>{JSON.stringify(memberList, null, 2)}</pre>
-                ) : <p>⚠️ Aucun membre trouvé</p>}
-            </div>
-
-            <table border="1">
+            <table className="styled-table">
                 <thead>
                     <tr>
                         <th>Prénom</th>
@@ -36,26 +16,23 @@ const TableauMembres = ({ members, setEditData, setShowEditModal, setSelectedDet
                     </tr>
                 </thead>
                 <tbody>
-                    {memberList.length > 0 ? (
-                        memberList.map(member => (
+                    {members.length > 0 ? (
+                        members.map(member => (
                             <tr key={member.email}>
                                 <td>{member.firstName}</td>
-                                <td>{member.name}</td>
+                                <td>{member.lastName || member.name}</td>
                                 <td>{member.email}</td>
-                                <td>{member.phone}</td>
-                                <td>
-                                    <TableauMembresButtons 
-                                        member={member} 
-                                        onEdit={() => handleEditMember(member, setEditData, setShowEditModal)}
-                                        onView={() => handleViewMember(member, setSelectedDetail, setShowDetailModal)}
-                                        onDelete={() => handleDeleteMember(member.email, fetchMembers)} // ✅ Supprime un membre
-                                    />
+                                <td>{member.phone || "Non renseigné"}</td>
+                                <td className="action-buttons">
+                                    <button className="edit-btn" onClick={() => onEdit(member)}>✏️ Modifier</button>
+                                    <button className="view-btn" onClick={() => onView(member)}>👁️ Voir</button>
+                                    <button className="delete-btn" onClick={() => onDelete(member.email)}>🗑️ Supprimer</button>
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="5" style={{ textAlign: "center" }}>Aucun membre trouvé</td>
+                            <td colSpan="5" className="empty-message">⚠️ Aucun membre trouvé</td>
                         </tr>
                     )}
                 </tbody>
