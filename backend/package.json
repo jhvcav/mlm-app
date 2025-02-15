@@ -17,7 +17,8 @@
     "gh-pages": "^6.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.13.0",
-    "mongoose": "^8.9.6"
+    "mongoose": "^8.9.6",
+    "nodemailer": "^6.10.0"
   },
   "description": "",
   "devDependencies": {
