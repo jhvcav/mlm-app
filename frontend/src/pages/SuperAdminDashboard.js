@@ -5,10 +5,12 @@ import TableauAdmins from './TableauAdmins';
 import TableauMembres from './TableauMembres';
 import ModalInscription from './ModalInscription';
 import './SuperAdminDashboard.css';
+import TestModal from './TestModal';
 
 const SuperAdminDashboard = () => {
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isTestModalOpen, setIsTestModalOpen] = useState(false);
     const [admins, setAdmins] = useState([]);
     const [members, setMembers] = useState([]);
 
@@ -62,7 +64,13 @@ const SuperAdminDashboard = () => {
             <div className="admin-buttons">
                 <button onClick={() => navigate('/admin-list')} className="btn-admin">👨‍💼 Liste des Admins</button>
                 <button onClick={() => navigate('/member-list')} className="btn-members">👥 Liste des Membres</button>
-                <button onClick={() => setIsModalOpen(true)} className="btn-add-user">➕ Inscrire un utilisateur</button>
+                <button onClick={() => {
+                    alert("🟢 Bouton cliqué !");
+                    setIsModalOpen(true);
+                }} className="btn-add-user">
+                    ➕ Inscrire un utilisateur
+                </button>
+                <button onClick={() => setIsTestModalOpen(true)} className="btn-test-modal">🛠 Tester Ouverture Modale</button>
             </div>
 
             {/* ✅ Historique des activités */}
@@ -82,6 +90,9 @@ const SuperAdminDashboard = () => {
 
             {/* ✅ Fenêtre Modale pour Inscription */}
             {isModalOpen && <ModalInscription isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+
+            {/* ✅ Fenêtre Modale de Test */}
+            <TestModal isOpen={isTestModalOpen} onClose={() => setIsTestModalOpen(false)} />
         </div>
     );
 };

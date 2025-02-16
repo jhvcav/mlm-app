@@ -13,17 +13,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// ✅ Récupérer la liste des admins
-router.get('/auth/admins', async (req, res) => {
-    try {
-        const admins = await Member.find({ role: "admin" }); // 🔥 Filtre sur le champ "role"
-        res.json(admins);
-    } catch (err) {
-        console.error("❌ Erreur lors de la récupération des admins :", err);
-        res.status(500).json({ error: "Erreur interne du serveur." });
-    }
-});
-
 // ✅ Inscrire un membre (Admin ou Membre)
 router.post("/register", async (req, res) => {
     try {
