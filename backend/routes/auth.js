@@ -71,20 +71,25 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
-    console.log("🟢 Tentative de connexion:", email);
-    console.log("Mot de passe fourni:", password);
-
-    if (!email || !password) {
-        return res.status(400).json({ error: "Email et mot de passe sont requis." });
-    }
-
     try {
         const user = await Member.findOne({ email }).select("+password");
+
+        if (!email || !password) {
+            return res.status(400).json({ error: "❌ Email et mot de passe sont requis." });
+        }
+        // ✅ Vérification si le champ `activityLog` existe
+        if (!user.activityLog) user.activityLog = [];
 
         if (!user) {
             console.log("❌ Utilisateur introuvable:", email);
             return res.status(401).json({ error: "Utilisateur introuvable." });
         }
+        // Ajouter un log d'activité
+        const newActivity = `${new Date().toLocaleString()}-Connexion réussi`;
+        user.activityLog.push(newActivity);
+        await user.save();
+
+        console.log("✅ Activité ajoutée :", newActivity);
 
         console.log("🔍 Vérification du mot de passe...");
         console.log("Mot de passe en base:", user.password);
@@ -189,6 +194,96 @@ router.get('/admins', verifyToken, async (req, res) => {
     } catch (err) {
         console.error("🚨 Erreur récupération admins :", err);
         res.status(500).json({ error: "❌ Erreur serveur" });
+    }
+});
+
+router.get('/admins', async (req, res) => {
+    try {
+        const admins = await Member.find({ role: "admin" });
+        res.json(admins);
+    } catch (error) {
+        console.error("Erreur récupération des admins :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+// ✅ Route pour récupérer un admin par son ID
+router.get('/admin/:id', verifyToken, async (req, res) => {
+    try {
+        const members = await Member.findById(req.params.id);
+        if (!members) {
+            return res.status(404).json({ error: "❌ Admin non trouvé." });
+        }
+        res.json(members);
+    } catch (error) {
+        console.error("❌ Erreur serveur :", error);
+        res.status(500).json({ error: "❌ Erreur serveur." });
+    }
+});
+
+// ✅ Supprimer un admin
+router.delete('/admins/:email', async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const deletedAdmin = await Member.findOneAndDelete({ email, role: "admin" });
+        if (!deletedAdmin) {
+            return res.status(404).json({ error: "❌ Administrateur non trouvé." });
+        }
+
+        res.json({ message: "✅ Administrateur supprimé avec succès." });
+    } catch (err) {
+        console.error("🚨 Erreur suppression admin :", err);
+        res.status(500).json({ error: "❌ Erreur serveur." });
+    }
+});
+
+// ✅ Mettre à jour un Admin
+router.put("/admin/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedAdmin = await Member.findByIdAndUpdate(id, req.body, { new: true });
+
+        if (!updatedAdmin) {
+            return res.status(404).json({ error: "❌ Admin non trouvé." });
+        }
+
+        res.json({ message: "✅ Admin mis à jour avec succès", admin: updatedAdmin });
+    } catch (error) {
+        console.error("❌ Erreur mise à jour de l'Admin :", error);
+        res.status(500).json({ error: "❌ Erreur serveur lors de la mise à jour." });
+    }
+});
+
+// ✅ Supprimer un membre
+router.delete('/members/:email', async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const deletedMember = await Member.findOneAndDelete({ email });
+
+        if (!deletedMember) {
+            return res.status(404).json({ error: "❌ Membre non trouvé." });
+        }
+
+        res.json({ message: "✅ Membre supprimé avec succès." });
+    } catch (error) {
+        console.error("❌ Erreur lors de la suppression :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+// ✅ Route pour récupérer un membre par son ID
+router.get('/members/:id', verifyToken, async (req, res) => {
+    try {
+        const member = await Member.findById(req.params.id);
+        if (!member) {
+            return res.status(404).json({ error: "❌ Membre non trouvé." });
+        }
+        res.json(member);
+    } catch (error) {
+        console.error("❌ Erreur récupération utilisateur :", error);
+        res.status(500).json({ error: "❌ Erreur serveur." });
     }
 });
 

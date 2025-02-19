@@ -5,8 +5,12 @@ const AdminSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String },
+    address: { type: String },
+    country: { type: String, default: "Non spécifié" },
     password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+    
+    activitylog: [{ type: [String], default: []}],
+    createdAt: { type: date, default: Date.now},
 });
 
 module.exports = mongoose.model('Admin', AdminSchema);

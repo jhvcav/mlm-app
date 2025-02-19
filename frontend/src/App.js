@@ -1,9 +1,12 @@
-import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import MemberDashboard from "./pages/MemberDashboard";
+import Inscription from "./pages/Inscription";
 import Navbar from "./components/Navbar";
+import MemberDetailsPage from './pages/MemberDetailsPage';
+import AdminDetailsPage from './pages/AdminDetailsPage';
 
 // ✅ Middleware pour protéger les routes selon le rôle
 const PrivateRoute = ({ element, allowedRoles }) => {
@@ -17,37 +20,36 @@ const PrivateRoute = ({ element, allowedRoles }) => {
     return element;
 };
 
-const App = () => {
-    const token = localStorage.getItem("token"); // Vérification de la connexion
+// ✅ Composant qui gère l'affichage de la Navbar
+const AppContent = () => {
+    const location = useLocation(); // 🔹 Récupère l'URL actuelle
 
     return (
-        <Router>
-            {/* ✅ Afficher la barre de navigation SEULEMENT si l'utilisateur est connecté */}
-            {token && <Navbar />}
-            
+        <>
+            {/* ✅ Affiche la Navbar sauf sur la page de connexion */}
+            {location.pathname !== "/login" && <Navbar />}
+
             <div className="container">
                 <Routes>
-                    {/* ✅ Page de connexion */}
                     <Route path="/login" element={<Login />} />
-
-                    {/* ✅ Redirection automatique vers login si non connecté */}
                     <Route path="/" element={<Navigate to="/login" />} />
-
-                    {/* ✅ Routes protégées avec vérification des rôles */}
-                    <Route 
-                        path="/superadmin-dashboard" 
-                        element={<PrivateRoute element={<SuperAdminDashboard />} allowedRoles={["superadmin"]} />} 
-                    />
-                    <Route 
-                        path="/admin-dashboard" 
-                        element={<PrivateRoute element={<AdminDashboard />} allowedRoles={["admin", "superadmin"]} />} 
-                    />
-                    <Route 
-                        path="/member-dashboard" 
-                        element={<PrivateRoute element={<MemberDashboard />} allowedRoles={["member", "admin", "superadmin"]} />} 
-                    />
+                    <Route path="/inscription" element={<Inscription />} />
+                    <Route path="/superadmin-dashboard" element={<PrivateRoute element={<SuperAdminDashboard />} allowedRoles={["superadmin"]} />} />
+                    <Route path="/admin-dashboard" element={<PrivateRoute element={<AdminDashboard />} allowedRoles={["admin", "superadmin"]} />} />
+                    <Route path="/member-dashboard" element={<PrivateRoute element={<MemberDashboard />} allowedRoles={["member", "admin", "superadmin"]} />} />
+                    <Route path="/member/:memberId" element={<MemberDetailsPage />} />
+                    <Route path="/admin/:adminId" element={<AdminDetailsPage />} />
                 </Routes>
             </div>
+        </>
+    );
+};
+
+// ✅ Le composant `Router` englobe tout pour éviter les erreurs
+const App = () => {
+    return (
+        <Router>
+            <AppContent />
         </Router>
     );
 };

@@ -6,6 +6,8 @@ const MemberSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: false },
     password: { type: String, required: true },
+    address: { type: String },
+    country: { type: String, default: "Non spécifié" },
     role: { 
         type: String, 
         enum: ['superadmin', 'admin', 'member'], 
@@ -24,7 +26,7 @@ const MemberSchema = new mongoose.Schema({
         } 
     }, // ✅ Permissions personnalisées
 
-    activityLog: [{ type: String, default: [] }], // ✅ Ajout de l'historique des actions
+    activityLog: [{ type: [String], default: [] }], // ✅ Ajout de l'historique des actions
 
     createdAt: { type: Date, default: Date.now }
 });

@@ -1,44 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const MemberHistoriqueActivite = () => {
-    const [historique, setHistorique] = useState([]);
+const HistoriqueActivites = ({ memberId }) => { // ✅ Ajout de memberId en paramètre
+    const [activities, setActivities] = useState([]);
 
     useEffect(() => {
-        const fetchHistorique = async () => {
+        if (!memberId) {
+            console.error("❌ Erreur : memberId est indéfini !");
+            return;
+        }
+
+        const fetchActivities = async () => {
             const token = localStorage.getItem("token");
-            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/member/historique", {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
+
+            try {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/members/${memberId}`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    alert("❌ Erreur récupération de l'historique");
+                    return;
                 }
-            });
 
-            if (!response.ok) {
-                console.error("⛔ Erreur lors de la récupération de l'historique.");
-                return;
+                const data = await response.json();
+                setActivities(data.activityLog || []); // ✅ Assure que `activityLog` est bien pris en compte
+            } catch (error) {
+                alert("❌ Erreur serveur lors du chargement de l'historique.");
             }
-
-            const data = await response.json();
-            setHistorique(data.historique);
         };
 
-        fetchHistorique();
-    }, []);
+        fetchActivities();
+    }, [memberId]); // ✅ Ajout de `memberId` comme dépendance
 
     return (
-        <div style={{ padding: "20px" }}>
-            <h2>🕒 Historique des Activités</h2>
-            {historique.length === 0 ? (
-                <p>📭 Aucun historique trouvé.</p>
-            ) : (
+        <div className="historique-container">
+            <h3>📜 Historique des Activités</h3>
+            {activities.length > 0 ? (
                 <ul>
-                    {historique.map((entry, index) => (
-                        <li key={index}>📌 {entry}</li>
+                    {activities.map((activity, index) => (
+                        <li key={index}>{activity}</li>
                     ))}
                 </ul>
+            ) : (
+                <p>⚠️ Aucune activité enregistrée.</p>
             )}
         </div>
     );
 };
 
-export default MemberHistoriqueActivite;
+export default HistoriqueActivites;

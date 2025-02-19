@@ -1,41 +1,47 @@
-// HistoriqueActivites.js
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from "react";
 
-const HistoriqueActivites = () => {
-    const [activites, setActivites] = useState([]);
+const HistoriqueActivites = ({ memberId }) => {
+    const [activities, setActivities] = useState([]);
 
     useEffect(() => {
-        const fetchActivites = async () => {
-            const token = localStorage.getItem('token');
-            const response = await fetch('https://mlm-app-jhc.fly.dev/api/activities', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+        const fetchActivities = async () => {
+            const token = localStorage.getItem("token");
 
-            if (response.ok) {
+            try {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/members/${memberId}`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    alert("❌ Erreur récupération de l'historique");
+                    return;
+                }
+
                 const data = await response.json();
-                setActivites(data);
-            } else {
-                console.error("Erreur lors de la récupération des activités.");
+                setActivities(data.activityLog || []);
+
+                // ✅ Vérification sur tablette
+                alert("📜 Logs récupérés : " + JSON.stringify(data.activityLog));
+
+            } catch (error) {
+                alert("❌ Erreur serveur lors du chargement des activités.");
             }
         };
 
-        fetchActivites();
-    }, []);
+        fetchActivities();
+    }, [memberId]);
 
     return (
-        <div>
-            <h2>Historique des Activités</h2>
-            {activites.length > 0 ? (
+        <div className="historique-container">
+            <h3>📜 Historique des Activités</h3>
+            {activities.length > 0 ? (
                 <ul>
-                    {activites.map((activite, index) => (
-                        <li key={index}>{activite.description}</li>
+                    {activities.map((activity, index) => (
+                        <li key={index}>{activity}</li>
                     ))}
                 </ul>
             ) : (
-                <p>Aucune activité récente.</p>
+                <p>⚠️ Aucune activité enregistrée.</p>
             )}
         </div>
     );

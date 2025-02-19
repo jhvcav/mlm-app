@@ -1,0 +1,79 @@
+/* ✅ Conteneur principal */
+.inscription-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh; /* Réduction de la hauteur pour remonter la fenêtre */
+    background-color: #f4f4f4;
+    padding-top: 5px; /* Optionnel : Ajoute un petit espace en haut */
+}
+
+/* ✅ Box de formulaire */
+.inscription-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 380px; /* Réduire la largeur maximale pour plus de centrage */
+    text-align: center;
+}
+
+/* ✅ Titre */
+.inscription-box h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* ✅ Champs de formulaire */
+.inscription-box input,
+.inscription-box select {
+    width: calc(100% - 60px); /* Réduit la largeur des champs pour ajouter une marge */
+    padding: 12px;
+    margin: 8px 15px; /* Ajoute une marge de 20px à gauche et à droite */
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* ✅ Boutons */
+.btn-inscription, .btn-cancel {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+/* ✅ Bouton Inscription */
+.btn-inscription {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-inscription:hover {
+    background-color: #218838;
+}
+
+/* ✅ Bouton Annuler */
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+}
+
+.inscription-box select {
+    height: 45px; /* Ajuste la hauteur du champ */
+    font-size: 16px; /* Rendre le texte plus lisible */
+    padding: 10px; /* Ajouter de l'espace intérieur */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: calc(100% - 40px); /* Assure un bon alignement */
+    margin: 8px 20px; /* Ajuste la marge pour un centrage */
+}

@@ -1,69 +1,79 @@
+/* ✅ Fond assombri quand le modal est ouvert */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5); /* 🔹 Fond sombre */
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 1000;
+    justify-content: center;
+    z-index: 9999; /* 🔹 Assurer que le modal passe AU-DESSUS des autres éléments */
 }
 
+/* ✅ Contenu du modal */
 .modal-content {
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
     text-align: center;
     position: relative;
+    z-index: 10000; /* 🔹 S'assurer que le modal reste au premier plan */
 }
 
-.modal-content h2 {
-    margin-bottom: 15px;
-    color: #333;
-}
-
+/* ✅ Organisation du formulaire */
 .modal-content form {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
+/* ✅ Champs et boutons */
 .modal-content input,
 .modal-content select {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    width: 100%;
 }
 
-.modal-content button {
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
+/* ✅ Bouton Inscrire */
 .btn-confirm {
     background-color: #28a745;
     color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    border: none;
 }
 
 .btn-confirm:hover {
     background-color: #218838;
 }
 
+/* ✅ Bouton Annuler */
 .btn-cancel {
     background-color: #dc3545;
     color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    border: none;
 }
 
 .btn-cancel:hover {
     background-color: #c82333;
+}
+
+/* ✅ Empêcher d'autres éléments d'être mis en avant */
+.superadmin-dashboard * {
+    position: relative;
+    z-index: auto !important; /* 🔹 Réinitialiser les boutons qui étaient en avant-plan */
 }

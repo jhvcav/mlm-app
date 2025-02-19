@@ -16,10 +16,10 @@ router.get("/", async (req, res) => {
 // ✅ Inscrire un membre (Admin ou Membre)
 router.post("/register", async (req, res) => {
     try {
-        const { firstName, lastName, email, password, role } = req.body;
+        const { firstName, lastName, email, password, phone, address, role } = req.body;
 
         if (!firstName || !lastName || !email || !password) {
-            return res.status(400).json({ error: "❌ Tous les champs sont obligatoires." });
+            return res.status(400).json({ error: "❌ Tous les champs Nom, prénom, email et mot de passe sont obligatoires." });
         }
 
         const existingUser = await Member.findOne({ email });
@@ -32,6 +32,9 @@ router.post("/register", async (req, res) => {
             lastName,
             email,
             password,
+            phone,
+            address,
+            country: country || "Non spécifié",// Si country n'est pas fourni, mettre "Non spécifié"
             role: role || "member"
         });
 
@@ -67,18 +70,49 @@ router.put("/update-permissions/:id", async (req, res) => {
 });
 
 // ✅ Supprimer un membre
-router.delete("/delete/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deletedUser = await Member.findByIdAndDelete(id);
+router.delete('/members/:email', async (req, res) => {
+    const { email } = req.params;
 
-        if (!deletedUser) {
+    try {
+        const deletedMember = await Member.findOneAndDelete({ email });
+
+        if (!deletedMember) {
             return res.status(404).json({ error: "❌ Membre non trouvé." });
         }
 
         res.json({ message: "✅ Membre supprimé avec succès." });
-    } catch (err) {
-        console.error("🚨 Erreur lors de la suppression du membre :", err);
+    } catch (error) {
+        console.error("❌ Erreur lors de la suppression :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+router.put("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedMember = await Member.findByIdAndUpdate(id, req.body, { new: true });
+
+        if (!updatedMember) {
+            return res.status(404).json({ error: "❌ Membre non trouvé." });
+        }
+
+        res.json({ message: "✅ Membre mis à jour avec succès", member: updatedMember });
+    } catch (error) {
+        console.error("❌ Erreur mise à jour membre :", error);
+        res.status(500).json({ error: "❌ Erreur serveur lors de la mise à jour." });
+    }
+});
+
+// ✅ Route pour récupérer un membre par son ID
+router.get("/:id", async (req, res) => {
+    try {
+        const member = await Member.findById(req.params.id);
+        if (!member) {
+            return res.status(404).json({ error: "❌ Membre non trouvé." });
+        }
+        res.json(member);
+    } catch (error) {
+        console.error("❌ Erreur récupération membre :", error);
         res.status(500).json({ error: "❌ Erreur serveur." });
     }
 });

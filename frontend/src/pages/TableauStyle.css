@@ -87,3 +87,8 @@
     color: #dc3545;
     font-weight: bold;
 }
+
+.superadmin-row {
+    background-color: #ffebcc; /* 🔥 Couleur spéciale pour les SuperAdmins */
+    font-weight: bold;
+}

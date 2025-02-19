@@ -1,52 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './ModalInscription.css';
 
 const ModalInscription = ({ isOpen, onClose }) => {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        role: 'member'
-    });
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const token = localStorage.getItem("token");
-
-        const response = await fetch('https://mlm-app-jhc.fly.dev/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (response.ok) {
-            alert('✅ Utilisateur inscrit avec succès !');
-            onClose();
-        } else {
-            alert("❌ Erreur lors de l'inscription.");
-        }
-    };
-
-    if (!isOpen) return null;
+    if (!isOpen) return null; // ✅ Ne pas afficher le modal si isOpen = false
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <h2>Inscription d'un nouvel utilisateur</h2>
-                <form onSubmit={handleSubmit}>
-                    <input type="text" name="firstName" placeholder="Prénom" onChange={handleChange} required />
-                    <input type="text" name="lastName" placeholder="Nom" onChange={handleChange} required />
-                    <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-                    <input type="password" name="password" placeholder="Mot de passe" onChange={handleChange} required />
-                    <select name="role" onChange={handleChange} required>
+                <form>
+                    <input type="text" name="firstName" placeholder="Prénom" required />
+                    <input type="text" name="lastName" placeholder="Nom" required />
+                    <input type="email" name="email" placeholder="Email" required />
+                    <input type="password" name="password" placeholder="Mot de passe" required />
+                    <select name="role" required>
                         <option value="member">Membre</option>
                         <option value="admin">Administrateur</option>
                         <option value="superadmin">Super Administrateur</option>

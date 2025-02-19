@@ -1,0 +1,229 @@
+.member-details-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.member-details-container h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.member-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Agir sur les champs */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrer les champs dans le conteneur */
+    width: 100%;
+    margin-bottom: 5px; /* Réduit l'espace entre les champs */
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 80%; /* Les champs prennent toute la largeur du conteneur */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-save {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.btn-save:hover {
+    background-color: #218838;
+}
+
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+}
+
+/* ✅ Responsiveness pour Tablettes */
+@media (max-width: 768px) {
+    .member-details-container {
+        width: 90%;
+    }
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column; /* ✅ Aligner les boutons verticalement */
+    gap: 10px; /* ✅ Ajouter un espace entre chaque bouton */
+    align-items: center; /* ✅ Centrer les boutons */
+    margin-top: 10px;
+}
+
+.btn-save, .btn-cancel {
+    width: 80%; /* ✅ Les boutons prennent toute la largeur */
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-save {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #218838;
+}
+
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+}
+
+/* ✅ Responsiveness pour Tablettes */
+@media (max-width: 768px) {
+    .member-details-container {
+        width: 90%;
+    }
+
+    .button-container {
+        width: 100%;
+    }
+}
+
+/* ✅ Ajuster la hauteur du champ "Rôle" */
+.member-role {
+    height: 40px; /* ✅ Augmente la hauteur du champ */
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 100%;
+}
+
+/* ✅ Optionnel : Adapter pour tablettes et mobiles */
+@media (max-width: 768px) {
+    .member-role {
+        height: 60px; /* ✅ Hauteur légèrement plus grande sur mobile */
+        font-size: 18px;
+    }
+}
+
+/* ✅ Augmenter la taille des titres des champs */
+.member-form label {
+    font-size: 18px;  /* ✅ Augmenter la taille de la police */
+    font-weight: bold; /* ✅ Mettre en gras */
+    color: #333;  /* ✅ Couleur foncée pour une meilleure visibilité */
+    display: block;  /* ✅ Mettre chaque label sur une ligne */
+    margin-bottom: 5px; /* ✅ Espacement entre le label et l'input */
+}
+
+/* ✅ Adapter pour tablettes et mobiles */
+@media (max-width: 768px) {
+    .member-form label {
+        font-size: 20px; /* ✅ Encore plus grand sur mobile */
+    }
+}
+
+/* ✅ Augmenter la taille du texte des valeurs des champs */
+.member-form input,
+.member-form select,
+.member-form textarea {
+    font-size: 18px;  /* ✅ Augmenter la taille de la police */
+    padding: 10px; /* ✅ Augmenter l'espace intérieur pour un meilleur affichage */
+    border: 1px solid #ccc; /* ✅ Ajouter une bordure légère */
+    border-radius: 5px; /* ✅ Arrondir les bords */
+}
+
+/* ✅ Adapter pour tablettes et mobiles */
+@media (max-width: 768px) {
+    .member-form input,
+    .member-form select,
+    .member-form textarea {
+        font-size: 20px; /* ✅ Encore plus grand sur mobile */
+    }
+}
+
+/* ✅ Modifier la largeur et la hauteur des champs */
+.member-form input,
+.member-form select,
+.member-form textarea {
+    width: 80%; /* ✅ Ajuste la largeur à 100% du conteneur */
+    max-width: 600px; /* ✅ Définit une largeur maximale */
+    height: 20px; /* ✅ Ajuste la hauteur des champs */
+    font-size: 18px; /* ✅ Ajuste la taille de la police */
+    padding: 10px; /* ✅ Ajoute un peu d'espace intérieur */
+    border: 1px solid #ccc; /* ✅ Ajoute une bordure légère */
+    border-radius: 5px; /* ✅ Arrondi les coins des champs */
+}
+
+/* ✅ Ajustement spécifique pour le champ "Rôle" */
+.member-form select.member-role {
+    height: 50px; /* ✅ Augmente la hauteur du champ Rôle */
+}
+
+/* ✅ Ajustement spécifique pour les textareas */
+.member-form textarea {
+    height: 100px; /* ✅ Augmente la hauteur des zones de texte */
+    resize: vertical; /* ✅ Permet à l'utilisateur d'agrandir le champ */
+}
+
+/* ✅ Adapter pour tablettes et mobiles */
+@media (max-width: 768px) {
+    .member-form input,
+    .member-form select,
+    .member-form textarea {
+        width: 100%; /* ✅ Pleine largeur sur mobile */
+        max-width: none; /* ✅ Supprime la largeur maximale */
+        font-size: 20px; /* ✅ Texte plus grand pour une meilleure lisibilité */
+    }
+}

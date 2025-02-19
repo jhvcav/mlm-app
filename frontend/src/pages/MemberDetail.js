@@ -19,6 +19,7 @@ const MemberDetail = () => {
             <p><strong>📧 Email :</strong> {member.email}</p>
             <p><strong>📞 Téléphone :</strong> {member.phone || "Non renseigné"}</p>
             <p><strong>🎭 Rôle :</strong> {member.role}</p>
+            <p><strong>Mot de passe :</strong> {member.password}</p>
         </div>
     );
 };
