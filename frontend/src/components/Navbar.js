@@ -28,6 +28,10 @@ const Navbar = () => {
                     <li><Link to="/member-dashboard">👤 Membre</Link></li>
                 )}
 
+                <li className="nav-item affiliates" onClick={() => navigate("/sponsored-members")}>
+                👥 Membres Affiliés
+                </li>
+
                 <li><Link to="/products">🛍️ Produits</Link></li>
                 <li><Link to="/wallets">💳 Wallets</Link></li>
                 <li><Link to="/progress">📈 Progression</Link></li>

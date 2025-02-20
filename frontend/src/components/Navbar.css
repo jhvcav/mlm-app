@@ -49,3 +49,34 @@
 .logout-btn:hover {
     background-color: #cc0000; /* Rouge foncé */
 }
+
+/* ✅ Style pour le bouton "Membres Affiliés" */
+.nav-item.affiliates {
+    color: white; /* Texte blanc */
+    font-family: inherit; /* Utiliser la même police que les autres boutons */
+    cursor: pointer; /* Effet de clic */
+    padding: 10px 15px;
+    transition: color 0.3s ease-in-out;
+}
+
+/* ✅ Effet au survol */
+.nav-item.affiliates:hover {
+    color: #f0f0f0; /* Légèrement plus clair au survol */
+}
+
+/* ✅ Style pour le bouton "Membres Affiliés" */
+.nav-item.affiliates {
+    color: white; /* Texte blanc */
+    font-size: 16px; /* Modifier la taille de la police */
+    font-weight: bold; /* Rendre le texte plus épais */
+    cursor: pointer; /* Effet de clic */
+    padding: 10px 15px;
+    transition: color 0.3s ease-in-out;
+    position: relative; /* Permet le déplacement du bouton */
+    top: -10px; /* Décalage vers le haut du bouton */
+}
+
+/* ✅ Effet au survol */
+.nav-item.affiliates:hover {
+    color: #f0f0f0; /* Légèrement plus clair au survol */
+}

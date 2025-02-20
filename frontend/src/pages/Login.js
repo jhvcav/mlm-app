@@ -69,13 +69,13 @@ const Login = () => {
         <div className="login-page">
             {/* ✅ Barre en haut avec le titre "Espace Membres RMR-M" */}
             <div className="login-header">
-                <h2>Espace Membres RMR-M</h2>
+                <h1>Espace Membres RMR-M</h1>
             </div>
 
             {/* ✅ Boîte de connexion centrée */}
             <div className="login-container">
                 <div className="login-box">
-                    <h3 className="login-title">🔑 Connexion</h3> {/* Titre boite de dialogue connexion */}
+                    <h2 className="login-title">🔑 Connexion</h2> {/* Titre boite de dialogue connexion */}
                     {error && <p className="error">{error}</p>}
                     <form onSubmit={(e) => e.preventDefault()}>
                         <input 

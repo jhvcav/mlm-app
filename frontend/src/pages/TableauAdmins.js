@@ -13,7 +13,7 @@ const TableauAdmins = ({ admins, onDelete, onView }) => {
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Rôle</th>  {/* ✅ Nouvelle colonne */}
-                        <th>Actions</th>
+                        <th className="actions-column">Actions</th> {/* ✅ Pour centrer le Nom de la colonne Action */}
                     </tr>
                 </thead>
                 <tbody>

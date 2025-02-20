@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import "./TableauStyle.css"; // Style du tableau
 
 const TableauMembres = ({ members, onDelete }) => {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ const TableauMembres = ({ members, onDelete }) => {
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Téléphone</th>
-                        <th>Actions</th>
+                        <th className="actions-column">Actions</th> {/* ✅ Pour centrer le Nom de la colonne Action */}
                     </tr>
                 </thead>
                 <tbody>
@@ -27,10 +28,11 @@ const TableauMembres = ({ members, onDelete }) => {
                                 <td className="action-buttons">
                                     <button className="view-btn" onClick={() => navigate(`/member/${member._id}`)}>👁️ Voir</button>
                                     <button className="delete-btn" onClick={() => onDelete(member.email)}>🗑️ Supprimer</button>
+                                    <button classnName="history-btn" onClick={() => window.open(`/#/member/${member._id}/history`, "_blank", "width=800,height=600")}>📜 Historique</button> 
                                 </td>
                             </tr>
                         ))
-                    ) : (
+                    ):(
                         <tr>
                             <td colSpan="5" className="empty-message">⚠️ Aucun membre trouvé</td>
                         </tr>

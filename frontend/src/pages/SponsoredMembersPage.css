@@ -1,0 +1,36 @@
+.sponsored-members-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.sponsored-table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+.sponsored-table th, .sponsored-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.sponsored-table th {
+    background-color: #f4f4f4;
+}
+
+.btn-back {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-back:hover {
+    background-color: #0056b3;
+}

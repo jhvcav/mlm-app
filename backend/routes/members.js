@@ -117,4 +117,36 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// ✅ Récupérer la liste des membres affiliés à l'utilisateur connecté
+router.get("/sponsored", async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+            return res.status(401).json({ error: "❌ Non autorisé" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // 🔹 Trouver les membres dont `sponsorId` est l'utilisateur connecté
+        const sponsoredMembers = await Member.find({ sponsorId: userId });
+
+        res.json(sponsoredMembers);
+    } catch (error) {
+        console.error("❌ Erreur récupération des affiliés :", error);
+        res.status(500).json({ error: "❌ Erreur serveur" });
+    }
+});
+
+// ✅ Obtenir les affiliés d'un membre
+router.get("/:id/affiliates", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const affiliates = await Member.find({ sponsorId: id });
+        res.json(affiliates);
+    } catch (error) {
+        res.status(500).json({ error: "❌ Erreur lors du chargement des affiliés." });
+    }
+});
+
 module.exports = router;

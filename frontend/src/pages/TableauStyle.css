@@ -92,3 +92,7 @@
     background-color: #ffebcc; /* 🔥 Couleur spéciale pour les SuperAdmins */
     font-weight: bold;
 }
+
+th.actions-column {
+    text-align: center;
+}

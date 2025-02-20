@@ -76,7 +76,7 @@ const MemberDetailsPage = () => {
 
                 <div className="form-group">
                     <label>Email :</label>
-                    <input type="email" name="email" value={formData.email || ""} onChange={handleChange} disabled />
+                    <input type="email" name="email" value={formData.email || ""} onChange={handleChange} />
                 </div>
 
                 <div className="form-group">
@@ -111,7 +111,7 @@ const MemberDetailsPage = () => {
 
                 <div className="button-container">
                     <button type="button" className="btn-save" onClick={handleSave}>💾 Enregistrer</button>
-                    <button type="button" className="btn-cancel" onClick={() => navigate("/superadmin-dashboard")}>❌ Annuler</button>
+                    <button type="button" className="btn-cancel" onClick={() => navigate("/member-dashboard")}>❌ Annuler</button>
                 </div>
             </form>
         </div>

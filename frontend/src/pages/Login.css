@@ -12,10 +12,10 @@
     width: 100%;
     text-align: center;
     padding: 15px;
-    background-color: #0044cc;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
+    background-color: #020085;
+}
+.login-header h1 {
+    color: white; /* Couleur du texte de la barre de titre */
 }
 
 /* ✅ Boîte de connexion centrée */
@@ -37,6 +37,8 @@
     top: -100px;
     width: 350px;
 }
+
+/* Style de la box connexion */
 .login-title {
     font-size: 1.5rem;
     font-weight: bold;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import HistoriqueActivites from './MemberHistoriqueActivite';
 import TableauAdmins from './TableauAdmins';
 import TableauMembres from './TableauMembres';
 import './SuperAdminDashboard.css';
@@ -20,10 +19,6 @@ const SuperAdminDashboard = () => {
     const [selectedMember, setSelectedMember] = useState(null);
     const [showMemberDetailsModal, setShowMemberDetailsModal] = useState(false);
     const [showEditMemberModal, setShowEditMemberModal] = useState(false);
-
-    // ✅ Récupérer l'utilisateur connecté
-    const user = JSON.parse(localStorage.getItem("user"));
-    const memberId = user ? user._id : null;
 
     // 🔹 Récupération des administrateurs
     useEffect(() => {
@@ -166,12 +161,9 @@ const handleSaveMember = (updatedMember) => {
             <div className="admin-buttons">
                 <button onClick={() => navigate('/admin-list')} className="btn-admin">👨‍💼 Liste des Admins</button>
                 <button onClick={() => navigate('/member-list')} className="btn-members">👥 Liste des Membres</button>
+                {/* ✅ Bouton pour accéder à l'historique sur une autre page */}
+                <button onClick={() => navigate("/admin-historique-activites")} className="btn-history">📜 Voir l'historique des activités</button>
                 <button onClick={openRegistrationWindow} className="btn-add-user">➕ Inscrire un utilisateur</button>
-            </div>
-
-            {/* ✅ Historique des activités */}
-            <div className="historique-activity">
-                {memberId ? <HistoriqueActivites memberId={memberId} /> : <p>❌ Impossible de charger l'historique.</p>}
             </div>
 
             {/* ✅ Liste des administrateurs */}
