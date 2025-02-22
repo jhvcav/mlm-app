@@ -164,6 +164,7 @@ const handleSaveMember = (updatedMember) => {
                 {/* ✅ Bouton pour accéder à l'historique sur une autre page */}
                 <button onClick={() => navigate("/admin-historique-activites")} className="btn-history">📜 Voir l'historique des activités</button>
                 <button onClick={openRegistrationWindow} className="btn-add-user">➕ Inscrire un utilisateur</button>
+                <button onClick={() => navigate("/member-dashboard")} className="btn-profile">👤 Profil</button>
             </div>
 
             {/* ✅ Liste des administrateurs */}

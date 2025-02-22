@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import '../styles.css'; // Assurez-vous d'avoir les styles nécessaires
+import { useNavigate } from "react-router-dom";
+import '../styles.css'; // ✅ Assurez-vous d'avoir les styles nécessaires
 
-// Fonction pour organiser les membres sous forme d'arbre
 const buildNetworkTree = (members) => {
     let membersMap = new Map();
 
-    // Créer une entrée pour chaque membre avec ses enfants
     members.forEach(member => {
         membersMap.set(member._id, { ...member, children: [] });
     });
 
     let tree = [];
 
-    // Construire la hiérarchie des membres
     members.forEach(member => {
         if (member.sponsorId && membersMap.has(member.sponsorId)) {
             membersMap.get(member.sponsorId).children.push(membersMap.get(member._id));
         } else {
-            tree.push(membersMap.get(member._id)); // Membres sans sponsor (racines)
+            tree.push(membersMap.get(member._id));
         }
     });
 
@@ -25,39 +23,32 @@ const buildNetworkTree = (members) => {
 };
 
 const NetworkTree = () => {
-    const [, setMembers] = useState([]);
+    const navigate = useNavigate();
     const [tree, setTree] = useState([]);
-    const [expandedNodes, setExpandedNodes] = useState(new Set()); // Pour stocker les niveaux ouverts
+    const [expandedNodes, setExpandedNodes] = useState(new Set());
 
     useEffect(() => {
         fetch("https://mlm-app-jhc.fly.dev/api/members")
             .then(res => res.json())
             .then(data => {
-                setMembers(data);
                 setTree(buildNetworkTree(data));
             })
             .catch(err => console.error("❌ Erreur chargement du réseau :", err));
     }, []);
 
-    // Fonction pour basculer l'affichage des enfants
     const toggleExpand = (id) => {
         setExpandedNodes(prev => {
             const newSet = new Set(prev);
-            if (newSet.has(id)) {
-                newSet.delete(id);
-            } else {
-                newSet.add(id);
-            }
+            newSet.has(id) ? newSet.delete(id) : newSet.add(id);
             return newSet;
         });
     };
 
-    // Fonction récursive pour afficher l'arbre avec des blocs et des boutons d'expansion
     const renderTree = (node) => {
         return (
             <li key={node._id} className="network-node">
                 <div className="node-box">
-                    <p>{node.firstName} {node.name}</p>
+                    <p>{node.firstName} {node.lastName}</p>
                     <span className="node-email">📧 {node.email}</span>
                     {node.children.length > 0 && (
                         <button className="expand-btn" onClick={() => toggleExpand(node._id)}>
@@ -84,6 +75,9 @@ const NetworkTree = () => {
             ) : (
                 <p>Aucun membre trouvé.</p>
             )}
+
+            {/* ✅ Bouton Retour */}
+            <button className="btn-back" onClick={() => navigate(-1)}>🔙 Retour</button>
         </div>
     );
 };

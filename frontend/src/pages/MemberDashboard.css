@@ -128,3 +128,13 @@
     color: black;
     background: orange;
 }
+
+.btn-network {
+    padding: 10px;
+    font-size: 16px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

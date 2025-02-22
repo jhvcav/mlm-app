@@ -11,6 +11,7 @@ import MemberHistoryPage from "./pages/MemberHistoryPage"; // ✅ Import de la p
 import SponsoredMembersPage from "./pages/SponsoredMembersPage"; // ✅ Import de la nouvelle page
 import AddAffiliates from "./pages/AddAffiliates";
 import AdminHistoryActivites from "./pages/AdminHistoryActivites";
+import NetworkTree from "./pages/NetworkTree"; // ✅ Importer la page
 
 // ✅ Middleware pour protéger les routes selon le rôle
 const PrivateRoute = ({ element, allowedRoles }) => {
@@ -48,6 +49,7 @@ const AppContent = () => {
                     <Route path="/add-affiliate" element={<AddAffiliates />} />
                     <Route path="/admin-historique-activites" element={<AdminHistoryActivites />} />
                     <Route path="/member/:memberId/history" element={<MemberHistoryPage />} />
+                    <Route path="/network-tree" element={<NetworkTree />} />
                 </Routes>
             </div>
         </>

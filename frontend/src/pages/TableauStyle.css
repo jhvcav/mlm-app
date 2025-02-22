@@ -7,6 +7,7 @@
     border-radius: 8px;
     margin-bottom: 20px;
     text-align: center;
+    overflow-x: auto; /* ✅ Ajoute une barre de défilement horizontale si nécessaire */
 }
 
 /* ✅ Style du tableau */
@@ -18,63 +19,107 @@
     margin-top: 10px;
 }
 
-.styled-table th, .styled-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
+/* ✅ Style des en-têtes */
 .styled-table thead {
     background-color: #007bff;
     color: white;
     font-weight: bold;
 }
 
+/* ✅ Style des cellules */
+.styled-table th,
+.styled-table td {
+    text-align: center; /* ✅ Centre le texte */
+    padding: 12px; /* ✅ Ajoute de l'espace dans les cellules */
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap; /* ✅ Empêche le texte de passer à la ligne */
+}
+
+/* ✅ Ajustement des colonnes */
+.styled-table th:nth-child(1),
+.styled-table td:nth-child(1) {
+    width: 15%; /* ✅ Ajuste la colonne "Prénom" */
+}
+
+.styled-table th:nth-child(2),
+.styled-table td:nth-child(2) {
+    width: 15%; /* ✅ Ajuste la colonne "Nom" */
+}
+
+.styled-table th:nth-child(3),
+.styled-table td:nth-child(3) {
+    width: 25%; /* ✅ Ajuste la colonne "Email" */
+}
+
+.styled-table th:nth-child(4),
+.styled-table td:nth-child(4) {
+    width: 15%; /* ✅ Ajuste la colonne "Rôle" */
+}
+
+.styled-table th:nth-child(5),
+.styled-table td:nth-child(5) {
+    width: 30%; /* ✅ Ajuste la colonne "Actions" */
+}
+
+/* ✅ Effet au survol */
 .styled-table tbody tr:hover {
     background-color: #f1f1f1;
     transition: background 0.2s ease-in-out;
 }
 
-/* ✅ Boutons d'action */
-.action-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
+/* ✅ Centrer la colonne "Actions" */
+th.actions-column {
+    text-align: center;
 }
 
+/* ✅ Conteneur des boutons */
+.action-buttons {
+    display: flex;
+    justify-content: center; /* ✅ Centre horizontalement */
+    align-items: center; /* ✅ Centre verticalement */
+    gap: 10px; /* ✅ Espacement entre les boutons */
+    min-width: 180px; /* ✅ Largeur minimale */
+}
+
+/* ✅ Ajout d'un petit espace au premier bouton */
+.action-buttons button:first-child {
+    margin-left: 8px;
+}
+
+/* ✅ Style des boutons */
+button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap; /* ✅ Empêche le texte des boutons de passer à la ligne */
+}
+
+/* ✅ Bouton Modifier */
 .edit-btn {
     background-color: #ffc107;
     color: black;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .edit-btn:hover {
     background-color: #e0a800;
 }
 
+/* ✅ Bouton Voir */
 .view-btn {
     background-color: #17a2b8;
     color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .view-btn:hover {
     background-color: #138496;
 }
 
+/* ✅ Bouton Supprimer */
 .delete-btn {
     background-color: #dc3545;
     color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .delete-btn:hover {
@@ -88,11 +133,8 @@
     font-weight: bold;
 }
 
+/* ✅ Couleur spéciale pour les SuperAdmins */
 .superadmin-row {
-    background-color: #ffebcc; /* 🔥 Couleur spéciale pour les SuperAdmins */
+    background-color: #ffebcc;
     font-weight: bold;
-}
-
-th.actions-column {
-    text-align: center;
 }

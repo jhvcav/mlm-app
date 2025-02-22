@@ -35,6 +35,10 @@ const MemberDashboard = () => {
                     🕒 Historique Activités
                 </button>
 
+                <button onClick={() => navigate("/network-tree")} className="btn-network">
+                    🌳 Arbre Réseau
+                </button>
+
                 <button 
                     className="btn-add-affiliate" 
                     onClick={() => navigate("/add-affiliate")}
