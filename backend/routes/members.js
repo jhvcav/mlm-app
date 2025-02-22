@@ -87,6 +87,7 @@ router.delete('/members/:email', async (req, res) => {
     }
 });
 
+// ✅ Route pour mettre à jour un membre par son ID
 router.put("/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -146,6 +147,49 @@ router.get("/:id/affiliates", async (req, res) => {
         res.json(affiliates);
     } catch (error) {
         res.status(500).json({ error: "❌ Erreur lors du chargement des affiliés." });
+    }
+});
+
+/* ✅ Inscrire un Affilié (Admin ou Membre) */
+router.post("/member/register", async (req, res) => {
+    try {
+        const { firstName, lastName, email, phone, address, country, password, sponsorId } = req.body;
+
+        // Vérifier que tous les champs obligatoires sont bien remplis
+        if (!firstName || !lastName || !email || !phone || !password) {
+            return res.status(400).json({ error: "❌ Tous les champs requis ne sont pas fournis." });
+        }
+
+        // Vérifier si l'email existe déjà
+        const existingMember = await Member.findOne({ email });
+        if (existingMember) {
+            return res.status(400).json({ error: "❌ Cet email est déjà utilisé." });
+        }
+
+        // Vérifier si le sponsor existe
+        const sponsor = await Member.findById(sponsorId);
+        if (!sponsor) {
+            return res.status(400).json({ error: "❌ Le sponsor n'existe pas." });
+        }
+
+        // Création du nouveau membre
+        const newMember = new Member({
+            firstName,
+            lastName,
+            email,
+            phone,
+            address,
+            country,
+            password,  // ⚠️ Assure-toi que le mot de passe sera hashé dans un middleware !
+            sponsorId
+        });
+
+        await newMember.save();
+
+        res.status(201).json({ message: "✅ Affilié enregistré avec succès", member: newMember });
+    } catch (error) {
+        console.error("❌ Erreur serveur :", error);
+        res.status(500).json({ error: "❌ Erreur serveur." });
     }
 });
 

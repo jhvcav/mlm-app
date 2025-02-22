@@ -1,2 +1,0 @@
-{"error":"Email et mot de passe sont requis."}--_curl_-- "email": "superadmin@example.com"
---_curl_-- "password": "superpassword" 

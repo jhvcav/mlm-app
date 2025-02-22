@@ -9,7 +9,7 @@ import MemberDetailsPage from './pages/MemberDetailsPage';
 import AdminDetailsPage from './pages/AdminDetailsPage';
 import MemberHistoryPage from "./pages/MemberHistoryPage"; // ✅ Import de la page historique
 import SponsoredMembersPage from "./pages/SponsoredMembersPage"; // ✅ Import de la nouvelle page
-import AddAffiliate from "./pages/AddAffiliates";
+import AddAffiliates from "./pages/AddAffiliates";
 import AdminHistoryActivites from "./pages/AdminHistoryActivites";
 
 // ✅ Middleware pour protéger les routes selon le rôle
@@ -45,7 +45,7 @@ const AppContent = () => {
                     <Route path="/admin/:adminId" element={<AdminDetailsPage />} />
                     <Route path="/member-historique/:memberId" element={<MemberHistoryPage />} />
                     <Route path="/sponsored-members" element={<PrivateRoute element={<SponsoredMembersPage />} allowedRoles={["member", "admin", "superadmin"]} />} />
-                    <Route path="/add-affiliate" element={<AddAffiliate />} />
+                    <Route path="/add-affiliate" element={<AddAffiliates />} />
                     <Route path="/admin-historique-activites" element={<AdminHistoryActivites />} />
                 </Routes>
             </div>

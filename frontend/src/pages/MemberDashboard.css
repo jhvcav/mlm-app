@@ -114,3 +114,17 @@
     color: red;
     font-weight: bold;
 }
+
+/* ✅ Bouton Voir Profil */
+.btn-add-affiliate {
+    padding: 15px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 280px;
+    text-align: center;
+    transition: all 0.3s ease;
+    color: black;
+    background: orange;
+}

@@ -40,9 +40,9 @@ const AddAffiliates = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
-
+    
         try {
-            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/register", {
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/members/member/register", { // ✅ Nouvelle URL corrigée
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -50,10 +50,10 @@ const AddAffiliates = () => {
                 },
                 body: JSON.stringify(formData)
             });
-
+    
             if (response.ok) {
                 alert("✅ Affilié enregistré avec succès !");
-                navigate("/affiliates");
+                navigate("/affiliates"); // ✅ Rediriger après inscription
             } else {
                 alert("❌ Erreur lors de l'inscription.");
             }
@@ -97,6 +97,11 @@ const AddAffiliates = () => {
 
                 <div className="form-group">
                     <label>Sponsor :</label>
+                    <input type="text" name="sponsorId" value={formData.sponsorId} onChange={handleChange} />
+                </div>
+
+                <div className="form-group">
+                    <label>Sponsor :</label>
                     <select name="sponsorId" value={formData.sponsorId} onChange={handleChange} required>
                         <option value="">Sélectionner un sponsor</option>
                         {sponsors.map((sponsor) => (
@@ -108,7 +113,7 @@ const AddAffiliates = () => {
                 </div>
 
                 <div className="button-container">
-                    <button type="submit" className="btn-save">💾 Enregistrer</button>
+                    <button type="submit" className="btn-save" onClick={handleSubmit}>💾 Enregistrer</button>
                     <button type="button" className="btn-cancel" onClick={handleCancel}>❌ Annuler</button>
                 </div>
             </form>

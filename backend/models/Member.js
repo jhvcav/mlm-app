@@ -6,8 +6,9 @@ const MemberSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: false },
     password: { type: String, required: true },
-    address: { type: String },
-    country: { type: String, default: "Non spécifié" },
+    address: { type: String, required: false},
+    country: { type: String, required: false, default: "Non spécifié" },
+    sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: "Member" }, // ✅ Référence au modèle Member
     role: { 
         type: String, 
         enum: ['superadmin', 'admin', 'member'], 
