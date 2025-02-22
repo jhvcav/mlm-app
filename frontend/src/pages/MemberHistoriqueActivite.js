@@ -13,7 +13,7 @@ const HistoriqueActivites = ({ memberId }) => { // ✅ Ajout de memberId en para
             const token = localStorage.getItem("token");
 
             try {
-                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/members/${memberId}`, {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/${memberId}`, {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
 

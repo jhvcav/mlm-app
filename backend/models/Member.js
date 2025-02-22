@@ -8,6 +8,7 @@ const MemberSchema = new mongoose.Schema({
     password: { type: String, required: true },
     address: { type: String, required: false},
     country: { type: String, required: false, default: "Non spécifié" },
+    affiliates: [{ type: mongoose.Schema.Types.ObjectId, ref: "Member" }], // 🔹 Liste des affiliés
     sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: "Member" }, // ✅ Référence au modèle Member
     role: { 
         type: String, 

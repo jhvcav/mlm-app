@@ -5,13 +5,14 @@ import "./SponsoredMembersPage.css"; // ✅ Fichier CSS
 const SponsoredMembersPage = () => {
     const [sponsoredMembers, setSponsoredMembers] = useState([]);
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
         const fetchSponsoredMembers = async () => {
             const token = localStorage.getItem("token");
 
             try {
-                const response = await fetch("https://mlm-app-jhc.fly.dev/api/members/sponsored", {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/sponsored/${user._id}`, {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
 
@@ -23,46 +24,30 @@ const SponsoredMembersPage = () => {
                 const data = await response.json();
                 setSponsoredMembers(data);
             } catch (error) {
-                alert("❌ Erreur serveur lors du chargement des affiliés.");
+                alert("❌ Erreur technique.");
             }
         };
 
-        fetchSponsoredMembers();
-    }, []);
+        if (user && user._id) {
+            fetchSponsoredMembers();
+        } else {
+            alert("❌ Impossible de récupérer les affiliés.");
+        }
+    }, [user]);
 
     return (
         <div className="sponsored-members-container">
-            <h2>👥 Liste de vos Affiliés</h2>
-
+            <h1>👥 Liste des Membres Affiliés</h1>
             {sponsoredMembers.length > 0 ? (
-                <table className="sponsored-table">
-                    <thead>
-                        <tr>
-                            <th>Prénom</th>
-                            <th>Nom</th>
-                            <th>Email</th>
-                            <th>Téléphone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sponsoredMembers.map(member => (
-                            <tr key={member._id}>
-                                <td>{member.firstName}</td>
-                                <td>{member.lastName || "Non renseigné"}</td>
-                                <td>{member.email}</td>
-                                <td>{member.phone || "Non renseigné"}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <ul>
+                    {sponsoredMembers.map((member) => (
+                        <li key={member._id}>{member.firstName} {member.lastName} - {member.email}</li>
+                    ))}
+                </ul>
             ) : (
-                <p>⚠️ Vous n'avez aucun affilié pour le moment.</p>
+                <p>⚠️ Aucun affilié trouvé.</p>
             )}
-            
-            {/* ✅ Bouton pour revenir au tableau de bord */}
-            <button className="btn-back" onClick={() => navigate("/member-dashboard")}>
-                ⬅️ Retour au tableau de bord
-            </button>
+            <button className="btn-back" onClick={() => navigate(-1)}>🔙 Retour</button>
         </div>
     );
 };

@@ -44,9 +44,10 @@ const AppContent = () => {
                     <Route path="/member/:memberId" element={<MemberDetailsPage />} />
                     <Route path="/admin/:adminId" element={<AdminDetailsPage />} />
                     <Route path="/member-historique/:memberId" element={<MemberHistoryPage />} />
-                    <Route path="/sponsored-members" element={<PrivateRoute element={<SponsoredMembersPage />} allowedRoles={["member", "admin", "superadmin"]} />} />
+                    <Route path="/sponsored-members" element={<SponsoredMembersPage />} />
                     <Route path="/add-affiliate" element={<AddAffiliates />} />
                     <Route path="/admin-historique-activites" element={<AdminHistoryActivites />} />
+                    <Route path="/member/:memberId/history" element={<MemberHistoryPage />} />
                 </Routes>
             </div>
         </>
