@@ -1,229 +1,156 @@
+/* ✅ Conteneur principal */
 .admin-details-container {
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-    background: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    text-align: center;
+    width: 35%; /* 🔹 Largeur du conteneur */
+    margin: 20px auto; /* 🔹 Centré horizontalement avec marge */
+    padding: 30px; /* 🔹 Augmente l'espacement intérieur pour créer un "gap" entre le conteneur et les champs */
+    background: white; /* 🔹 Couleur de fond */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 🔹 Ombre légère */
+    border-radius: 8px; /* 🔹 Coins arrondis */
+    text-align: center; /* 🔹 Texte centré */
 }
 
-.admin-details-container h2 {
-    color: #333;
-    margin-bottom: 10px;
+/* ✅ Titre principal */
+.admin-details-container h1 {
+    color: #333; /* 🔹 Couleur du texte */
+    font-size: 26px; /* 🔹 Taille du texte */
+    margin-bottom: 20px; /* 🔹 Augmente l'espacement sous le titre */
 }
 
+/* ✅ Conteneur du formulaire */
 .admin-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px; /* 🔹 Augmente l'espacement entre les champs */
 }
 
-/* Agir sur les champs */
+/* ✅ Champs du formulaire */
 .form-group {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centrer les champs dans le conteneur */
+    align-items: center;
     width: 100%;
-    margin-bottom: 5px; /* Réduit l'espace entre les champs */
+    margin-bottom: 15px; /* 🔹 Augmente l'espace sous chaque champ */
+    padding: 5px 0; /* 🔹 Ajoute un léger espace interne */
 }
 
+/* ✅ Labels des champs */
 .form-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-size: 18px; /* 🔹 Taille du texte */
+    font-weight: bold; /* 🔹 Texte en gras */
+    margin-bottom: 5px; /* 🔹 Espacement entre label et input */
 }
 
-.form-group input,
-.form-group select {
-    width: 80%; /* Les champs prennent toute la largeur du conteneur */
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: all 0.3s ease-in-out;
+/* ✅ Champs de saisie */
+.form-group input, .form-group select {
+    width: 65%; /* 🔹 Largeur du champ */
+    height: 40px; /* 🔹 Hauteur du champ */
+    font-size: 16px; /* 🔹 Taille de la police */
+    padding: 10px; /* 🔹 Espacement intérieur */
+    border: 1px solid #ddd; /* 🔹 Bordure légère */
+    border-radius: 5px; /* 🔹 Coins arrondis */
+    margin-left: 10px; /* 🔹 Ajoute un espace à gauche du champ */
+    margin-right: 10px; /* 🔹 Ajoute un espace à droite du champ */
 }
 
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
+/* ✅ Conteneur des boutons */
 .button-container {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.btn-save {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s;
-}
-
-.btn-save:hover {
-    background-color: #218838;
-}
-
-.btn-cancel {
-    background-color: #dc3545;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s;
-}
-
-.btn-cancel:hover {
-    background-color: #c82333;
-}
-
-/* ✅ Responsiveness pour Tablettes */
-@media (max-width: 768px) {
-    .admin-details-container {
-        width: 90%;
-    }
-}
-
-.button-container {
-    display: flex;
-    flex-direction: column; /* ✅ Aligner les boutons verticalement */
-    gap: 10px; /* ✅ Ajouter un espace entre chaque bouton */
-    align-items: center; /* ✅ Centrer les boutons */
-    margin-top: 10px;
-}
-
-.btn-save, .btn-cancel {
-    width: 80%; /* ✅ Les boutons prennent toute la largeur */
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.btn-save {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-save:hover {
-    background-color: #218838;
-}
-
-.btn-cancel {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-cancel:hover {
-    background-color: #c82333;
-}
-
-/* ✅ Responsiveness pour Tablettes */
-@media (max-width: 768px) {
-    .admin-details-container {
-        width: 90%;
-    }
-
-    .button-container {
-        width: 100%;
-    }
-}
-
-/* ✅ Ajuster la hauteur du champ "Rôle" */
-.admin-role {
-    height: 40px; /* ✅ Augmente la hauteur du champ */
-    font-size: 16px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
+    flex-direction: column; /* 🔹 Aligne verticalement */
+    align-items: center; /* 🔹 Centre horizontalement */
+    gap: 15px; /* 🔹 Espacement uniforme entre les boutons */
+    margin-top: 25px; /* 🔹 Augmente l'espace entre les champs et les boutons */
     width: 100%;
 }
 
-/* ✅ Optionnel : Adapter pour tablettes et mobiles */
+/* ✅ Style général des boutons */
+.btn-save, .btn-delete, .btn-history, .btn-cancel {
+    width: 85%; /* 🔹 Largeur uniforme pour tous les boutons */
+    max-width: 300px; /* 🔹 Largeur maximale */
+    height: 50px; /* 🔹 Hauteur égale */
+    font-size: 18px; /* 🔹 Taille du texte */
+    font-weight: bold; /* 🔹 Texte en gras */
+    text-align: center; /* 🔹 Centre le texte */
+    border: none; /* 🔹 Supprime les bordures */
+    border-radius: 8px; /* 🔹 Coins arrondis */
+    cursor: pointer; /* 🔹 Curseur pointer */
+    transition: background 0.3s ease-in-out; /* 🔹 Effet de transition */
+}
+
+/* ✅ Personnalisation individuelle des boutons */
+
+/* 🔹 Bouton Enregistrer */
+.btn-save {
+    background-color: #28a745; /* ✅ Couleur */
+    color: white;
+    width: 90%; /* ✅ Largeur */
+    height: 55px; /* ✅ Hauteur */
+    font-size: 20px; /* ✅ Taille de la police */
+    margin-left: 10px; /* ✅ Décalage vers la droite */
+    margin-top: 5px; /* ✅ Décalage vers le bas */
+}
+
+.btn-save:hover {
+    background-color: #218838;
+}
+
+/* 🔹 Bouton Supprimer */
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    width: 85%;
+    height: 45px;
+    font-size: 17px;
+    margin-right: 15px; /* ✅ Décalage vers la gauche */
+    margin-bottom: 10px; /* ✅ Décalage vers le haut */
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* 🔹 Bouton Historique */
+.btn-history {
+    background-color: #17a2b8;
+    color: white;
+    width: 75%;
+    height: 50px;
+    font-size: 16px;
+    margin-top: 15px; /* ✅ Décalage vers le bas */
+}
+
+.btn-history:hover {
+    background-color: #138496;
+}
+
+/* 🔹 Bouton Annuler */
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    width: 95%;
+    height: 60px;
+    font-size: 18px;
+    margin-bottom: 5px; /* ✅ Décalage vers le haut */
+}
+
+.btn-cancel:hover {
+    background-color: #545b62;
+}
+
+/* ✅ Responsive pour tablettes et mobiles */
 @media (max-width: 768px) {
-    .admin-role {
-        height: 60px; /* ✅ Hauteur légèrement plus grande sur mobile */
+    .admin-details-container {
+        width: 90%;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%; /* ✅ Pleine largeur pour mobile */
         font-size: 18px;
+        margin-left: 5px; /* ✅ Ajustement mobile */
+        margin-right: 5px; /* ✅ Ajustement mobile */
     }
-}
 
-/* ✅ Augmenter la taille des titres des champs */
-.admin-form label {
-    font-size: 18px;  /* ✅ Augmenter la taille de la police */
-    font-weight: bold; /* ✅ Mettre en gras */
-    color: #333;  /* ✅ Couleur foncée pour une meilleure visibilité */
-    display: block;  /* ✅ Mettre chaque label sur une ligne */
-    margin-bottom: 5px; /* ✅ Espacement entre le label et l'input */
-}
-
-/* ✅ Adapter pour tablettes et mobiles */
-@media (max-width: 768px) {
-    .admin-form label {
-        font-size: 20px; /* ✅ Encore plus grand sur mobile */
-    }
-}
-
-/* ✅ Augmenter la taille du texte des valeurs des champs */
-.admin-form input,
-.admin-form select,
-.admin-form textarea {
-    font-size: 18px;  /* ✅ Augmenter la taille de la police */
-    padding: 10px; /* ✅ Augmenter l'espace intérieur pour un meilleur affichage */
-    border: 1px solid #ccc; /* ✅ Ajouter une bordure légère */
-    border-radius: 5px; /* ✅ Arrondir les bords */
-}
-
-/* ✅ Adapter pour tablettes et mobiles */
-@media (max-width: 768px) {
-    .admin-form input,
-    .admin-form select,
-    .admin-form textarea {
-        font-size: 20px; /* ✅ Encore plus grand sur mobile */
-    }
-}
-
-/* ✅ Modifier la largeur et la hauteur des champs */
-.admin-form input,
-.admin-form select,
-.admin-form textarea {
-    width: 80%; /* ✅ Ajuste la largeur à 100% du conteneur */
-    max-width: 600px; /* ✅ Définit une largeur maximale */
-    height: 20px; /* ✅ Ajuste la hauteur des champs */
-    font-size: 18px; /* ✅ Ajuste la taille de la police */
-    padding: 10px; /* ✅ Ajoute un peu d'espace intérieur */
-    border: 1px solid #ccc; /* ✅ Ajoute une bordure légère */
-    border-radius: 5px; /* ✅ Arrondi les coins des champs */
-}
-
-/* ✅ Ajustement spécifique pour le champ "Rôle" */
-.admin-form select.admin-role {
-    height: 50px; /* ✅ Augmente la hauteur du champ Rôle */
-}
-
-/* ✅ Ajustement spécifique pour les textareas */
-.admin-form textarea {
-    height: 100px; /* ✅ Augmente la hauteur des zones de texte */
-    resize: vertical; /* ✅ Permet à l'utilisateur d'agrandir le champ */
-}
-
-/* ✅ Adapter pour tablettes et mobiles */
-@media (max-width: 768px) {
-    .admin-form input,
-    .admin-form select,
-    .admin-form textarea {
-        width: 100%; /* ✅ Pleine largeur sur mobile */
-        max-width: none; /* ✅ Supprime la largeur maximale */
-        font-size: 20px; /* ✅ Texte plus grand pour une meilleure lisibilité */
+    .btn-save, .btn-delete, .btn-history, .btn-cancel {
+        width: 100%; /* ✅ Pleine largeur pour mobile */
+        font-size: 16px;
     }
 }

@@ -21,7 +21,7 @@ router.post('/add-wallet', async (req, res) => {
 
         // Créer le wallet avec les données en clair
         const newWallet = new Wallet({
-            ownerId: member._id,
+            ownerId: memberId,
             walletName: walletName.trim(),
             publicAddress: publicAddress.trim(),
             encryptedPassword,  // Stocke le mot de passe en clair
@@ -37,7 +37,7 @@ router.post('/add-wallet', async (req, res) => {
         res.status(201).json({ message: "✅ Wallet ajouté avec succès !" });
     } catch (err) {
         console.error("❌ Erreur lors de l'ajout du wallet :", err);
-        res.status(500).json({ error: "Erreur interne du serveur." });
+        res.status(500).json({ error: error.message});
     }
 });
 

@@ -1,7 +1,8 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./TableauStyle.css"; // Style du tableau
+import "./TableauMembres.css"; // Style du tableau
 
-const TableauMembres = ({ members, onDelete }) => {
+const TableauMembres = ({ members }) => {
     const navigate = useNavigate();
 
     return (
@@ -14,7 +15,7 @@ const TableauMembres = ({ members, onDelete }) => {
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Téléphone</th>
-                        <th className="actions-column">Actions</th> {/* ✅ Pour centrer le Nom de la colonne Action */}
+                        <th>Actions</th> {/* ✅ Colonne Actions */}
                     </tr>
                 </thead>
                 <tbody>
@@ -26,13 +27,17 @@ const TableauMembres = ({ members, onDelete }) => {
                                 <td>{member.email}</td>
                                 <td>{member.phone || "Non renseigné"}</td>
                                 <td className="action-buttons">
-                                    <button className="view-btn" onClick={() => navigate(`/member/${member._id}`)}>👁️ Voir</button>
-                                    <button className="delete-btn" onClick={() => onDelete(member.email)}>🗑️ Supprimer</button>
-                                    <button classnName="history-btn" onClick={() => navigate(`/member/${member._id}/history`, "_blank", "width=800,height=600")}>📜 Historique</button>
+                                    {/* ✅ Bouton qui ouvre la page MemberDetail */}
+                                    <button 
+                                        className="action-btn"
+                                        onClick={() => navigate(`/member/${member._id}`)}
+                                    >
+                                        ⚙️ Actions
+                                    </button>
                                 </td>
                             </tr>
                         ))
-                    ):(
+                    ) : (
                         <tr>
                             <td colSpan="5" className="empty-message">⚠️ Aucun membre trouvé</td>
                         </tr>

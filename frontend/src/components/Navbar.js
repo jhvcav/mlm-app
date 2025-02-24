@@ -33,7 +33,7 @@ const Navbar = () => {
                 </li>
 
                 <li><Link to="/products">🛍️ Produits</Link></li>
-                <li><Link to="/wallets">💳 Wallets</Link></li>
+                <li><Link to={`/wallets/${localStorage.getItem("memberId")}`}>Voir mes Wallets</Link></li>
                 <li><Link to="/progress">📈 Progression</Link></li>
 
                 {/* ✅ Bouton Déconnexion amélioré */}

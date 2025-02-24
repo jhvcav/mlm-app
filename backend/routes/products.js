@@ -23,4 +23,23 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Modifier un produit
+router.put('/:id', async (req, res) => {
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id, // Récupère l'ID du produit
+            req.body,      // Met à jour les champs avec ceux envoyés dans la requête
+            { new: true }  // Retourne l'objet mis à jour
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ error: "Produit non trouvé" });
+        }
+
+        res.json(updatedProduct);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

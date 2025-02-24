@@ -145,6 +145,10 @@ const handleDeleteMember = async (memberEmail) => {
     }
 };
 
+const handleHistoryMember = (member) => {
+    navigate(`/member/${member._id}/history`);
+};
+
 
 const handleSaveMember = (updatedMember) => {
     setMembers(prevMembers =>
@@ -159,12 +163,9 @@ const handleSaveMember = (updatedMember) => {
 
             {/* ✅ Boutons d'accès */}
             <div className="admin-buttons">
-                <button onClick={() => navigate('/admin-list')} className="btn-admin">👨‍💼 Liste des Admins</button>
-                <button onClick={() => navigate('/member-list')} className="btn-members">👥 Liste des Membres</button>
                 {/* ✅ Bouton pour accéder à l'historique sur une autre page */}
-                <button onClick={() => navigate("/admin-historique-activites")} className="btn-history">📜 Voir l'historique des activités</button>
-                <button onClick={openRegistrationWindow} className="btn-add-user">➕ Inscrire un utilisateur</button>
-                <button onClick={() => navigate("/member-dashboard")} className="btn-profile">👤 Profil</button>
+                <button onClick={() => navigate("/member-dashboard")} className="btn-dashboard-user btn-medium">👤 Tableau de bord User</button>
+                <button onClick={openRegistrationWindow} className="btn-add-user btn-medium">➕ Inscrire un utilisateur</button>
             </div>
 
             {/* ✅ Liste des administrateurs */}
@@ -183,7 +184,8 @@ const handleSaveMember = (updatedMember) => {
                     members={members} 
                     onEdit={handleEditMember} 
                     onDelete={handleDeleteMember} 
-                    onView={handleViewMember} 
+                    onView={handleViewMember}
+                    onHistory={handleHistoryMember}
                 />
             </div>
 

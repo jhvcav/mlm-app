@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./AdminDetailsPage.css"; // ✅ Ajout du fichier CSS
+import "./AdminDetailsPage.css"; // ✅ Fichier CSS
 
 const AdminDetailsPage = () => {
     const { adminId } = useParams();
@@ -58,6 +58,28 @@ const AdminDetailsPage = () => {
         }
     };
 
+    const handleDelete = async () => {
+        const token = localStorage.getItem("token");
+
+        if (window.confirm("❌ Êtes-vous sûr de vouloir supprimer cet administrateur ?")) {
+            try {
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/admin/${adminId}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    alert("✅ Administrateur supprimé !");
+                    navigate("/superadmin-dashboard");
+                } else {
+                    alert("❌ Erreur lors de la suppression.");
+                }
+            } catch (error) {
+                alert("❌ Problème technique.");
+            }
+        }
+    };
+
     if (!admin) return <p>Chargement des informations...</p>;
 
     return (
@@ -76,7 +98,7 @@ const AdminDetailsPage = () => {
 
                 <div className="form-group">
                     <label>Email :</label>
-                    <input type="email" name="email" value={formData.email || ""} onChange={handleChange} disabled />
+                    <input type="email" name="email" value={formData.email || ""} disabled />
                 </div>
 
                 <div className="form-group">
@@ -84,34 +106,11 @@ const AdminDetailsPage = () => {
                     <input type="text" name="phone" value={formData.phone || ""} onChange={handleChange} />
                 </div>
 
-                <div className="form-group">
-                    <label>Adresse :</label>
-                    <input type="text" name="address" value={formData.address || ""} onChange={handleChange} />
-                </div>
-
-                <div className="form-group">
-                    <label>Pays :</label>
-                    <input type="text" name="country" value={formData.country || ""} onChange={handleChange} />
-                </div>
-
-                <div className="form-group">
-                <label htmlFor="role">Rôle :</label>
-                <select 
-                    id="role" 
-                    name="role" 
-                    value={formData.role} 
-                    onChange={handleChange} 
-                    className="admin-role"
-                >
-                    <option value="admin">Member</option>
-                    <option value="admin">Administrateur</option>
-                    <option value="superadmin">Super Administrateur</option>
-                </select>
-                </div>
-
                 <div className="button-container">
                     <button type="button" className="btn-save" onClick={handleSave}>💾 Enregistrer</button>
-                    <button type="button" className="btn-cancel" onClick={() => navigate("/superadmin-dashboard")}>❌ Annuler</button>
+                    <button type="button" className="btn-delete" onClick={handleDelete}>🗑️ Supprimer</button>
+                    <button type="button" className="btn-history" onClick={() => navigate(`/admin-history/${adminId}`)}>📜 Historique</button>
+                    <button type="button" className="btn-cancel" onClick={() => navigate("/superadmin-dashboard")}>❌ Retour</button>
                 </div>
             </form>
         </div>

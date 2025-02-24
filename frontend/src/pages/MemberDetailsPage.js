@@ -7,12 +7,7 @@ const MemberDetailsPage = () => {
     const navigate = useNavigate();
     const [member, setMember] = useState(null);
     const [formData, setFormData] = useState({});
-    const [sponsorsList, setSponsorsList] = useState([]);
-    const user = JSON.parse(localStorage.getItem("user"));
     const [sponsors, setSponsors] = useState([]);
-
-// Vérifier si l'utilisateur connecté est Admin ou SuperAdmin
-const isAdmin = user?.role === "admin" || user?.role === "superadmin";
 
     useEffect(() => {
         const fetchMemberDetails = async () => {
@@ -32,15 +27,6 @@ const isAdmin = user?.role === "admin" || user?.role === "superadmin";
                 setMember(data);
                 setFormData(data);
 
-                // ✅ Récupérer la liste des sponsors pour modification
-                const sponsorsResponse = await fetch("https://mlm-app-jhc.fly.dev/api/members", {
-                    headers: { "Authorization": `Bearer ${token}` }
-                });
-
-                if (sponsorsResponse.ok) {
-                    const sponsorsData = await sponsorsResponse.json();
-                    setSponsorsList(sponsorsData);
-                }
             } catch (error) {
                 alert("❌ Erreur technique, impossible de charger les données.");
             }
@@ -123,6 +109,34 @@ useEffect(() => {
         }
     };
 
+    // ✅ Supprimer le membre
+    const handleDelete = async () => {
+        if (!window.confirm("❌ Êtes-vous sûr de vouloir supprimer ce membre ?")) return;
+
+        const token = localStorage.getItem("token");
+
+        try {
+            const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/members/${member.email}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+
+            if (response.ok) {
+                alert("✅ Membre supprimé avec succès !");
+                navigate(-1); // Retour à la page précédente
+            } else {
+                alert("❌ Erreur lors de la suppression.");
+            }
+        } catch (error) {
+            alert("❌ Problème technique.");
+        }
+    };
+
+     // ✅ Voir l'historique des activités
+     const handleViewHistory = () => {
+        navigate(`/member/${memberId}/history`);
+    };
+
     if (!member) return <p>Chargement des informations...</p>;
 
     return (
@@ -192,6 +206,8 @@ useEffect(() => {
 
                 <div className="button-container">
                     <button type="button" className="btn-save" onClick={handleSave}>💾 Enregistrer</button>
+                    <button type="button" className="btn-history" onClick={handleViewHistory}>📜 Historique</button>
+                    <button type="button" className="btn-delete" onClick={handleDelete}>❌ Supprimer</button>
                     <button type="button" className="btn-cancel" onClick={() => navigate("/superadmin-dashboard")}>❌ Retour</button>
                 </div>
             </form>

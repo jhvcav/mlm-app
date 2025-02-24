@@ -1,52 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './WalletsPage.css';
 
-const API_URL = "https://mlm-app-jhc.fly.dev/api/wallets";
-
 const WalletsPage = () => {
-    const [wallets, setWallets] = useState([]);
-    const [selectedWalletId, setSelectedWalletId] = useState("");
-    const [enteredPassword, setEnteredPassword] = useState("");
+    let { memberId } = useParams();
     const navigate = useNavigate();
+    const [wallets, setWallets] = useState([]);
 
-    // Charger la liste des wallets
+    // 🔹 Si `memberId` est `undefined`, essayer de le récupérer depuis `localStorage`
+    if (!memberId) {
+        memberId = localStorage.getItem("memberId");
+    }
+
+    // 🔹 Vérification de `memberId` et de l’URL
+    alert("🔗 URL actuelle : " + window.location.href);
+    alert("🆔 ID du membre récupéré : " + memberId);
+
     useEffect(() => {
+        if (!memberId) {
+            alert("❌ Aucun ID membre trouvé !");
+            return;
+        }
+
+        const API_URL = `https://mlm-app-jhc.fly.dev/api/wallets/member/${memberId}`;
+        alert("📡 Requête envoyée à : " + API_URL);
+
         fetch(API_URL)
             .then(res => res.json())
-            .then(data => setWallets(data))
-            .catch(err => console.error("❌ Erreur chargement des wallets :", err));
-    }, []);
-
-    // Fonction pour vérifier le mot de passe du wallet sélectionné
-    const checkPassword = async () => {
-        if (!selectedWalletId) {
-            alert("❌ Veuillez sélectionner un wallet !");
-            return;
-        }
-        if (!enteredPassword) {
-            alert("❌ Veuillez entrer un mot de passe !");
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_URL}/verify-password`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ walletId: selectedWalletId, passwordToCheck: enteredPassword })
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert("✅ Mot de passe correct !");
-            } else {
-                alert("❌ Mot de passe incorrect !");
-            }
-        } catch (error) {
-            console.error("❌ Erreur lors de la vérification du mot de passe :", error);
-            alert("❌ Erreur interne du serveur.");
-        }
-    };
+            .then(data => {
+                alert("✅ Données reçues de l'API : " + JSON.stringify(data));
+                setWallets(data);
+            })
+            .catch(err => alert("❌ Erreur chargement des wallets : " + err));
+    }, [memberId]);
 
     return (
         <div className="wallets-container">
@@ -82,34 +68,6 @@ const WalletsPage = () => {
                     )}
                 </tbody>
             </table>
-
-            {/* Vérification du mot de passe */}
-            {wallets.length > 0 && (
-                <div className="wallet-verification">
-                    <h3>🔑 Vérifier votre wallet</h3>
-
-                    {/* Sélectionner un wallet */}
-                    <select onChange={(e) => setSelectedWalletId(e.target.value)} value={selectedWalletId}>
-                        <option value="">-- Sélectionnez un wallet --</option>
-                        {wallets.map(wallet => (
-                            <option key={wallet._id} value={wallet._id}>
-                                {wallet.walletName} ({wallet.publicAddress})
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Champ de saisie du mot de passe */}
-                    <input
-                        type="password"
-                        placeholder="Entrez votre mot de passe"
-                        value={enteredPassword}
-                        onChange={(e) => setEnteredPassword(e.target.value)}
-                    />
-                    
-                    {/* Bouton de vérification */}
-                    <button onClick={checkPassword}>✅ Vérifier</button>
-                </div>
-            )}
         </div>
     );
 };

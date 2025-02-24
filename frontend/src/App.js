@@ -12,6 +12,9 @@ import SponsoredMembersPage from "./pages/SponsoredMembersPage"; // ✅ Import d
 import AddAffiliates from "./pages/AddAffiliates";
 import AdminHistoryActivites from "./pages/AdminHistoryActivites";
 import NetworkTree from "./pages/NetworkTree"; // ✅ Importer la page
+import ProductsPage from "./pages/ProductsPage";
+import WalletsPage from "./pages/WalletsPage";
+import WalletForm from "./pages/WalletForm"
 
 // ✅ Middleware pour protéger les routes selon le rôle
 const PrivateRoute = ({ element, allowedRoles }) => {
@@ -50,6 +53,9 @@ const AppContent = () => {
                     <Route path="/admin-historique-activites" element={<AdminHistoryActivites />} />
                     <Route path="/member/:memberId/history" element={<MemberHistoryPage />} />
                     <Route path="/network-tree" element={<NetworkTree />} />
+                    <Route path="/products" element={<ProductsPage />} />
+                    <Route path="/Wallets-form" element={<WalletForm />} />
+                    <Route path="/wallets/:memberId" element={<WalletsPage />} />
                 </Routes>
             </div>
         </>

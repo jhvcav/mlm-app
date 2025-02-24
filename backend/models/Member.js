@@ -10,6 +10,7 @@ const MemberSchema = new mongoose.Schema({
     country: { type: String, required: false, default: "Non spécifié" },
     affiliates: [{ type: mongoose.Schema.Types.ObjectId, ref: "Member" }], // 🔹 Liste des affiliés
     sponsorId: { type: mongoose.Schema.Types.ObjectId, ref: "Member" }, // ✅ Référence au modèle Member
+    wallets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' }],
     role: { 
         type: String, 
         enum: ['superadmin', 'admin', 'member'], 

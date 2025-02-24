@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './ProductsPage.css';
 
 const ProductsPage = () => {
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         price: '',
         duration: '',
-        commission: '',
-        level: '',
         description: ''
     });
 
@@ -43,7 +39,7 @@ const ProductsPage = () => {
 
         if (response.ok) {
             alert(formData._id ? '✅ Produit modifié !' : '✅ Produit ajouté !');
-            setFormData({ name: '', price: '', duration: '', commission: '', level: '', description: '' });
+            setFormData({ name: '', price: '', duration: '', description: '' });
             window.location.reload();
         } else {
             alert("❌ Erreur lors de l'enregistrement.");
@@ -51,8 +47,13 @@ const ProductsPage = () => {
     };
 
     const handleEdit = (product) => {
+        if (!product._id) {
+            console.error("Erreur : ID du produit introuvable.");
+            return;
+        }
+    
         setFormData(product);
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Remonter en haut du formulaire
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDelete = async (productId) => {

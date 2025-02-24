@@ -1,0 +1,81 @@
+/* ✅ Conteneur du tableau des Admins */
+.table-admins-container {
+    width: 100%;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    overflow-x: auto;
+    position: relative;
+}
+
+/* ✅ Style du tableau */
+.styled-table-admins {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+/* ✅ Centrer le texte et espacement correct */
+.styled-table-admins th, .styled-table-admins td {
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+/* ✅ Style du bouton Actions */
+.actions-dropdown-admins {
+    position: relative;
+    display: inline-block;
+    z-index: 9999;
+}
+
+.actions-button-admins {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10001;
+}
+
+.actions-button-admins:hover {
+    background-color: #0056b3;
+}
+
+/* ✅ Style du menu d'actions */
+.actions-menu-admins {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    text-align: left;
+}
+
+.actions-dropdown-admins:hover .actions-menu-admins {
+    display: block;
+}
+
+/* ✅ Boutons du menu */
+.actions-menu-admins button {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    color: black;
+}
+
+.actions-menu-admins button:hover {
+    background-color: #f1f1f1;
+}

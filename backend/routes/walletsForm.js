@@ -5,6 +5,7 @@ const WalletForm = () => {
     const [members, setMembers] = useState([]); // Liste des membres
     const [selectedMember, setSelectedMember] = useState(""); // Membre sélectionné
     const [walletData, setWalletData] = useState({
+        ownerid: '',
         walletName: '',
         publicAddress: '',
         encryptedPassword: '',
@@ -15,7 +16,7 @@ const WalletForm = () => {
 
     // Charger la liste des membres pour la sélection
     useEffect(() => {
-        fetch('https://mlm-app.onrender.com/api/members')
+        fetch('https://mlm-app.fly.dev/api/members')
             .then(res => res.json())
             .then(data => setMembers(data))
             .catch(err => console.error("❌ Erreur lors du chargement des membres :", err));
@@ -37,7 +38,7 @@ const WalletForm = () => {
             return;
         }
 
-        const response = await fetch('https://mlm-app.onrender.com/api/wallets/add-wallet', {
+        const response = await fetch('https://mlm-app.fly.dev/api/wallets/add-wallet', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ memberId: selectedMember, ...walletData })
