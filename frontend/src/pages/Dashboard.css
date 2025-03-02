@@ -1,53 +1,35 @@
-/* Conteneur principal du Dashboard */
+/* ✅ Conteneur principal du tableau de bord */
 .dashboard {
-    max-width: 900px;
-    margin: auto;
-    text-align: center;
+    display: flex;
+    flex-direction: column; /* ✅ Organise les éléments en colonne */
+    align-items: center; /* ✅ Centre le contenu horizontalement */
+    justify-content: center; /* ✅ Centre le contenu verticalement */
+    width: 100%;
+    min-height: 100vh; /* ✅ Utiliser toute la hauteur de l'écran */
     padding: 20px;
+    text-align: center; /* ✅ Centrer le texte */
 }
 
-/* Style des graphiques */
+/* ✅ Conteneur des graphiques */
 .chart-container {
     width: 100%;
-    height: 300px;
-    margin: 20px auto;
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Titre du Dashboard */
-.dashboard h2 {
-    font-size: 32px;
-    font-weight: bold;
-    color: #007bff;
-    margin-bottom: 20px;
-}
-
-.modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    max-width: 500px; /* ✅ Largeur maximale */
+    height: 400px; /* ✅ Hauteur contrôlée */
     background: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* ✅ Centre chaque graphique */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.modal input {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 8px;
-}
-
-.modal button {
-    margin: 5px;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
+/* ✅ S'assurer que les graphiques ne débordent pas */
+.chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 350px !important; /* ✅ Limite la largeur */
+    max-height: 300px !important;
 }

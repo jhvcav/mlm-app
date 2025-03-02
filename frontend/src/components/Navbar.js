@@ -14,7 +14,7 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <ul className="nav-list">
-                <li><Link to="/">🏠 Accueil</Link></li>
+                <li><Link to="Dashboard">🏠 Accueil</Link></li>
 
                 {user && user.role === "superadmin" && (
                     <li><Link to="/superadmin-dashboard">🔑 Super Admin</Link></li>
@@ -32,7 +32,7 @@ const Navbar = () => {
                 👥 Membres Affiliés
                 </li>
 
-                <li><Link to="/products">🛍️ Produits</Link></li>
+                <li className="nav-list" onClick={() => navigate("/products-enr")}>📦 Produits</li>
                 <li><Link to={`/wallets/${localStorage.getItem("memberId")}`}>Voir mes Wallets</Link></li>
                 <li><Link to="/progress">📈 Progression</Link></li>
 

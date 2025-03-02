@@ -1,174 +1,116 @@
 /* ✅ Conteneur principal */
-.member-details-container {
-    width: 60%; /* 🔹 Ajuste la largeur du conteneur */
-    max-width: 800px; /* 🔹 Définit une largeur maximale */
-    margin: 30px auto; /* 🔹 Centre la page */
-    padding: 25px; /* 🔹 Ajuste l’espace intérieur */
-    background: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    text-align: center;
+.admin-details-container {
+    width: 90%; /* Largeur globale ajustable */
+    max-width: 800px; /* Limite la largeur */
+    margin: auto; /* Centre horizontalement */
+    padding: 20px; /* Espace interne */
+    
+    /* 🔧 Permet d'ajuster les espaces gauche et droite */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* ✅ Ajuster la taille et couleur des titres */
-.member-details-container h1 {
-    color: #333;
-    font-size: 28px; /* 🔹 Ajuste la taille du titre */
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-/* ✅ Conteneur du formulaire */
-.member-form {
+/* ✅ Formulaire */
+.admin-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    align-items: center; /* Centre les champs */
+    gap: 15px; /* Espacement vertical entre les champs */
+    
+    /* 🔧 Ajustement des espaces gauche et droite */
+    padding-left: 30px; /* Modifie l’espace à gauche */
+    padding-right: 30px; /* Modifie l’espace à droite */
 }
 
-/* ✅ Agir sur les champs */
+/* ✅ Champs de saisie */
 .form-group {
+    width: 100%; /* Prend toute la largeur */
     display: flex;
     flex-direction: column;
-    align-items: center; /* 🔹 Centre les champs */
-    width: 100%;
-    margin-bottom: 10px; /* 🔹 Ajuste l’espace entre les champs */
+    align-items: center; /* Centre les champs */
 }
 
-/* ✅ Modifier la taille des labels */
-.form-group label {
-    font-size: 18px; /* 🔹 Ajuste la taille du texte des labels */
-    font-weight: bold;
-    color: #444;
-    margin-bottom: 5px;
-}
-
-/* ✅ Ajuster la taille et le style des champs */
-.form-group input,
-.form-group select {
-    width: 85%; /* 🔹 Ajuste la largeur */
-    max-width: 600px; /* 🔹 Définit une largeur maximale */
-    height: 45px; /* 🔹 Ajuste la hauteur des champs */
-    font-size: 16px;
+/* ✅ Champs de saisie (input) */
+.form-group input, .form-group select {
+    width: 60%; /* Prend toute la largeur du container */
+    max-width: 400px; /* 🔧 Ajuste la largeur */
     padding: 10px;
+    font-size: 20px; /* Modifie la taille des textes des champs */
     border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: all 0.3s ease-in-out;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-/* ✅ Ajustement spécifique pour le champ "Sponsor" */
-.member-sponsor {
-    height: 50px;
-    font-size: 16px;
-    padding: 10px;
-    border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #fff;
-    width: 85%;
+    text-align: center; /* Centre les textes des champs */
+
+    /* 🔧 Ajuste les marges gauche/droite */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* ✅ Ajuster la hauteur du champ "Rôle" */
-.member-role {
-    height: 45px;
+/* ✅ Labels */
+.form-group label {
     font-size: 16px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
-    width: 85%;
-}
-
-/* ✅ Ajustement spécifique pour les textareas */
-.member-form textarea {
-    height: 100px; /* 🔹 Augmente la hauteur des zones de texte */
-    resize: vertical; /* 🔹 Permet à l'utilisateur d'agrandir le champ */
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 /* ✅ Conteneur des boutons */
 .button-container {
     display: flex;
-    justify-content: space-around; /* 🔹 Espacement entre les boutons */
-    flex-wrap: wrap; /* 🔹 Permet de s’adapter aux petits écrans */
+    flex-direction: column; /* Boutons en colonne */
+    align-items: center; /* Centre les boutons horizontalement */
+    gap: 12px; /* Espacement entre les boutons */
     margin-top: 20px;
+    width: 100%;
 }
 
-/* ✅ Modifier les boutons */
-.btn-save, .btn-cancel, .btn-delete, .btn-history {
-    width: 45%; /* 🔹 Ajuste la largeur des boutons */
-    max-width: 250px; /* 🔹 Largeur max pour éviter l’étirement */
-    height: 50px; /* 🔹 Ajuste la hauteur */
-    font-size: 16px; /* 🔹 Ajuste la taille du texte */
+/* ✅ Boutons uniformisés */
+.button-container button {
+    width: 90%; /* Largeur uniforme */
+    max-width: 250px; /* Ajustable */
+    padding: 14px;
+    font-size: 16px;
     font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: 0.3s;
+    text-align: center;
 }
 
-/* ✅ Bouton Enregistrer */
+/* ✅ Bouton "Enregistrer" avec possibilité d'ajuster le centrage */
 .btn-save {
     background-color: #28a745;
     color: white;
+
+    /* 🔧 Ajustement manuel de la position gauche/droite */
+    margin-left: auto; /* Ajuster vers la gauche */
+    margin-right: auto; /* Ajuster vers la droite */
 }
 
-.btn-save:hover {
-    background-color: #218838;
-}
-
-/* ✅ Bouton Supprimer */
+/* ✅ Styles pour les autres boutons */
 .btn-delete {
     background-color: #dc3545;
     color: white;
 }
 
-.btn-delete:hover {
-    background-color: #c82333;
-}
-
-/* ✅ Bouton Historique */
 .btn-history {
-    background-color: #17a2b8;
+    background-color: #007bff;
     color: white;
 }
 
-.btn-history:hover {
-    background-color: #138496;
-}
-
-/* ✅ Bouton Retour */
 .btn-cancel {
     background-color: #6c757d;
     color: white;
 }
 
-.btn-cancel:hover {
-    background-color: #545b62;
+/* ✅ Effet au survol */
+.button-container button:hover {
+    opacity: 0.8;
 }
 
-/* ✅ Adapter pour mobile */
-@media (max-width: 768px) {
-    .member-details-container {
-        width: 90%;
-    }
-
-    .form-group input,
-    .form-group select {
-        width: 95%;
-        font-size: 18px;
-    }
-
-    .button-container {
-        flex-direction: column; /* 🔹 Met les boutons en colonne */
-        gap: 10px;
-        align-items: center;
-    }
-
-    .btn-save, .btn-cancel, .btn-delete, .btn-history {
-        width: 90%; /* 🔹 Ajuste la largeur sur mobile */
+/* ✅ Responsive : Ajustement pour petits écrans */
+@media (max-width: 600px) {
+    .button-container button {
+        width: 100%;
+        max-width: 300px;
     }
 }

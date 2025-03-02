@@ -5,7 +5,7 @@ const MemberSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: false },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     address: { type: String, required: false},
     country: { type: String, required: false, default: "Non spécifié" },
     affiliates: [{ type: mongoose.Schema.Types.ObjectId, ref: "Member" }], // 🔹 Liste des affiliés

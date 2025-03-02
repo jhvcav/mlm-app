@@ -13,8 +13,15 @@ import AddAffiliates from "./pages/AddAffiliates";
 import AdminHistoryActivites from "./pages/AdminHistoryActivites";
 import NetworkTree from "./pages/NetworkTree"; // ✅ Importer la page
 import ProductsPage from "./pages/ProductsPage";
+import MesWallets from "./pages/WalletsPage";
+import WalletForm from "./pages/WalletForm";
+import Dashboard from "./pages/Dashboard";
 import WalletsPage from "./pages/WalletsPage";
-import WalletForm from "./pages/WalletForm"
+import ProductsEnr from "./pages/ProductsEnr";
+import ProductsListe from "./pages/ProductsListe";
+import ProductModifier from "./pages/ProductModifier";
+import EditAffiliate from "./pages/EditAffiliate";
+import MLMTree from "./pages/MLMTree";
 
 // ✅ Middleware pour protéger les routes selon le rôle
 const PrivateRoute = ({ element, allowedRoles }) => {
@@ -39,7 +46,8 @@ const AppContent = () => {
 
             <div className="container">
                 <Routes>
-                    <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login />} />
                     <Route path="/" element={<Navigate to="/login" />} />
                     <Route path="/inscription" element={<Inscription />} />
                     <Route path="/superadmin-dashboard" element={<PrivateRoute element={<SuperAdminDashboard />} allowedRoles={["superadmin"]} />} />
@@ -53,9 +61,19 @@ const AppContent = () => {
                     <Route path="/admin-historique-activites" element={<AdminHistoryActivites />} />
                     <Route path="/member/:memberId/history" element={<MemberHistoryPage />} />
                     <Route path="/network-tree" element={<NetworkTree />} />
-                    <Route path="/products" element={<ProductsPage />} />
-                    <Route path="/Wallets-form" element={<WalletForm />} />
-                    <Route path="/wallets/:memberId" element={<WalletsPage />} />
+                    <Route path="/products" element={<PrivateRoute element={<ProductsPage />} allowedRoles={["admin", "superadmin"]} />} />
+                    <Route path="/wallets-form" element={<WalletForm />} />
+                    <Route path="/member/:memberId" element={<MesWallets />} />
+                    <Route path="/Dashboard" element={<Dashboard />} />
+                    <Route path="/wallets/:memberId" element={<MesWallets />} />
+                    <Route path="/Wallets-page" element={<WalletsPage />} />
+                    <Route path="/products-enr" element={<ProductsEnr />} />
+                    <Route path="/products-liste" element={<ProductsListe />} />
+                    <Route path="/products-page" element={<PrivateRoute element={<ProductsPage />} allowedRoles={["admin", "superadmin"]} />} />
+                    <Route path="/product-modifier/:productId" element={<ProductModifier />} />
+                    <Route path="/member/register" element={<AddAffiliates />} />
+                    <Route path="/edit-affiliate/:affiliateId" element={<EditAffiliate />} />
+                    <Route path="/MLM-tree" element={<MLMTree />} />
                 </Routes>
             </div>
         </>

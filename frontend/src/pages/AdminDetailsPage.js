@@ -7,11 +7,13 @@ const AdminDetailsPage = () => {
     const navigate = useNavigate();
     const [admin, setAdmin] = useState(null);
     const [formData, setFormData] = useState({});
+    const [members, setMembers] = useState([]); // ✅ Liste des membres pour le menu déroulant
 
     useEffect(() => {
-        const fetchAdminDetails = async () => {
-            const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
+        // ✅ Récupération des détails de l'admin
+        const fetchAdminDetails = async () => {
             try {
                 const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/admin/${adminId}`, {
                     headers: { "Authorization": `Bearer ${token}` }
@@ -30,13 +32,51 @@ const AdminDetailsPage = () => {
             }
         };
 
-        if (adminId) fetchAdminDetails();
+        // ✅ Récupération de la liste des membres pour le menu déroulant
+        const fetchMembers = async () => {
+            try {
+                const response = await fetch("https://mlm-app-jhc.fly.dev/api/members", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    alert("❌ Erreur lors de la récupération des membres.");
+                    return;
+                }
+
+                const data = await response.json();
+                setMembers(data);
+            } catch (error) {
+                alert("❌ Impossible de récupérer la liste des membres.");
+            }
+        };
+
+        if (adminId) {
+            fetchAdminDetails();
+            fetchMembers();
+        }
     }, [adminId]);
 
+    // ✅ Gestion des changements dans le formulaire
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // ✅ Gestion du changement du sponsor via le menu déroulant
+    const handleSponsorChange = (e) => {
+        const selectedSponsorId = e.target.value;
+        const selectedSponsor = members.find(member => member._id === selectedSponsorId);
+
+        if (selectedSponsor) {
+            setFormData({
+                ...formData,
+                sponsorId: selectedSponsor._id,
+                sponsorName: `${selectedSponsor.firstName} ${selectedSponsor.lastName}`
+            });
+        }
+    };
+
+    // ✅ Sauvegarde des modifications
     const handleSave = async () => {
         const token = localStorage.getItem("token");
 
@@ -58,6 +98,7 @@ const AdminDetailsPage = () => {
         }
     };
 
+    // ✅ Suppression de l'admin
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
 
@@ -80,7 +121,7 @@ const AdminDetailsPage = () => {
         }
     };
 
-    if (!admin) return <p>Chargement des informations...</p>;
+    if (!admin) return <p>⏳ Chargement des informations...</p>;
 
     return (
         <div className="admin-details-container">
@@ -104,6 +145,19 @@ const AdminDetailsPage = () => {
                 <div className="form-group">
                     <label>Téléphone :</label>
                     <input type="text" name="phone" value={formData.phone || ""} onChange={handleChange} />
+                </div>
+
+                {/* ✅ Ajout du menu déroulant pour sélectionner le Sponsor */}
+                <div className="form-group">
+                    <label>🎖️ Sponsor :</label>
+                    <select name="sponsorId" value={formData.sponsorId || ""} onChange={handleSponsorChange}>
+                        <option value="">-- Sélectionner un sponsor --</option>
+                        {members.map(member => (
+                            <option key={member._id} value={member._id}>
+                                {member.firstName} {member.lastName}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div className="button-container">

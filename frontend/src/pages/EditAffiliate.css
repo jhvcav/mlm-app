@@ -1,0 +1,116 @@
+/* ✅ Conteneur principal du formulaire */
+.edit-affiliate-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* ✅ Place le formulaire en haut */
+    min-height: 100vh;
+    padding: 20px;
+    margin-top: -20px; /* 🔹 Ajuste cette valeur pour remonter encore plus */
+}
+
+/* ✅ Centrer le titre */
+.edit-affiliate-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* ✅ Conteneur du formulaire */
+.edit-affiliate-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Labels */
+.edit-affiliate-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    align-self: center; /* Centre le label */
+    text-align: center; /* Centre le texte à l'intérieure des champs */
+    width: 100%; /* Permet un bon alignement */
+}
+
+/* ✅ Champs de saisie */
+.edit-affiliate-input, .edit-affiliate-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center; /* Centre les textes à l'intérieur des champs */
+}
+
+/* ✅ Conteneur des boutons */
+.edit-affiliate-buttons {
+    display: flex;
+    justify-content: center; /* 🔹 Centre les boutons horizontalement */
+    align-items: center; /* 🔹 Aligne les boutons sur le même axe vertical */
+    gap: 20px; /* 🔹 Ajoute un espace entre les boutons */
+    margin-top: 20px; /* 🔹 Ajoute un espace entre les champs et les boutons */
+}
+
+/* ✅ Styles des boutons */
+.edit-affiliate-buttons button {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    height: 50px; /* 🔹 Assure que tous les boutons ont la même hauteur */
+    display: flex;
+    align-items: center; /* 🔹 Centre le texte verticalement */
+}
+
+/* ✅ Style spécifique pour le bouton Enregistrer */
+.edit-affiliate-buttons .save-btn {
+    background-color: #28a745; /* 🔹 Vert */
+    color: white;
+}
+
+/* ✅ Style spécifique pour le bouton Annuler */
+.edit-affiliate-buttons .cancel-btn {
+    background-color: #dc3545; /* 🔹 Rouge */
+    color: white;
+}
+
+/* ✅ Effet au survol */
+.edit-affiliate-buttons button:hover {
+    opacity: 0.8;
+}
+
+/* ✅ Style du champ Sponsor (liste déroulante) */
+.edit-affiliate-form select {
+    height: 50px; /* 🔹 Augmente la hauteur */
+    font-size: 16px; /* 🔹 Ajuste la taille du texte */
+    padding: 10px; /* 🔹 Ajoute de l'espace à l'intérieur */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%; /* 🔹 Assure une largeur uniforme */
+    background-color: white;
+}
+
+/* ✅ Style du champ Sponsor (liste déroulante) */
+.edit-affiliate-form select {
+    height: 50px; /* 🔹 Augmente la hauteur */
+    font-size: 16px; /* 🔹 Ajuste la taille du texte */
+    padding: 10px; /* 🔹 Ajoute de l'espace à l'intérieur */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%; /* 🔹 Assure une largeur uniforme */
+    background-color: white;
+    text-align: center; /* 🔹 Centre le texte */
+    text-align-last: center; /* 🔹 Centre aussi le texte des options */
+}

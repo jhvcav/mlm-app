@@ -1,133 +1,169 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './WalletForm.css'; // Ajoute un fichier CSS dédié
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const WalletForm = () => {
-    const [members, setMembers] = useState([]); // Liste des membres
-    const [selectedMember, setSelectedMember] = useState(""); // Membre sélectionné
-    const [loading, setLoading] = useState(true); // Indicateur de chargement
-    const [walletData, setWalletData] = useState({
-        walletName: '',
-        publicAddress: '',
-        encryptedPassword: '',
-        secretPhrase: ''
-    });
-
+    const location = useLocation();
     const navigate = useNavigate();
+    const wallet = location.state ? location.state.wallet : null;
 
-    // Charger la liste des membres pour la sélection
-    useEffect(() => {
-        fetch('https://mlm-app-jhc.fly.dev/api/members')
-            .then(res => res.json())
-            .then(data => {
-                setMembers(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error("❌ Erreur lors du chargement des membres :", err);
-                setLoading(false);
-            });
-    }, []);
+    // ✅ États pour les champs modifiables
+    const [walletName, setWalletName] = useState(wallet ? wallet.walletName : "");
+    const [publicAddress, setPublicAddress] = useState(wallet ? wallet.publicAddress : "");
+    const [encryptedPassword, setEncryptedPassword] = useState(wallet ? wallet.encryptedPassword : "");
+    const [secretPhrase, setSecretPhrase] = useState(wallet ? wallet.secretPhrase : "");
 
-    const handleChange = (e) => {
-        setWalletData({ ...walletData, [e.target.name]: e.target.value });
-    };
-
-    const handleMemberChange = (e) => {
-        setSelectedMember(e.target.value);
-    };
-
+    // ✅ Fonction pour gérer la soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        alert("📤 Tentative d'enregistrement du Wallet..."); // 1️⃣ Vérifier si la fonction est bien exécutée
-    
-        if (!selectedMember) {
-            alert("❌ Veuillez sélectionner un membre !");
-            return;
-        }
-    
-        const requestData = { 
-            memberId: selectedMember, 
-            ...walletData 
-        };
-    
-        alert("📦 Données envoyées : " + JSON.stringify(requestData)); // 2️⃣ Vérifier les données envoyées
-    
+
         try {
-            const response = await fetch('https://mlm-app-jhc.fly.dev/api/wallets/add-wallet', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestData)
+            const token = localStorage.getItem("token");
+            const url = `https://mlm-app-jhc.fly.dev/api/wallets/${wallet._id}`;
+
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    walletName,
+                    publicAddress,
+                    encryptedPassword,
+                    secretPhrase
+                })
             });
-    
-            alert("🔄 Réponse du serveur reçue..."); // 3️⃣ Vérifier si la réponse arrive
-    
-            const responseData = await response.json(); // Récupérer la réponse JSON du serveur
-            alert("📝 Réponse JSON : " + JSON.stringify(responseData));
-    
-            if (response.ok) {
-                alert('✅ Wallet ajouté avec succès !');
-                navigate('/wallets'); // Retour à la liste des wallets
-            } else {
-                alert("❌ Erreur lors de l'ajout du wallet : " + (responseData.error || "Réponse invalide"));
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Erreur lors de la mise à jour du wallet.");
             }
+
+            alert("✅ Wallet mis à jour avec succès !");
+            navigate("/Wallets-page"); // ✅ Retour à la liste des wallets après modification
         } catch (error) {
-            alert("❌ Erreur réseau : " + error.message); // 5️⃣ Vérifier si c'est un problème réseau
+            alert(`❌ Erreur : ${error.message}`);
         }
     };
 
     return (
-        <div className="form-container">
-            <h2 className="form-title">💰 Ajouter un Wallet</h2>
-            
-            <form onSubmit={handleSubmit} className="wallet-form">
-                {/* Sélection du membre */}
-                <div className="form-group">
-                    <label htmlFor="member">👤 Sélectionner un membre :</label>
-                    <select name="member" id="member" onChange={handleMemberChange} required>
-                        <option value="">-- Sélectionner un membre --</option>
-                        {loading ? (
-                            <option disabled>Chargement en cours...</option>
-                        ) : (
-                            members.map(member => (
-                                <option key={member._id} value={member._id}>
-                                    {member.firstName} {member.name} ({member.email})
-                                </option>
-                            ))
-                        )}
-                    </select>
-                </div>
+        <div style={containerStyle}>
+            <h1 style={{ textAlign: "center" }}>📝 Modifier le Wallet</h1>
 
-                {/* Champs du formulaire */}
-                <div className="form-group">
-                    <label htmlFor="walletName">🏷️ Nom du Wallet :</label>
-                    <input type="text" id="walletName" name="walletName" placeholder="Ex: Wallet Principal" value={walletData.walletName} onChange={handleChange} required />
-                </div>
+            {wallet ? (
+                <form onSubmit={handleSubmit} style={formStyle}>
+                    <label style={labelStyle}>📌 Nom du Wallet :</label>
+                    <input 
+                        type="text" 
+                        value={walletName} 
+                        onChange={(e) => setWalletName(e.target.value)} 
+                        required
+                        style={inputStyle}
+                    />
 
-                <div className="form-group">
-                    <label htmlFor="publicAddress">🔗 Adresse Publique :</label>
-                    <input type="text" id="publicAddress" name="publicAddress" placeholder="Ex: 0x123..." value={walletData.publicAddress} onChange={handleChange} required />
-                </div>
+                    <label style={labelStyle}>🔗 Adresse Publique :</label>
+                    <input 
+                        type="text" 
+                        value={publicAddress} 
+                        onChange={(e) => setPublicAddress(e.target.value)} 
+                        required
+                        style={inputStyle}
+                    />
 
-                <div className="form-group">
-                    <label htmlFor="encryptedPassword">🔒 Mot de passe (chiffré) :</label>
-                    <input type="password" id="encryptedPassword" name="encryptedPassword" placeholder="••••••" value={walletData.encryptedPassword} onChange={handleChange} required />
-                </div>
+                    <label style={labelStyle}>🔑 Mot de Passe :</label>
+                    <input 
+                        type="text" 
+                        value={encryptedPassword} 
+                        onChange={(e) => setEncryptedPassword(e.target.value)} 
+                        placeholder="Laissez vide si inchangé"
+                        style={inputStyle}
+                    />
 
-                <div className="form-group">
-                    <label htmlFor="secretPhrase">🔑 Phrase secrète (optionnel):</label>
-                    <input type="text" name="secretPhrase" className="input-secret" placeholder="Phrase secrète (optionnel)" value={walletData.secretPhrase} onChange={handleChange} />
-                </div>
+                    <label style={labelStyle}>🛡️ Phrase Secrète :</label>
+                    <textarea 
+                        value={secretPhrase} 
+                        onChange={(e) => setSecretPhrase(e.target.value)} 
+                        placeholder="Laissez vide si inchangé"
+                        style={textareaStyle}
+                    />
 
-                {/* Boutons */}
-                <div className="button-group">
-                    <button type="submit" className="btn-submit">✅ Enregistrer</button>
-                    <button type="button" className="btn-cancel" onClick={() => navigate('/wallets')}>❌ Annuler</button>
-                </div>
-            </form>
+                    <div style={{ textAlign: "center", marginTop: "20px" }}>
+                        <button type="submit" style={saveButtonStyle}>💾 Enregistrer</button>
+                        <button 
+                            type="button" 
+                            onClick={() => navigate("/Wallets-page")}
+                            style={cancelButtonStyle}
+                        >
+                            ❌ Annuler
+                        </button>
+                    </div>
+                </form>
+            ) : (
+                <p style={{ color: "red", textAlign: "center" }}>❌ Aucun wallet sélectionné.</p>
+            )}
         </div>
     );
+};
+
+// ✅ Styles CSS
+const containerStyle = {
+    maxWidth: "500px",  // ✅ Réduction de la largeur (avant 600px)
+    margin: "50px auto",  // ✅ Descend le container (ajout de marge en haut)
+    padding: "20px",
+    backgroundColor: "#f8f9fa",
+    borderRadius: "8px",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)"
+};
+
+const formStyle = {
+    display: "flex",
+    flexDirection: "column"
+};
+
+const labelStyle = {
+    marginTop: "10px",
+    fontWeight: "bold"
+};
+
+const inputStyle = {
+    width: "100%",  // ✅ Réduction de la largeur pour éviter qu'il touche les bords
+    padding: "10px",
+    margin: "5px 0",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    boxSizing: "border-box" // ✅ Empêche le padding d'affecter la largeur
+};
+
+const saveButtonStyle = {
+    padding: "10px 20px",
+    margin: "5px",
+    cursor: "pointer",
+    border: "none",
+    borderRadius: "5px",
+    backgroundColor: "#28a745",
+    color: "white",
+    fontSize: "16px"
+};
+
+const cancelButtonStyle = {
+    padding: "10px 20px",
+    margin: "5px",
+    cursor: "pointer",
+    border: "none",
+    borderRadius: "5px",
+    backgroundColor: "#dc3545",
+    color: "white",
+    fontSize: "16px"
+};
+
+const textareaStyle = {
+    padding: "10px",
+    margin: "5px 0",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    height: "80px", // ✅ Hauteur augmentée
+    resize: "vertical" // ✅ Permet à l'utilisateur d'agrandir si besoin
 };
 
 export default WalletForm;

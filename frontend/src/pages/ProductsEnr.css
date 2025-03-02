@@ -1,0 +1,117 @@
+/* Conteneur global */
+.products-enr-container {
+    width: 95%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* Titre */
+.products-enr-container h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Conteneur du bouton Souscrire */
+.subscribe-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Bouton souscrire */
+.btn-subscribe {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-subscribe:hover {
+    background-color: #218838;
+}
+
+/* Message si aucun produit */
+.no-products {
+    font-size: 18px;
+    color: #dc3545;
+    text-align: center;
+}
+
+/* Conteneur des cartes */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Style des cartes produit */
+.product-card {
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Titre produit */
+.product-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #007bff;
+}
+
+/* Détails du produit */
+.product-card p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+/* Conteneur boutons action */
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+/* Boutons action */
+.btn-action {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.btn-edit:hover {
+    background-color: #e0a800;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}

@@ -27,7 +27,7 @@ const MemberDashboard = () => {
                     📋 Voir Profil
                 </button>
 
-                {/* ✅ Bouton pour afficher l'historique des activités dans une nouvelle page */}
+                {/* ✅ Bouton pour afficher l'historique des activités */}
                 <button 
                     onClick={() => navigate(`/member-historique/${user._id}`)} 
                     className="btn-action btn-history"
@@ -35,7 +35,11 @@ const MemberDashboard = () => {
                     🕒 Historique Activités
                 </button>
 
-                <button onClick={() => navigate("/network-tree")} className="btn-network">
+                {/* ✅ Bouton pour afficher l'arbre du réseau MLM */}
+                <button 
+                    onClick={() => navigate("/MLM-tree")} 
+                    className="btn-action btn-network"
+                >
                     🌳 Arbre Réseau
                 </button>
 

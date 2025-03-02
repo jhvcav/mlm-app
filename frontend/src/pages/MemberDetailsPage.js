@@ -26,7 +26,6 @@ const MemberDetailsPage = () => {
                 const data = await response.json();
                 setMember(data);
                 setFormData(data);
-
             } catch (error) {
                 alert("❌ Erreur technique, impossible de charger les données.");
             }
@@ -35,39 +34,39 @@ const MemberDetailsPage = () => {
         if (memberId) fetchMemberDetails();
     }, [memberId]);
 
-useEffect(() => {
-    const fetchSponsors = async () => {
-        const token = localStorage.getItem("token");
+    useEffect(() => {
+        const fetchSponsors = async () => {
+            const token = localStorage.getItem("token");
 
-        try {
-            const response = await fetch("https://mlm-app-jhc.fly.dev/api/members", {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
+            try {
+                const response = await fetch("https://mlm-app-jhc.fly.dev/api/members", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
 
-            if (!response.ok) {
-                alert("❌ Erreur lors de la récupération des sponsors.");
-                return;
+                if (!response.ok) {
+                    alert("❌ Erreur lors de la récupération des sponsors.");
+                    return;
+                }
+
+                const data = await response.json();
+                setSponsors(data);
+            } catch (error) {
+                alert("❌ Erreur technique, impossible de charger les sponsors.");
             }
+        };
 
-            const data = await response.json();
-            setSponsors(data);
-        } catch (error) {
-            alert("❌ Erreur technique, impossible de charger les sponsors.");
-        }
-    };
-
-    fetchSponsors();
-}, []);
+        fetchSponsors();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-    
+
         // Mise à jour du formulaire
         setFormData(prevState => ({
             ...prevState,
             [name]: value
         }));
-    
+
         // Si l'utilisateur sélectionne un sponsor, met à jour le champ affichant le nom du sponsor
         if (name === "sponsorId") {
             const selectedSponsor = sponsors.find(s => s._id === value);
@@ -83,7 +82,7 @@ useEffect(() => {
     // ✅ Fonction de sauvegarde des modifications
     const handleSave = async () => {
         const token = localStorage.getItem("token");
-    
+
         try {
             const response = await fetch(`https://mlm-app-jhc.fly.dev/api/members/${memberId}`, {
                 method: "PUT",
@@ -93,7 +92,7 @@ useEffect(() => {
                 },
                 body: JSON.stringify(formData)
             });
-    
+
             if (response.ok) {
                 alert("✅ Informations mises à jour !");
                 
@@ -132,8 +131,8 @@ useEffect(() => {
         }
     };
 
-     // ✅ Voir l'historique des activités
-     const handleViewHistory = () => {
+    // ✅ Voir l'historique des activités
+    const handleViewHistory = () => {
         navigate(`/member/${memberId}/history`);
     };
 
@@ -155,7 +154,7 @@ useEffect(() => {
 
                 <div className="form-group">
                     <label>Email :</label>
-                    <input type="email" name="email" value={formData.email || ""} onChange={handleChange} />
+                    <input type="email" name="email" value={formData.email || ""} disabled />
                 </div>
 
                 <div className="form-group">
@@ -171,6 +170,12 @@ useEffect(() => {
                 <div className="form-group">
                     <label>Pays :</label>
                     <input type="text" name="country" value={formData.country || ""} onChange={handleChange} />
+                </div>
+
+                {/* ✅ Affichage de la date de création */}
+                <div className="form-group">
+                    <label>Date de création :</label>
+                    <input type="text" value={new Date(member.createdAt).toLocaleString()} disabled />
                 </div>
 
                 <div className="form-group">
@@ -208,7 +213,7 @@ useEffect(() => {
                     <button type="button" className="btn-save" onClick={handleSave}>💾 Enregistrer</button>
                     <button type="button" className="btn-history" onClick={handleViewHistory}>📜 Historique</button>
                     <button type="button" className="btn-delete" onClick={handleDelete}>❌ Supprimer</button>
-                    <button type="button" className="btn-cancel" onClick={() => navigate("/superadmin-dashboard")}>❌ Retour</button>
+                    <button type="button" className="btn-cancel" onClick={() => navigate("/member-dashboard")}>❌ Retour</button>
                 </div>
             </form>
         </div>

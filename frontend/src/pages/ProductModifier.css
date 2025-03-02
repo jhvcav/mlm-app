@@ -1,0 +1,63 @@
+/* ✅ Style général du formulaire */
+.product-form {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Style des labels */
+.product-form label {
+    font-weight: bold;
+    margin-top: 8px;
+    font-size: 18px; /* ✅ Augmente la taille des titres des champs */
+    display: block;
+}
+
+/* ✅ Style des champs input et textarea */
+.product-form input,
+.product-form textarea {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px; /* ✅ Augmente légèrement la taille des champs */
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* ✅ Agrandir la taille du texte dans la description */
+.product-form textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-size: 18px; /* ✅ Plus grand pour une meilleure lisibilité */
+    line-height: 1.5; /* ✅ Meilleur espacement entre les lignes */
+}
+
+/* ✅ Conteneur des boutons */
+.product-form-buttons {
+    display: flex;
+    margin-top: 20px;
+}
+
+/* ✅ Conteneur des boutons */
+.product-form-buttons {
+    display: flex;
+    justify-content: center;  /* ✅ Centre les boutons */
+    align-items: center;
+    gap: 2px; /* ✅ Réduit l'espace entre les boutons */
+    margin-top: 20px;
+}
+
+/* ✅ Couleurs pour différencier les boutons */
+.btn-save {
+    background-color: #28a745; /* ✅ Vert pour "Enregistrer" */
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #dc3545; /* ✅ Rouge pour "Annuler" */
+    color: white;
+}

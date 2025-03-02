@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Member = require("../models/Member");
+const Wallet = require('../models/Wallet');
+
 
 // ✅ Récupérer la liste des membres
 router.get("/", async (req, res) => {
@@ -156,7 +158,7 @@ router.post("/member/register", async (req, res) => {
         const { firstName, lastName, email, phone, address, country, password, sponsorId } = req.body;
 
         // Vérifier que tous les champs obligatoires sont bien remplis
-        if (!firstName || !lastName || !email || !phone || !password) {
+        if (!firstName || !lastName || !email || !phone ) {
             return res.status(400).json({ error: "❌ Tous les champs requis ne sont pas fournis." });
         }
 
@@ -181,7 +183,8 @@ router.post("/member/register", async (req, res) => {
             address,
             country,
             password,  // ⚠️ Assure-toi que le mot de passe sera hashé dans un middleware !
-            sponsorId
+            sponsorId,
+            createdAt: Date.now() // Ajout automatique de la date du jour de création de l'affilié
         });
 
         await newMember.save();

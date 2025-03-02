@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TableauAdmins from './TableauAdmins';
-import TableauMembres from './TableauMembres';
 import './SuperAdminDashboard.css';
-import MemberDetailsModal from "./MemberDetailsModal"; // ✅ Import du modal d'édition
-import EditMemberModal from "./EditMemberModal"; // ✅ Import du modal d'édition
-import EditAdminModal from "./EditAdminModal";
-import "./ModalStyle.css";
 
 const SuperAdminDashboard = () => {
     const navigate = useNavigate();
     const [admins, setAdmins] = useState([]);
     const [members, setMembers] = useState([]);
-    
-    // ✅ États pour la gestion des modales (édition et détails)
-    const [editData, setEditData] = useState(null);
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [selectedMember, setSelectedMember] = useState(null);
-    const [showMemberDetailsModal, setShowMemberDetailsModal] = useState(false);
-    const [showEditMemberModal, setShowEditMemberModal] = useState(false);
 
-    // 🔹 Récupération des administrateurs
+    // ✅ Fonction pour naviguer vers AdminDetailsPage.js ou MemberDetailsPage.js
+    const handleEdit = (userId, role) => {
+        if (role === "admin") {
+            navigate(`/admin/${userId}`);  // Redirige vers AdminDetailsPage.js
+        } else {
+            navigate(`/member/${userId}`); // Redirige vers MemberDetailsPage.js
+        }
+    };
+
     useEffect(() => {
         const fetchAdmins = async () => {
             const token = localStorage.getItem("token");
@@ -35,11 +30,7 @@ const SuperAdminDashboard = () => {
                 console.error("⛔ Erreur chargement des administrateurs.");
             }
         };
-        fetchAdmins();
-    }, []);
 
-    // 🔹 Récupération des membres
-    useEffect(() => {
         const fetchMembers = async () => {
             const token = localStorage.getItem("token");
             const response = await fetch("https://mlm-app-jhc.fly.dev/api/members", {
@@ -53,166 +44,60 @@ const SuperAdminDashboard = () => {
                 console.error("⛔ Erreur chargement des membres.");
             }
         };
+
+        fetchAdmins();
         fetchMembers();
     }, []);
-
-    // ✅ Fonction pour ouvrir la fenêtre d'inscription
-    const openRegistrationWindow = () => {
-        const registrationUrl = window.location.origin + "/#/inscription"; // ✅ URL complète pour éviter la redirection vers login
-        window.open(
-            registrationUrl,
-            "InscriptionUtilisateur",
-            "width=500,height=650,top=100,left=100"
-        );
-    };
-
-    // ✅ Fonction pour modifier (Edit) un admin
-    const handleEditAdmin = (admin) => {
-        document.body.innerHTML += `<p style='color:blue;'>📝 Modifier Admin: ${admin.firstName} ${admin.lastName}</p>`;
-        setEditData(admin);
-        setShowEditModal(true);
-    };
-
-    // ✅ Fonction pour voir les détails d'un admin (comme pour les membres)
-    const handleViewAdmin = (admin) => {
-        if (admin && admin._id) {
-            navigate(`/admin/${admin._id}`);
-        } else {
-            alert("❌ Impossible de récupérer les détails de cet administrateur.");
-        }
-    };
-
-    // ✅ Fonction pour supprimer un admin avec message de confirmation
-    const handleDeleteAdmin = async (adminEmail) => {
-        if (window.confirm("❌ Êtes-vous sûr de vouloir supprimer cet administrateur ?")) {
-            try {
-                const token = localStorage.getItem("token");
-
-                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/admins/${adminEmail}`, {
-                    method: "DELETE",
-                    headers: { "Authorization": `Bearer ${token}` }
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert(`✅ Administrateur ${adminEmail} supprimé avec succès !`);
-                    setAdmins(prevAdmins => prevAdmins.filter(admin => admin.email !== adminEmail));
-                } else {
-                    alert(`❌ Erreur lors de la suppression : ${result.error || "Réponse API inconnue"}`);
-                }
-            } catch (error) {
-                alert(`❌ Erreur technique : ${error.message}`);
-            }
-        }
-    };
-
-    // ✅ Fonction pour modifier un membre
-const handleEditMember = (member) => {
-    alert(`📝 Modifier Membre : ${member.firstName} ${member.lastName}`);
-    setEditData(member);
-    setShowEditModal(true);
-};
-
-// ✅ Fonction pour voir les détails d'un membre
-const handleViewMember = (member) => {
-    alert(`👁️ Voir détails Membre : ${member.firstName} ${member.lastName}`);
-    setSelectedMember(member);
-    setShowMemberDetailsModal(true);
-};
-
-// ✅ Fonction pour supprimer un membre
-const handleDeleteMember = async (memberEmail) => {
-    if (window.confirm("❌ Supprimer ce membre ?")) {
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/members/${memberEmail}`, {
-                method: "DELETE",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                alert("✅ Membre supprimé avec succès !");
-                setMembers(prevMembers => prevMembers.filter(member => member.email !== memberEmail));
-            } else {
-                alert(`❌ Erreur suppression : ${result.error || "Réponse API inconnue"}`);
-            }
-        } catch (error) {
-            alert(`❌ Erreur technique : ${error.message}`);
-        }
-    }
-};
-
-const handleHistoryMember = (member) => {
-    navigate(`/member/${member._id}/history`);
-};
-
-
-const handleSaveMember = (updatedMember) => {
-    setMembers(prevMembers =>
-        prevMembers.map(m => (m.email === updatedMember.email ? updatedMember : m))
-    );
-};
 
     return (
         <div className="superadmin-dashboard">
             <h1 className="dashboard-title">🏆 Tableau de bord Super Admin</h1>
             <p className="dashboard-message">Bienvenue sur votre espace de gestion.</p>
 
-            {/* ✅ Boutons d'accès */}
             <div className="admin-buttons">
-                {/* ✅ Bouton pour accéder à l'historique sur une autre page */}
-                <button onClick={() => navigate("/member-dashboard")} className="btn-dashboard-user btn-medium">👤 Tableau de bord User</button>
-                <button onClick={openRegistrationWindow} className="btn-add-user btn-medium">➕ Inscrire un utilisateur</button>
+                <button onClick={() => navigate("/member-dashboard")} className="btn-dashboard-user">
+                    👤 Tableau de bord User
+                </button>
+                <button onClick={() => navigate("/inscription")} className="btn-add-user">
+                    ➕ Inscrire un utilisateur
+                </button>
             </div>
 
-            {/* ✅ Liste des administrateurs */}
-            <div className="admin-table">
-                <TableauAdmins 
-                    admins={admins} 
-                    onEdit={handleEditAdmin} 
-                    onDelete={handleDeleteAdmin} 
-                    onView={handleViewAdmin}
-                />
+            <h2 className="section-title">🛠️ Administrateurs</h2>
+            <div className="card-container">
+                {admins.map((admin) => (
+                    <div key={admin._id} className="user-card">
+                        <h3>{admin.firstName} {admin.lastName}</h3>
+                        <p>📧 {admin.email}</p>
+                        <p>🆔 {admin._id}</p>
+                        <div className="card-buttons">
+                            <button className="btn-edit" onClick={() => handleEdit(admin._id, "admin")}>
+                                ✏️ Modifier
+                            </button>
+                            <button className="btn-delete">❌ Supprimer</button>
+                            <button className="btn-view">👁️ Voir</button>
+                        </div>
+                    </div>
+                ))}
             </div>
 
-            {/* ✅ Liste des membres */}
-            <div className="member-table">
-                <TableauMembres 
-                    members={members} 
-                    onEdit={handleEditMember} 
-                    onDelete={handleDeleteMember} 
-                    onView={handleViewMember}
-                    onHistory={handleHistoryMember}
-                />
+            <h2 className="section-title">👥 Membres</h2>
+            <div className="card-container">
+                {members.map((member) => (
+                    <div key={member._id} className="user-card">
+                        <h3>{member.firstName} {member.lastName}</h3>
+                        <p>📧 {member.email}</p>
+                        <p>🆔 {member._id}</p>
+                        <div className="card-buttons">
+                            <button className="btn-edit" onClick={() => handleEdit(member._id, "member")}>
+                                ✏️ Modifier
+                            </button>
+                            <button className="btn-delete">❌ Supprimer</button>
+                            <button className="btn-view">👁️ Voir</button>
+                        </div>
+                    </div>
+                ))}
             </div>
-
-            {/* ✅ Modal pour Modifier un Admin */}
-            {showEditModal && (
-                <EditAdminModal 
-                    admin={editData} 
-                    onClose={() => setShowEditModal(false)}
-                />
-            )}
-
-            {showMemberDetailsModal && (
-                <MemberDetailsModal 
-                    member={selectedMember} 
-                    onClose={() => setShowMemberDetailsModal(false)} 
-                />
-            )}
-
-            {showEditMemberModal && (
-                <EditMemberModal 
-                    member={selectedMember} 
-                    onClose={() => setShowEditMemberModal(false)} 
-                    onSave={handleSaveMember}
-                />
-            )}
-
-            {/* ✅ Modales (Ajoute ici les modales d'édition et de détails si elles existent) */}
         </div>
     );
 };

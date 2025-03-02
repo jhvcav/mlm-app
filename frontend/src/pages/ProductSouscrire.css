@@ -1,0 +1,91 @@
+/* ✅ Centrer le contenu */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* ✅ Titre centré */
+.title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* ✅ Informations sur le produit */
+.product-info {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* ✅ Conteneur du formulaire */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ✅ Alignement des labels et inputs */
+.input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.input-group input {
+    width: 95%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* ✅ Style des boutons */
+.button-group {
+    margin-top: 20px;
+}
+
+.btn-save {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.btn-save:hover {
+    background-color: #218838;
+}
+
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+}
+
+/* ✅ Style du message de chargement */
+.loading {
+    font-size: 16px;
+    color: #007bff;
+}

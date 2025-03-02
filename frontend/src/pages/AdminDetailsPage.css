@@ -1,156 +1,116 @@
 /* ✅ Conteneur principal */
 .admin-details-container {
-    width: 35%; /* 🔹 Largeur du conteneur */
-    margin: 20px auto; /* 🔹 Centré horizontalement avec marge */
-    padding: 30px; /* 🔹 Augmente l'espacement intérieur pour créer un "gap" entre le conteneur et les champs */
-    background: white; /* 🔹 Couleur de fond */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 🔹 Ombre légère */
-    border-radius: 8px; /* 🔹 Coins arrondis */
-    text-align: center; /* 🔹 Texte centré */
+    width: 90%; /* Largeur globale ajustable */
+    max-width: 800px; /* Limite la largeur */
+    margin: auto; /* Centre horizontalement */
+    padding: 20px; /* Espace interne */
+    
+    /* 🔧 Permet d'ajuster les espaces gauche et droite */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* ✅ Titre principal */
-.admin-details-container h1 {
-    color: #333; /* 🔹 Couleur du texte */
-    font-size: 26px; /* 🔹 Taille du texte */
-    margin-bottom: 20px; /* 🔹 Augmente l'espacement sous le titre */
-}
-
-/* ✅ Conteneur du formulaire */
+/* ✅ Formulaire */
 .admin-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* 🔹 Augmente l'espacement entre les champs */
-}
-
-/* ✅ Champs du formulaire */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 15px; /* 🔹 Augmente l'espace sous chaque champ */
-    padding: 5px 0; /* 🔹 Ajoute un léger espace interne */
-}
-
-/* ✅ Labels des champs */
-.form-group label {
-    font-size: 18px; /* 🔹 Taille du texte */
-    font-weight: bold; /* 🔹 Texte en gras */
-    margin-bottom: 5px; /* 🔹 Espacement entre label et input */
+    align-items: center; /* Centre les champs */
+    gap: 15px; /* Espacement vertical entre les champs */
+    
+    /* 🔧 Ajustement des espaces gauche et droite */
+    padding-left: 30px; /* Modifie l’espace à gauche */
+    padding-right: 30px; /* Modifie l’espace à droite */
 }
 
 /* ✅ Champs de saisie */
+.form-group {
+    width: 100%; /* Prend toute la largeur */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre les champs */
+}
+
+/* ✅ Champs de saisie (input) */
 .form-group input, .form-group select {
-    width: 65%; /* 🔹 Largeur du champ */
-    height: 40px; /* 🔹 Hauteur du champ */
-    font-size: 16px; /* 🔹 Taille de la police */
-    padding: 10px; /* 🔹 Espacement intérieur */
-    border: 1px solid #ddd; /* 🔹 Bordure légère */
-    border-radius: 5px; /* 🔹 Coins arrondis */
-    margin-left: 10px; /* 🔹 Ajoute un espace à gauche du champ */
-    margin-right: 10px; /* 🔹 Ajoute un espace à droite du champ */
+    width: 60%; /* Prend toute la largeur du container */
+    max-width: 400px; /* 🔧 Ajuste la largeur */
+    padding: 10px;
+    font-size: 20px; /* Modifie la taille des textes des champs */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center; /* Centre les textes des champs */
+
+    /* 🔧 Ajuste les marges gauche/droite */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ✅ Labels */
+.form-group label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
 /* ✅ Conteneur des boutons */
 .button-container {
     display: flex;
-    flex-direction: column; /* 🔹 Aligne verticalement */
-    align-items: center; /* 🔹 Centre horizontalement */
-    gap: 15px; /* 🔹 Espacement uniforme entre les boutons */
-    margin-top: 25px; /* 🔹 Augmente l'espace entre les champs et les boutons */
+    flex-direction: column; /* Boutons en colonne */
+    align-items: center; /* Centre les boutons horizontalement */
+    gap: 12px; /* Espacement entre les boutons */
+    margin-top: 20px;
     width: 100%;
 }
 
-/* ✅ Style général des boutons */
-.btn-save, .btn-delete, .btn-history, .btn-cancel {
-    width: 85%; /* 🔹 Largeur uniforme pour tous les boutons */
-    max-width: 300px; /* 🔹 Largeur maximale */
-    height: 50px; /* 🔹 Hauteur égale */
-    font-size: 18px; /* 🔹 Taille du texte */
-    font-weight: bold; /* 🔹 Texte en gras */
-    text-align: center; /* 🔹 Centre le texte */
-    border: none; /* 🔹 Supprime les bordures */
-    border-radius: 8px; /* 🔹 Coins arrondis */
-    cursor: pointer; /* 🔹 Curseur pointer */
-    transition: background 0.3s ease-in-out; /* 🔹 Effet de transition */
+/* ✅ Boutons uniformisés */
+.button-container button {
+    width: 90%; /* Largeur uniforme */
+    max-width: 250px; /* Ajustable */
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
 }
 
-/* ✅ Personnalisation individuelle des boutons */
-
-/* 🔹 Bouton Enregistrer */
+/* ✅ Bouton "Enregistrer" avec possibilité d'ajuster le centrage */
 .btn-save {
-    background-color: #28a745; /* ✅ Couleur */
+    background-color: #28a745;
     color: white;
-    width: 90%; /* ✅ Largeur */
-    height: 55px; /* ✅ Hauteur */
-    font-size: 20px; /* ✅ Taille de la police */
-    margin-left: 10px; /* ✅ Décalage vers la droite */
-    margin-top: 5px; /* ✅ Décalage vers le bas */
+
+    /* 🔧 Ajustement manuel de la position gauche/droite */
+    margin-left: auto; /* Ajuster vers la gauche */
+    margin-right: auto; /* Ajuster vers la droite */
 }
 
-.btn-save:hover {
-    background-color: #218838;
-}
-
-/* 🔹 Bouton Supprimer */
+/* ✅ Styles pour les autres boutons */
 .btn-delete {
     background-color: #dc3545;
     color: white;
-    width: 85%;
-    height: 45px;
-    font-size: 17px;
-    margin-right: 15px; /* ✅ Décalage vers la gauche */
-    margin-bottom: 10px; /* ✅ Décalage vers le haut */
 }
 
-.btn-delete:hover {
-    background-color: #c82333;
-}
-
-/* 🔹 Bouton Historique */
 .btn-history {
-    background-color: #17a2b8;
+    background-color: #007bff;
     color: white;
-    width: 75%;
-    height: 50px;
-    font-size: 16px;
-    margin-top: 15px; /* ✅ Décalage vers le bas */
 }
 
-.btn-history:hover {
-    background-color: #138496;
-}
-
-/* 🔹 Bouton Annuler */
 .btn-cancel {
     background-color: #6c757d;
     color: white;
-    width: 95%;
-    height: 60px;
-    font-size: 18px;
-    margin-bottom: 5px; /* ✅ Décalage vers le haut */
 }
 
-.btn-cancel:hover {
-    background-color: #545b62;
+/* ✅ Effet au survol */
+.button-container button:hover {
+    opacity: 0.8;
 }
 
-/* ✅ Responsive pour tablettes et mobiles */
-@media (max-width: 768px) {
-    .admin-details-container {
-        width: 90%;
-    }
-
-    .form-group input, .form-group select {
-        width: 100%; /* ✅ Pleine largeur pour mobile */
-        font-size: 18px;
-        margin-left: 5px; /* ✅ Ajustement mobile */
-        margin-right: 5px; /* ✅ Ajustement mobile */
-    }
-
-    .btn-save, .btn-delete, .btn-history, .btn-cancel {
-        width: 100%; /* ✅ Pleine largeur pour mobile */
-        font-size: 16px;
+/* ✅ Responsive : Ajustement pour petits écrans */
+@media (max-width: 600px) {
+    .button-container button {
+        width: 100%;
+        max-width: 300px;
     }
 }

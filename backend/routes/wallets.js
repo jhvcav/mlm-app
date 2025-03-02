@@ -1,7 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const Member = require("../models/Member");
 const Wallet = require('../models/Wallet');
-const Member = require('../models/Member');
+const mongoose = require("mongoose");
 
 // ✅ Ajouter un wallet à un membre (sans cryptage)
 router.post('/add-wallet', async (req, res) => {
@@ -98,23 +99,35 @@ router.get('/member/:memberId', async (req, res) => {
     try {
         const memberId = req.params.memberId;
 
-        // Vérifier si le membre existe
+        // ✅ Vérifie si l'ID est valide
+        if (!mongoose.Types.ObjectId.isValid(memberId)) {
+            return res.status(400).json({ error: "❌ ID du membre invalide." });
+        }
+
+        // ✅ Vérifie si le membre existe
         const member = await Member.findById(memberId);
         if (!member) {
             return res.status(404).json({ error: "❌ Membre introuvable." });
         }
 
-        // Récupérer les wallets du membre, en **excluant** encryptedPassword et secretPhrase
-        const wallets = await Wallet.find({ ownerId: memberId }).select('-encryptedPassword -secretPhrase');
-
-        if (wallets.length === 0) {
-            return res.status(404).json({ error: "⚠️ Aucun wallet trouvé pour ce membre." });
+        // ✅ Correction ici : Ajout de `new` devant `ObjectId`
+        let wallets = [];
+        try {
+            wallets = await Wallet.find({ ownerId: new mongoose.Types.ObjectId(memberId) })
+            .select("walletName publicAddress")
+        } catch (walletError) {
+            return res.status(500).json({ 
+                error: "Erreur interne du serveur.", 
+                details: walletError.message 
+            });
         }
 
-        res.json(wallets);
+        res.json({ member, wallets });
     } catch (err) {
-        console.error("❌ Erreur lors de la récupération des wallets :", err);
-        res.status(500).json({ error: "Erreur interne du serveur." });
+        res.status(500).json({ 
+            error: "Erreur interne du serveur.", 
+            details: err.message 
+        });
     }
 });
 

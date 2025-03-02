@@ -1,6 +1,6 @@
 /* Conteneur principal du formulaire */
 .form-container {
-    width: 50%; /* Ajuste la largeur du formulaire */
+    width: 20%; /* Ajuste la largeur du formulaire */
     margin: 0 auto; /* Centre horizontalement */
     text-align: center; /* Centre le texte */
 }

@@ -57,84 +57,33 @@
     font-size: 16px;
 }
 
-/* ✅ Boutons d'action */
-.button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* ✅ Boutons */
-.btn-action {
-    padding: 15px 25px;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 280px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.btn-action:hover {
-    background: #0056b3;
-}
-
 /* ✅ Conteneur des boutons */
 .member-actions {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px; /* ✅ Espacement uniforme entre les boutons */
     align-items: center;
     width: 100%;
 }
 
-/* ✅ Bouton Voir Profil */
-.btn-profile {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-profile:hover {
-    background-color: #0056b3;
-}
-
-/* ✅ Bouton Historique Activités */
-.btn-history {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-history:hover {
-    background-color: #1e7e34;
-}
-
-/* ✅ Message d'erreur */
-.error-message {
-    color: red;
-    font-weight: bold;
-}
-
-/* ✅ Bouton Voir Profil */
-.btn-add-affiliate {
-    padding: 15px 25px;
-    font-size: 18px;
+/* ✅ Uniformisation des boutons */
+.btn-action, 
+.btn-profile, 
+.btn-history, 
+.btn-add-affiliate, /* ✅ Appliqué ici aussi */
+.btn-network {
+    padding: 15px 25px; /* ✅ Taille uniforme */
+    font-size: var(--button-font-size, 18px) !important; /* ✅ Taille de police ajustable */
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    width: 280px;
+    width: 280px; /* ✅ Largeur fixe pour tous */
+    height: 50px; /* ✅ Hauteur fixe pour tous */
     text-align: center;
     transition: all 0.3s ease;
-    color: black;
-    background: orange;
 }
 
-.btn-network {
-    padding: 10px;
-    font-size: 16px;
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* ✅ Ajout d’une variable pour modifier facilement la taille de police */
+:root {
+    --button-font-size: 18px; /* Ajuste cette valeur pour tous les boutons */
 }

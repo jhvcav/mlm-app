@@ -4,8 +4,10 @@ import './ProductsPage.css';
 const ProductsPage = () => {
     const [formData, setFormData] = useState({
         name: '',
-        price: '',
+        amountInvested: '',
+        subscriptionDate: '',
         duration: '',
+        yield: '',
         description: ''
     });
 
@@ -39,7 +41,7 @@ const ProductsPage = () => {
 
         if (response.ok) {
             alert(formData._id ? '✅ Produit modifié !' : '✅ Produit ajouté !');
-            setFormData({ name: '', price: '', duration: '', description: '' });
+            setFormData({ name: '', amountInvested: '',subscriptionDate: '', duration: '', yield: '', description: '' });
             window.location.reload();
         } else {
             alert("❌ Erreur lors de l'enregistrement.");
@@ -86,8 +88,10 @@ const ProductsPage = () => {
             {/* Formulaire d'ajout/modification */}
             <form onSubmit={handleSubmit} className="product-form">
                 <input type="text" name="name" placeholder="Nom du produit" value={formData.name} onChange={handleChange} required />
-                <input type="number" name="price" placeholder="Prix (€)" value={formData.price} onChange={handleChange} required />
+                <input type="number" name="amountInvested" placeholder="Montant investit (€)" value={formData.price} onChange={handleChange} required />
+                <input type="date" name="subscriptionDate" placeholder="Date de souscription" value={formData.subscriptionDate} onChange={handleChange} required />
                 <input type="number" name="duration" placeholder="Durée (mois)" value={formData.duration} onChange={handleChange} />
+                <input type="number" name="yeld" placeholder="Rendement (%)" value={formData.yield} onChange={handleChange} />
                 <textarea name="description" placeholder="Description du produit" value={formData.description} onChange={handleChange} rows="3"></textarea>
 
                 <button type="submit" className="btn-enregistrer">
@@ -101,8 +105,10 @@ const ProductsPage = () => {
                 <thead>
                     <tr>
                         <th>Nom</th>
-                        <th>Prix (€)</th>
-                        <th>Durée</th>
+                        <th>Montant investit(€)</th>
+                        <th>Date de souscription</th>
+                        <th>Durée investissement(mois)</th>
+                        <th>Rendement(%)</th>
                         <th>Description</th>
                         <th>Actions</th>
                     </tr>
@@ -111,8 +117,10 @@ const ProductsPage = () => {
                     {currentProducts.map(product => (
                         <tr key={product._id}>
                             <td>{product.name}</td>
-                            <td>{product.price}€</td>
-                            <td>{product.duration} mois</td>
+                            <td>{product.amountInvested}€</td>
+                            <td>{product.subscriptionDate}</td>
+                            <td>{product.duration}mois</td>
+                            <td>{product.yield}%</td>
                             <td>{product.description}</td>
                             <td>
                                 <button className="btn-edit" onClick={() => handleEdit(product)}>✏️ Modifier</button>
