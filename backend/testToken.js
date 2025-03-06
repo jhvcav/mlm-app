@@ -1,0 +1,6 @@
+// Code pour décoder token
+const jwt = require("jsonwebtoken");
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M3NDkwYjRmMWRmNzgzOTI4NzI0NzIiLCJyb2xlIjoic3VwZXJhZG1pbiIsInBlcm1pc3Npb25zIjp7ImNhbkNyZWF0ZUFkbWluIjp0cnVlLCJjYW5DcmVhdGVNZW1iZXIiOnRydWUsImNhbkRlbGV0ZVVzZXIiOnRydWUsImNhbkVkaXRVc2VyIjp0cnVlLCJjYW5BY2Nlc3NTdXBlckFkbWluRGFzaGJvYXJkIjp0cnVlLCJjYW5BY2Nlc3NBZG1pbkRhc2hib2FyZCI6dHJ1ZX0sImlhdCI6MTc0MTIwMDg3OCwiZXhwIjoxNzQxODA1Njc4fQ.Y7mBnBUp6EKRW7VJ6pv5rXJw_AqRl7Au0yVKpPj1CTg";
+
+const decoded = jwt.decode(token);
+console.log(decoded);

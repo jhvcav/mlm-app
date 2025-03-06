@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // ✅ Importer useNavigate
+import './WalletsPage.css';
 
 const WalletsPage = () => {
     const [wallets, setWallets] = useState([]);
@@ -52,6 +53,11 @@ const WalletsPage = () => {
         navigate(`/Wallets-form`, { state: { wallet } });
     };
 
+    // ✅ Fonction pour naviguer vers WalletEnr.js pour enregistrer un Wallet
+    const openWalletEnr = (wallet) => {
+        navigate(`/Wallets-enr`, { state: { wallet } });
+    };
+
     return (
         <div style={{ maxWidth: "800px", margin: "auto", padding: "20px" }}>
             <h1 style={{ textAlign: "center" }}>💰 Mes Wallets</h1>
@@ -63,7 +69,10 @@ const WalletsPage = () => {
             {loading && <p style={{ textAlign: "center" }}>⏳ Chargement...</p>}
             {error && <p style={{ color: "red", textAlign: "center" }}>❌ {error}</p>}
 
+            <button className="add-wallet-btn" onClick={() => openWalletEnr(wallets)}>➕ Enregistrer un Walett</button>
+
             <h2 style={{ textAlign: "center" }}>📌 Liste des Wallets</h2>
+            
 
             {wallets.length > 0 ? (
                 <table style={{

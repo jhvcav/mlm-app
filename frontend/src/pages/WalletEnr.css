@@ -1,0 +1,124 @@
+/* ✅ Conteneur principal */
+.form-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 50px; /* Décaler le container vers le bas */
+}
+
+/* ✅ Titre */
+.form-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* ✅ Espacement des champs */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px; /* Laisse un peu d'espace entre les champs */
+    text-align: left;
+}
+
+/* ✅ Styles des labels */
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* ✅ Styles des champs */
+input, select {
+    padding: 10px; /* Ajoute un espace interne correct */
+    font-size: 16px; /* Taille du texte modifiable */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 40px; /* Permet une hauteur ajustable */
+    width: 100%; /* Prend toute la largeur disponible */
+    max-width: 400px; /* Limite la largeur si nécessaire */
+    box-sizing: border-box; /* Empêche le padding d'affecter la taille totale */
+}
+
+/* ✅ Classe pour un champ plus grand */
+.input-large {
+    height: 50px;
+    font-size: 18px;
+}
+
+/* ✅ Classe pour un champ plus petit */
+.input-small {
+    height: 30px;
+    font-size: 14px;
+}
+
+.input-secret {
+    min-height: 80px !important; /* Augmente la hauteur */
+    font-size: 16px;
+    padding: 10px;
+    box-sizing: border-box; /* Assure que padding ne change pas pas la hauteur */
+    width: 100%;
+    max-width: 400px
+}
+
+/* ✅ Conteneur des boutons */
+.button-group {
+    display: flex;
+    justify-content: center; /* Centre les boutons */
+    gap: 0px; /* Ajoute un espace entre les boutons */
+    margin-top: 15px;
+}
+
+/* ✅ Style du bouton Enregistrer */
+.btn-submit {
+    background: #28a745;
+    color: white;
+}
+
+/* ✅ Style du bouton Annuler */
+.btn-cancel {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-submit:hover {
+    background: #218838;
+}
+
+.btn-cancel:hover {
+    background: #c82333;
+}
+
+/* ✅ Styles des boutons */
+.btn-submit {
+    width: 200px; /* Largeur spécifique pour "Enregistrer" */
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+    background: #28a745;
+    color: white;
+    margin: 10px auto;
+}
+
+.btn-cancel {
+    width: 200px; /* Largeur spécifique pour "Annuler" */
+    padding: 15px; /* Hauteur du bouton */
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+    background: #dc3545;
+    color: white;
+    margin: 10px auto; /* Centre le bouton individuellement */
+}

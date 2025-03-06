@@ -48,6 +48,7 @@ const SponsoredMembersPage = () => {
                 <p>⚠️ Aucun affilié trouvé.</p>
             )}
             <button className="btn-back" onClick={() => navigate(-1)}>🔙 Retour</button>
+            <button className="btn-all-affiliates" onClick={() => navigate("/all-affiliates-products")}>📜 Voir tous les affiliés et produits souscrits</button>
         </div>
     );
 };

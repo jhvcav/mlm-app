@@ -1,0 +1,73 @@
+.investment-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.input-container label {
+    font-weight: bold;
+}
+
+.input-container input {
+    padding: 8px;
+    font-size: 16px;
+    width: 200px;
+    text-align: center;
+}
+
+.btn-calculate {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.btn-calculate:hover {
+    background-color: #218838;
+}
+
+/* ✅ Tableau des résultats */
+.results-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.results-table th, .results-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.results-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: black;
+}
+
+.btn-clear {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #dc3545; /* 🔴 Rouge pour "Clear" */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.btn-clear:hover {
+    background-color: #c82333;
+}

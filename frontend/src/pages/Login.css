@@ -127,3 +127,29 @@
 .cancel-button:hover {
     background: #bbb;
 }
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input {
+    width: 100%;
+    padding-right: 40px; /* Permet d'éviter que le texte soit masqué par l'icône */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 22px; /* Taille plus visible */
+    color: #555;
+    padding: 5px;
+}
+
+.toggle-password:hover {
+    color: #000;
+}

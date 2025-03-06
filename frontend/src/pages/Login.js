@@ -8,6 +8,7 @@ const Login = () => {
     const [error, setError] = useState("");
     const [showResetDialog, setShowResetDialog] = useState(false);
     const [resetEmail, setResetEmail] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // ✅ Affichage/Masquage du mot de passe
     const navigate = useNavigate();
 
     const handleLogin = async () => {
@@ -44,24 +45,26 @@ const Login = () => {
         }
     };
 
-    const handlePasswordReset = async () => {
-        if (!resetEmail) {
-            alert("❌ Veuillez entrer votre email.");
-            return;
-        }
-
+    const handleResetPassword = async () => {
         try {
-            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/reset-password", {
+            const response = await fetch("https://mlm-app-jhc.fly.dev/api/reset/reset-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: resetEmail }),
             });
 
             const data = await response.json();
-            alert(data.message || "Un lien de réinitialisation a été envoyé !");
-            setShowResetDialog(false);
-        } catch (err) {
-            alert("❌ Erreur lors de l'envoi du lien de réinitialisation.");
+
+            if (response.ok) {
+                alert("✅ Email envoyé !");
+                setShowResetDialog(false);
+                navigate("/login");
+            } else {
+                alert(`❌ Erreur : ${data.error}`);
+            }
+        } catch (error) {
+            alert("❌ Erreur serveur.");
+            console.error("🚨 Erreur frontend :", error);
         }
     };
 
@@ -86,14 +89,27 @@ const Login = () => {
                             required 
                             className="login-input"
                         />
-                        <input 
-                            type="password" 
-                            placeholder="Mot de passe" 
-                            value={password} 
-                            onChange={(e) => setPassword(e.target.value)} 
-                            required 
-                            className="login-input"
-                        />
+
+                        {/* ✅ Champ mot de passe avec émoji-bouton intégré */}
+                        <div className="password-container">
+                            <input 
+                                type={showPassword ? "text" : "password"} 
+                                placeholder="Mot de passe" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)} 
+                                required 
+                                className="login-input password-input"
+                            />
+                            <button 
+                                type="button" 
+                                className="toggle-password" 
+                                onClick={() => setShowPassword(!showPassword)}
+                                aria-label="Afficher ou masquer le mot de passe"
+                            >
+                                {showPassword ? "🔓" : "🔒"} {/* 🔓 Visible - 🔒 Caché */}
+                            </button>
+                        </div>
+
                         <button type="button" onClick={handleLogin} className="login-button">
                             🚀 Se connecter
                         </button>
@@ -117,7 +133,7 @@ const Login = () => {
                             required
                             className="login-input"
                         />
-                        <button onClick={handlePasswordReset} className="login-button">📩 Envoyer</button>
+                        <button onClick={handleResetPassword} className="login-button">📩 Envoyer</button>
                         <button onClick={() => setShowResetDialog(false)} className="cancel-button">❌ Annuler</button>
                     </div>
                 </div>

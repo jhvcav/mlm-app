@@ -143,6 +143,11 @@ const MemberDetailsPage = () => {
             <h1>👤 Détails du Membre</h1>
             <form className="member-form">
                 <div className="form-group">
+                    <label>🆔:</label>
+                    <input type="text" value={member._id || ""} disabled />
+                </div>
+
+                <div className="form-group">
                     <label>Prénom :</label>
                     <input type="text" name="firstName" value={formData.firstName || ""} onChange={handleChange} />
                 </div>

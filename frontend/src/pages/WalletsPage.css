@@ -1,14 +1,10 @@
 /* 📌 Centrer le bouton "Ajouter un Wallet" */
 .add-wallet-btn {
-    display: block;
+    padding: 8px 15px;
     margin: 20px auto; /* Centre le bouton horizontalement */
-    padding: 12px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+    display: block;
+    font-size: 18px; /* ✅ Augmente la taille du texte */
+    background-color: #0056b3;
 }
 
 .add-wallet-btn:hover {
@@ -26,7 +22,7 @@
     display: block;
     margin: 10px auto; /* Centre le bouton */
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 20px;
     background-color: #28a745;
     color: white;
     border: none;

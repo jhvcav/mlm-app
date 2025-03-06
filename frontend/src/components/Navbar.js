@@ -28,13 +28,13 @@ const Navbar = () => {
                     <li><Link to="/member-dashboard">👤 Membre</Link></li>
                 )}
 
-                <li className="nav-item affiliates" onClick={() => navigate("/sponsored-members")}>
-                👥 Membres Affiliés
-                </li>
-
-                <li className="nav-list" onClick={() => navigate("/products-enr")}>📦 Produits</li>
+                <li><Link to="/sponsored-members">👥 Membres Affiliés</Link></li>
+                <li><Link to="/products-enr">📦 Produits</Link></li>
                 <li><Link to={`/wallets/${localStorage.getItem("memberId")}`}>Voir mes Wallets</Link></li>
                 <li><Link to="/progress">📈 Progression</Link></li>
+
+                {/* ✅ Bouton Simulation Rendements */}
+                <li><Link to="/investment-returns">📊 Simulation Rendements</Link></li>
 
                 {/* ✅ Bouton Déconnexion amélioré */}
                 <li>

@@ -19,8 +19,10 @@
     background-color: #f4f4f4;
 }
 
+/* Style du bouton Retour */
 .btn-back {
     display: block;
+    width: 250px; /* Largeur uniforme */
     margin: 20px auto;
     padding: 10px 15px;
     font-size: 16px;
@@ -33,4 +35,22 @@
 
 .btn-back:hover {
     background-color: #0056b3;
+}
+
+/* ✅ Nouveau style pour le bouton "Voir tous les affiliés et produits souscrits" */
+.btn-all-affiliates {
+    display: block;
+    width: 250px; /* Largeur uniforme */
+    margin: 10px auto; /* Espace avec le bouton Retour */
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #28a745; /* Vert pour différencier */
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-all-affiliates:hover {
+    background-color: #218838;
 }

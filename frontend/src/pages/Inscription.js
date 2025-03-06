@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Inscription.css'; // ✅ Import du CSS
+import { useNavigate } from 'react-router-dom';
 
 const Inscription = () => {
     const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ const Inscription = () => {
         password: '',
         role: 'member'
     });
+
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -29,7 +32,7 @@ const Inscription = () => {
 
         if (response.ok) {
             alert('✅ Utilisateur inscrit avec succès !');
-            window.close(); // ✅ Ferme la fenêtre après inscription
+            navigate("/superadmin-dashboard");
         } else {
             alert("❌ Erreur lors de l'inscription.");
         }
@@ -49,8 +52,8 @@ const Inscription = () => {
                         <option value="admin">Administrateur</option>
                         <option value="superadmin">Super Administrateur</option>
                     </select>
-                    <button type="submit" className="btn-inscription">📩 Inscrire</button>
-                    <button type="button" className="btn-cancel" onClick={() => window.close()}>❌ Annuler</button>
+                    <button type="submit" className="btn-inscription"onClick={() => navigate("/superadmin-dashboard")}>📩 Inscrire</button>
+                    <button type="button" className="btn-cancel" onClick={() => navigate("/superadmin-dashboard")}>❌ Annuler</button>
                 </form>
             </div>
         </div>

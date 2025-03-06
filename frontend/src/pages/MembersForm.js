@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './AdminDashboard.css';
-import MembersForm from './MembersForm';  // ✅ Import du formulaire d'inscription des membres
-import MembersTable from './MembersTable';  // ✅ Import du tableau des membres
 
 const AdminDashboard = () => {
     const [admins, setAdmins] = useState([]);
     const [members, setMembers] = useState([]);
     const [showAdminForm, setShowAdminForm] = useState(false);
-    const [showMemberForm, setShowMemberForm] = useState(false);  // ✅ Gestion de l'affichage du formulaire membre
     const [selectedAdmin, setSelectedAdmin] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDetailModal, setShowDetailModal] = useState(false);
-    const [newPassword, setNewPassword] = useState(""); 
-
     const [newAdmin, setNewAdmin] = useState({
         firstName: '',
         lastName: '',
@@ -20,11 +15,43 @@ const AdminDashboard = () => {
         password: ''
     });
 
-    useEffect(() => {
-        fetchAdmins();
-        fetchMembers();
-    }, []);
+    // ✅ Fonction pour modifier un administrateur
+    const handleEditAdmin = (admin) => {
+        console.log("Modification de l'admin :", admin);
+        setSelectedAdmin(admin);
+        setShowEditModal(true);
+    };
 
+    // ✅ Fonction pour voir les détails d'un administrateur
+    const handleViewAdmin = (admin) => {
+        console.log("Affichage des détails de l'admin :", admin);
+        setSelectedAdmin(admin);
+        setShowDetailModal(true);
+    };
+
+    // ✅ Fonction pour supprimer un administrateur
+    const handleDeleteAdmin = async (adminId) => {
+        if (!window.confirm("Voulez-vous vraiment supprimer cet administrateur ?")) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/admins/${adminId}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error("Échec de la suppression de l'administrateur.");
+            }
+
+            alert("✅ Administrateur supprimé avec succès !");
+            fetchAdmins(); // Rafraîchit la liste après suppression
+        } catch (err) {
+            alert(`❌ Erreur: ${err.message}`);
+        }
+    };
+
+    // ✅ Fonction pour récupérer les administrateurs
     const fetchAdmins = async () => {
         try {
             const response = await fetch('https://mlm-app-jhc.fly.dev/api/auth/admins');
@@ -35,6 +62,7 @@ const AdminDashboard = () => {
         }
     };
 
+    // ✅ Fonction pour récupérer les membres
     const fetchMembers = async () => {
         try {
             const response = await fetch('https://mlm-app-jhc.fly.dev/api/auth/members');
@@ -45,7 +73,12 @@ const AdminDashboard = () => {
         }
     };
 
-    // ✅ Ajouter un administrateur (aucune modification)
+    useEffect(() => {
+        fetchAdmins();
+        fetchMembers();
+    }, []);
+
+    // ✅ Fonction pour ajouter un administrateur
     const handleAddAdmin = async () => {
         const { firstName, lastName, email, password } = newAdmin;
 
@@ -71,30 +104,7 @@ const AdminDashboard = () => {
             setShowAdminForm(false);
             setNewAdmin({ firstName: '', lastName: '', email: '', password: '' });
 
-            fetchAdmins();
-        } catch (err) {
-            alert(`❌ Erreur: ${err.message}`);
-        }
-    };
-
-    // ✅ Ajouter un membre (aucune altération du code existant)
-    const handleAddMember = async (newMemberData) => {
-        try {
-            const response = await fetch("https://mlm-app-jhc.fly.dev/api/auth/register/member", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newMemberData),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || "Échec de l'ajout du membre.");
-            }
-
-            alert("✅ Membre ajouté avec succès !");
-            setShowMemberForm(false);
-            fetchMembers();
+            fetchAdmins(); // Rafraîchir la liste des admins
         } catch (err) {
             alert(`❌ Erreur: ${err.message}`);
         }
@@ -104,16 +114,11 @@ const AdminDashboard = () => {
         <div className="admin-dashboard">
             <h2>🛠️ Tableau de bord Administrateur</h2>
 
-            <div className="nav-buttons">
-                <button className="add-admin-button" onClick={() => setShowAdminForm(true)}>
-                     ➕ Inscrire un Administrateur
-                </button>
-                <button className="add-member-button" onClick={() => setShowMemberForm(true)}>
-                     ➕ Ajouter un Membre
-                </button>
-            </div>
+            <button className="add-admin-button" onClick={() => setShowAdminForm(true)}>
+                ➕ Inscrire un Administrateur
+            </button>
 
-            {/* ✅ Formulaire d'ajout d'admin (aucune modification) */}
+            {/* ✅ Formulaire d'ajout d'admin */}
             {showAdminForm && (
                 <div className="modal">
                     <h3>Créer un Administrateur</h3>
@@ -121,17 +126,8 @@ const AdminDashboard = () => {
                     <input type="text" placeholder="Nom" value={newAdmin.lastName} onChange={(e) => setNewAdmin({ ...newAdmin, lastName: e.target.value })} required />
                     <input type="email" placeholder="Email" value={newAdmin.email} onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })} required />
                     <input type="password" placeholder="Mot de passe" value={newAdmin.password} onChange={(e) => setNewAdmin({ ...newAdmin, password: e.target.value })} required />
-                    <button onClick={handleAddAdmin}>✅ Créer Admin</button>
-                    <button onClick={() => setShowAdminForm(false)} className="cancel-btn">❌ Annuler</button>
-                </div>
-            )}
-
-            {/* ✅ Formulaire d'ajout de membre avec le composant MembersForm */}
-            {showMemberForm && (
-                <div className="modal">
-                    <h3>Ajouter un Membre</h3>
-                    <MembersForm onAddMember={handleAddMember} />
-                    <button onClick={() => setShowMemberForm(false)} className="cancel-btn">❌ Annuler</button>
+                    <button onClick={handleAddAdmin} className="create-admin-btn">✅ Créer Admin</button>
+                    <button onClick={() => setShowAdminForm(false)} className="cancel-admin-btn">❌ Annuler</button>
                 </div>
             )}
 
@@ -153,18 +149,36 @@ const AdminDashboard = () => {
                             <td>{admin.lastName}</td>
                             <td>{admin.email}</td>
                             <td>
-                                <button className="edit-btn">📝 Modifier</button>
-                                <button className="view-btn">👁️ Voir Détails</button>
-                                <button className="delete-btn">🗑️ Supprimer</button>
+                                <button className="edit-btn" onClick={() => handleEditAdmin(admin)}>📝 Modifier</button>
+                                <button className="view-btn" onClick={() => handleViewAdmin(admin)}>👁️ Voir Détails</button>
+                                <button className="delete-btn" onClick={() => handleDeleteAdmin(admin._id)}>🗑️ Supprimer</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            {/* ✅ Liste des Membres avec le composant MembersTable */}
-            <h3>👥 Liste des Membres</h3>
-            <MembersTable members={members} />
+            {/* ✅ Modale pour voir les détails */}
+            {showDetailModal && selectedAdmin && (
+                <div className="modal">
+                    <h3>Détails de l'Administrateur</h3>
+                    <p>Prénom : {selectedAdmin.firstName}</p>
+                    <p>Nom : {selectedAdmin.lastName}</p>
+                    <p>Email : {selectedAdmin.email}</p>
+                    <button onClick={() => setShowDetailModal(false)}>❌ Fermer</button>
+                </div>
+            )}
+
+            {/* ✅ Modale pour modifier un admin */}
+            {showEditModal && selectedAdmin && (
+                <div className="modal">
+                    <h3>Modifier l'Administrateur</h3>
+                    <p>Prénom : {selectedAdmin.firstName}</p>
+                    <p>Nom : {selectedAdmin.lastName}</p>
+                    <p>Email : {selectedAdmin.email}</p>
+                    <button onClick={() => setShowEditModal(false)}>❌ Fermer</button>
+                </div>
+            )}
         </div>
     );
 };

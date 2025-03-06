@@ -7,12 +7,59 @@ const SuperAdminDashboard = () => {
     const [admins, setAdmins] = useState([]);
     const [members, setMembers] = useState([]);
 
-    // ✅ Fonction pour naviguer vers AdminDetailsPage.js ou MemberDetailsPage.js
-    const handleEdit = (userId, role) => {
-        if (role === "admin") {
-            navigate(`/admin/${userId}`);  // Redirige vers AdminDetailsPage.js
-        } else {
-            navigate(`/member/${userId}`); // Redirige vers MemberDetailsPage.js
+    const handleEditAdmin = (id) => {
+        navigate(`/admin/${id}`);
+        };
+
+    const handleEditMember = (id) => {
+        navigate(`/member/${id}`);
+        };
+
+    const handleDeleteMember = async (memberEmail) => {
+        if (window.confirm("❌ Supprimer ce membre ?")) {
+            try {
+                const token = localStorage.getItem("token");
+    
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/members/${memberEmail}`, { // 🔥 Correction URL
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+    
+                if (response.ok) {
+                    alert("✅ Membre supprimé !");
+                    setMembers(prevMembers => prevMembers.filter(member => member.email !== memberEmail)); // 🔥 Correction état
+                    navigate("/superadmin-dashboard");
+                } else {
+                    const result = await response.json();
+                    alert(`❌ Erreur suppression: ${result.error || "Réponse API inconnue"}`);
+                }
+            } catch (error) {
+                alert(`❌ Erreur technique: ${error.message}`);
+            }
+        }
+    };
+    
+    const handleDeleteAdmin = async (adminEmail) => {
+        if (window.confirm("❌ Supprimer cet administrateur ?")) {
+            try {
+                const token = localStorage.getItem("token");
+    
+                const response = await fetch(`https://mlm-app-jhc.fly.dev/api/auth/admins/${adminEmail}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+    
+                if (response.ok) {
+                    alert("✅ Administrateur supprimé !");
+                    setAdmins(prevAdmins => prevAdmins.filter(admin => admin.email !== adminEmail)); // 🔥 Correction état
+                    navigate("/superadmin-dashboard");
+                } else {
+                    const result = await response.json();
+                    alert(`❌ Erreur suppression: ${result.error || "Réponse API inconnue"}`);
+                }
+            } catch (error) {
+                alert(`❌ Erreur technique: ${error.message}`);
+            }
         }
     };
 
@@ -71,10 +118,8 @@ const SuperAdminDashboard = () => {
                         <p>📧 {admin.email}</p>
                         <p>🆔 {admin._id}</p>
                         <div className="card-buttons">
-                            <button className="btn-edit" onClick={() => handleEdit(admin._id, "admin")}>
-                                ✏️ Modifier
-                            </button>
-                            <button className="btn-delete">❌ Supprimer</button>
+                            <button className="btn-edit" onClick={() => handleEditAdmin(admin._id, "admin")}>✏️ Modifier</button>
+                            <button className="btn-delete" onClick={() => handleDeleteAdmin(admin.email)}>❌ Supprimer</button>
                             <button className="btn-view">👁️ Voir</button>
                         </div>
                     </div>
@@ -89,10 +134,8 @@ const SuperAdminDashboard = () => {
                         <p>📧 {member.email}</p>
                         <p>🆔 {member._id}</p>
                         <div className="card-buttons">
-                            <button className="btn-edit" onClick={() => handleEdit(member._id, "member")}>
-                                ✏️ Modifier
-                            </button>
-                            <button className="btn-delete">❌ Supprimer</button>
+                            <button className="btn-edit" onClick={() => handleEditMember(member._id)}>✏️ Modifier</button>
+                            <button className="btn-delete" onClick={() => handleDeleteMember(member.email)}>❌ Supprimer</button>
                             <button className="btn-view">👁️ Voir</button>
                         </div>
                     </div>

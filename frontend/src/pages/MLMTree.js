@@ -41,13 +41,33 @@ const MLMTree = () => {
     // ✅ Fonction pour filtrer l'arbre selon le produit sélectionné
     const filterTreeByProduct = async (members, productId, user) => {
         try {
-            const response = await fetch(`https://mlm-app-jhc.fly.dev/api/products/subscribed/${user._id}`);
+            console.log("🔍 Produit sélectionné :", productId);
+    
+            const response = await fetch(`https://mlm-app-jhc.fly.dev/api/products/subscribed/${productId}`);
             const subscribedMembers = await response.json();
+            
+            console.log("📌 Membres ayant souscrit :", subscribedMembers);
+    
+            if (!Array.isArray(subscribedMembers) || subscribedMembers.length === 0) {
+                console.warn("⚠️ Aucun membre n'a souscrit à ce produit !");
+                setTreeData(null);
+                return;
+            }
+    
             const subscribedIds = new Set(subscribedMembers.map(member => member._id));
-
+    
             const filteredMembers = members.filter(member => subscribedIds.has(member._id));
-
+    
+            console.log("✅ Membres filtrés :", filteredMembers);
+    
+            if (filteredMembers.length === 0) {
+                console.warn("⚠️ Aucun membre filtré !");
+                setTreeData(null);
+                return;
+            }
+    
             const root = buildTree(filteredMembers, user);
+            console.log("🌳 Arbre généré :", root);
             setTreeData(root);
         } catch (error) {
             console.error("❌ Erreur lors du filtrage des membres :", error);
@@ -57,11 +77,11 @@ const MLMTree = () => {
     // ✅ Fonction pour construire l'arbre
     const buildTree = (members, user) => {
         if (!Array.isArray(members) || members.length === 0) return null;
-
+    
         const memberMap = {};
         members.forEach(member => {
             memberMap[member._id] = {
-                name: `${member.firstName} ${member.lastName}`, // ✅ Seul le prénom et nom sont affichés
+                name: `${member.firstName} ${member.lastName}`,
                 children: [],
                 memberId: member._id,
                 sponsorId: member.sponsorId,
@@ -72,22 +92,24 @@ const MLMTree = () => {
                 }
             };
         });
-
-        let rootNode = null;
-
+    
+        let rootNodes = [];
+    
         if (user.role === "superadmin") {
-            rootNode = memberMap["67b034cf976b52b77608d7bf"] || null;
+            // 🚀 Trouver tous les membres sans sponsor comme points d'entrée
+            rootNodes = members.filter(member => !member.sponsorId).map(member => memberMap[member._id]);
         } else {
-            rootNode = memberMap[user._id] || null;
+            rootNodes = [memberMap[user._id] || null].filter(node => node !== null);
         }
-
+    
+        // 🌳 Construire l'arbre
         members.forEach(member => {
             if (member.sponsorId && memberMap[member.sponsorId] && member.sponsorId !== member._id) {
                 memberMap[member.sponsorId].children.push(memberMap[member._id]);
             }
         });
-
-        return rootNode;
+    
+        return rootNodes.length === 1 ? rootNodes[0] : { name: "Superadmin", children: rootNodes };
     };
 
     // ✅ Fonction pour charger les produits souscrits du membre sélectionné
@@ -123,21 +145,6 @@ const MLMTree = () => {
         <div style={{ padding: '20px' }}>
             <h2>🌳 Arbre du Réseau MLM</h2>
 
-            {/* ✅ Menu déroulant pour sélectionner un produit */}
-            <label>📌 Filtrer par produit :</label>
-            <select 
-                value={selectedProduct} 
-                onChange={(e) => setSelectedProduct(e.target.value)} 
-                style={{ marginLeft: '10px', padding: '5px' }}
-            >
-                <option value="">Tous les produits</option>
-                {products.map(product => (
-                    <option key={product._id} value={product._id}>
-                        {product.name}
-                    </option>
-                ))}
-            </select>
-
             {treeData ? (
                 <div style={{ width: '100%', height: '500px', border: '1px solid red', marginTop: '20px' }}>
                     <Tree 
@@ -160,6 +167,7 @@ const MLMTree = () => {
             {selectedMember && selectedMember.data && selectedMember.data.fullDetails && (
                 <div style={{ padding: '10px', border: '1px solid #ccc', marginTop: '20px' }}>
                     <h3>👤 Détails du Membre</h3>
+                    <p><strong>🆔 :</strong> {selectedMember.data.memberId}</p>
                     <p><strong>Nom :</strong> {selectedMember.data.name}</p>
                     <p><strong>Email :</strong> {selectedMember.data.fullDetails.email}</p>
                     <p><strong>Téléphone :</strong> {selectedMember.data.fullDetails.phone}</p>

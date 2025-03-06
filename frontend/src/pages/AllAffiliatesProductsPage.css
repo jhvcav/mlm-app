@@ -1,0 +1,114 @@
+.all-affiliates-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.affiliates-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.affiliates-table th, .affiliates-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.affiliates-table td:last-child {
+    text-align: center; /* ✅ Centre les boutons dans la colonne Action */
+}
+
+.affiliates-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.btn-view-products {
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-view-products:hover {
+    background-color: #218838;
+}
+
+.btn-back {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-back:hover {
+    background-color: #0056b3;
+}
+
+/* ✅ Fenêtre modale */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 80%;
+    max-width: 600px;
+}
+
+.modal-content {
+    text-align: center;
+}
+
+.btn-close {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-close:hover {
+    background-color: darkred;
+}
+
+.products-table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+.products-table th, .products-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.products-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.affiliates-table th,
+.products-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    color: black; /* ✅ Titre en noir */
+    text-align: center; /* ✅ Centre le texte */
+    padding: 10px;
+    border: 1px solid #ddd;
+}

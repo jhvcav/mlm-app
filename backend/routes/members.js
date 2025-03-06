@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Member = require("../models/Member");
 const Wallet = require('../models/Wallet');
+const Product = require("../models/Product");
+const authMiddleware = require("./auth");
 
 
 // ✅ Récupérer la liste des membres
@@ -72,8 +74,8 @@ router.put("/update-permissions/:id", async (req, res) => {
 });
 
 // ✅ Supprimer un membre
-router.delete('/members/:email', async (req, res) => {
-    const { email } = req.params;
+router.delete('/members/:id', async (req, res) => {
+    const { id } = req.params;
 
     try {
         const deletedMember = await Member.findOneAndDelete({ email });
@@ -193,6 +195,130 @@ router.post("/member/register", async (req, res) => {
     } catch (error) {
         console.error("❌ Erreur serveur :", error);
         res.status(500).json({ error: "❌ Erreur serveur." });
+    }
+});
+
+// ✅ Route pour récupérer les affiliés et leurs produits souscrits
+router.get("/all-affiliates-products/:userId", authMiddleware, async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Vérifie si l'utilisateur existe
+        const user = await Member.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        // Récupérer les affiliés directs de l'utilisateur
+        const affiliates = await Member.find({ sponsorId: userId });
+
+        // Ajouter les produits souscrits pour chaque affilié
+        const affiliatesWithProducts = await Promise.all(
+            affiliates.map(async (affiliate) => {
+                console.log(`🔍 Recherche des produits pour l'affilié : ${affiliate.firstName} (${affiliate._id})`);
+
+                const products = await Product.find({
+                    $or: [
+                        { membersSubscribed: affiliate._id }, // Vérifie si l'affilié est dans membersSubscribed
+                        { "subscriptions.memberId": affiliate._id } // Vérifie si l'affilié est dans subscriptions
+                    ]
+                });
+
+                console.log(`✅ Produits trouvés pour ${affiliate.firstName}:`, products.length);
+
+                return {
+                    _id: affiliate._id,
+                    firstName: affiliate.firstName,
+                    lastName: affiliate.lastName,
+                    email: affiliate.email,
+                    products: products.map((product) => ({
+                        _id: product._id,
+                        name: product.name,
+                        amountInvested: product.amountInvested,
+                        subscriptionDate: product.subscriptionDate,
+                        duration: product.duration,
+                        yeld: product.yeld,
+                        description: product.description,
+                    })),
+                };
+            })
+        );
+
+        res.json(affiliatesWithProducts);
+    } catch (error) {
+        console.error("❌ Erreur API /all-affiliates-products :", error);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+});
+
+router.get("/all-members-products", authMiddleware, async (req, res) => {
+    try {
+        console.log("✅ Requête reçue sur /all-members-products");
+
+        const userId = req.user._id;
+        console.log(`🔹 ID utilisateur reçu : ${userId}`);
+
+        const user = await Member.findById(userId);
+        if (!user) {
+            console.error("❌ Utilisateur non trouvé :", userId);
+            return res.status(404).json({ message: "Utilisateur non trouvé." });
+        }
+
+        console.log(`🔹 Utilisateur authentifié : ${user.email}, rôle : ${user.role}`);
+
+        if (user.role !== "superadmin") {
+            console.error("🚨 Accès refusé : l'utilisateur n'est pas superadmin.");
+            return res.status(403).json({ message: "Accès refusé. Seuls les superadmins peuvent voir tous les membres et produits." });
+        }
+
+        console.log("🔹 Récupération de tous les membres...");
+        const allMembers = await Member.find();
+        console.log(`✅ ${allMembers.length} membres récupérés`);
+
+        const membersWithProducts = await Promise.all(
+            allMembers.map(async (member) => {
+                try {
+                    console.log(`🔍 Recherche des produits pour ${member.firstName} (${member._id})`);
+                    
+                    // 🔹 Vérifier le type de _id avant la requête
+                    console.log(`📌 Type de member._id : ${typeof member._id}, Valeur : ${member._id}`);
+
+                    const products = await Product.find({
+                        $or: [
+                            { membersSubscribed: mongoose.Types.ObjectId(member._id) }, 
+                            { "subscriptions.memberId": mongoose.Types.ObjectId(member._id) } 
+                        ]
+                    });
+
+                    console.log(`✅ Produits trouvés pour ${member.firstName}:`, products.length);
+
+                    return {
+                        _id: member._id,
+                        firstName: member.firstName,
+                        lastName: member.lastName,
+                        email: member.email,
+                        role: member.role,
+                        products: products.map((product) => ({
+                            _id: product._id,
+                            name: product.name,
+                            amountInvested: product.amountInvested,
+                            subscriptionDate: product.subscriptionDate,
+                            duration: product.duration,
+                            yeld: product.yeld,
+                            description: product.description,
+                        })),
+                    };
+                } catch (productError) {
+                    console.error(`❌ Erreur lors de la récupération des produits pour ${member.email}:`, productError);
+                    return { error: "❌ Erreur récupération produits", details: productError.message };
+                }
+            })
+        );
+
+        res.json(membersWithProducts);
+    } catch (error) {
+        console.error("❌ Erreur API /all-members-products :", error);
+        res.status(500).json({ error: error.message, details: error.stack });
     }
 });
 

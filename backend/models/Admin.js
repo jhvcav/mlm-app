@@ -10,7 +10,7 @@ const AdminSchema = new mongoose.Schema({
     password: { type: String, required: true },
     
     activitylog: [{ type: [String], default: []}],
-    createdAt: { type: date, default: Date.now},
+    createdAt: { type: Date, default: Date.now},
 });
 
 module.exports = mongoose.model('Admin', AdminSchema);

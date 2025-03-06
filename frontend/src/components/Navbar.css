@@ -57,6 +57,7 @@
     cursor: pointer; /* Effet de clic */
     padding: 10px 15px;
     transition: color 0.3s ease-in-out;
+    font-size: 16px;
 }
 
 /* ✅ Effet au survol */

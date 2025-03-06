@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const Member = require('../models/Member');
 const nodemailer = require('nodemailer');
 const router = express.Router();
+const bcrypt = require("bcrypt");
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
@@ -114,49 +115,6 @@ router.get('/superadmin/dashboard', verifyToken, verifySuperAdmin, (req, res) =>
     res.json({ message: "🎉 Bienvenue sur le tableau de bord du Super Admin !" });
 });
 
-// ✅ Route pour demander la réinitialisation du mot de passe
-router.post('/reset-password', async (req, res) => {
-    const { email } = req.body;
-
-    if (!email) {
-        return res.status(400).json({ error: "❌ Email requis." });
-    }
-
-    try {
-        const user = await Member.findOne({ email }).select("+password");
-        if (!user) {
-            return res.status(404).json({ error: "❌ Email non trouvé." });
-        }
-
-        // Génération d'un token unique pour réinitialisation (expiration courte)
-        const resetToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-        const resetLink = `https://mlm-app-jhc.fly.dev/reset-password?token=${resetToken}`;
-
-        // Configuration du transporteur email
-        const transporter = nodemailer.createTransport({
-            service: "Gmail",
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
-
-        // Envoi de l'email avec le lien de réinitialisation
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "🔄 Réinitialisation de votre mot de passe",
-            html: `<p>Bonjour,</p><p>Vous avez demandé une réinitialisation de mot de passe.</p><p>👉 <a href="${resetLink}">Cliquez ici pour réinitialiser votre mot de passe</a></p><p>Ce lien expirera dans 1 heure.</p>`
-        });
-
-        res.json({ message: "✅ Un email de réinitialisation a été envoyé !" });
-
-    } catch (err) {
-        console.error("🚨 Erreur d'envoi d'email :", err);
-        res.status(500).json({ error: "❌ Erreur serveur" });
-    }
-});
-
 // ✅ Route pour changer le mot de passe après vérification du token
 router.post('/new-password', async (req, res) => {
     const { token, newPassword } = req.body;
@@ -166,16 +124,20 @@ router.post('/new-password', async (req, res) => {
     }
 
     try {
-        // Vérification du token
-        const decoded = jwt.verify(token, JWT_SECRET);
+        // 🔹 Vérification du token JWT
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await Member.findById(decoded.id);
 
         if (!user) {
             return res.status(404).json({ error: "❌ Utilisateur non trouvé." });
         }
 
-        // 🔹 Mise à jour du mot de passe directement (sans cryptage)
-        user.password = newPassword;
+        // 🔹 Hachage du nouveau mot de passe
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // 🔹 Mise à jour du mot de passe
+        user.password = hashedPassword;
         await user.save();
 
         res.json({ message: "✅ Mot de passe mis à jour avec succès !" });
@@ -285,6 +247,10 @@ router.get('/members/:id', verifyToken, async (req, res) => {
         console.error("❌ Erreur récupération utilisateur :", error);
         res.status(500).json({ error: "❌ Erreur serveur." });
     }
+});
+
+router.get('/', (req, res) => {
+    res.json({ message: "API Auth en ligne !" });
 });
 
 module.exports = router;
